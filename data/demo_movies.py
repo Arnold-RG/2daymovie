@@ -36,7 +36,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 18, "name": "Drama"}, {"id": 28, "name": "Action"}],
         "trailer_key": "TEN-2uPCFf8",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/389/watch",
+        "watch_link": None,
     },
     {
         "id": 419704,
@@ -51,7 +51,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 12, "name": "Adventure"}, {"id": 878, "name": "Science Fiction"}],
         "trailer_key": "P6AaSMfXHbA",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/419704/watch",
+        "watch_link": None,
     },
     {
         "id": 19995,
@@ -66,7 +66,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 18, "name": "Drama"}, {"id": 28, "name": "Action"}],
         "trailer_key": "5PSNL1qE6VY",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/19995/watch",
+        "watch_link": None,
     },
     {
         "id": 76600,
@@ -81,7 +81,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 12, "name": "Adventure"}, {"id": 878, "name": "Science Fiction"}],
         "trailer_key": "d9MyW72ELq0",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/76600/watch",
+        "watch_link": None,
     },
     {
         "id": 99861,
@@ -96,7 +96,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 18, "name": "Drama"}, {"id": 28, "name": "Action"}],
         "trailer_key": "tmeOjFno6Do",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/99861/watch",
+        "watch_link": None,
     },
     {
         "id": 299534,
@@ -111,7 +111,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 12, "name": "Adventure"}, {"id": 878, "name": "Science Fiction"}],
         "trailer_key": "TcMBFSGVi1c",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/299534/watch",
+        "watch_link": None,
     },
     {
         "id": 299536,
@@ -126,7 +126,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 12, "name": "Adventure"}, {"id": 878, "name": "Science Fiction"}],
         "trailer_key": "6ZfuNTqbHE8",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/299536/watch",
+        "watch_link": None,
     },
     {
         "id": 105,
@@ -141,7 +141,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 18, "name": "Drama"}, {"id": 28, "name": "Action"}],
         "trailer_key": "qvsgGtivCgs",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/105/watch",
+        "watch_link": None,
     },
     {
         "id": 78,
@@ -156,7 +156,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 12, "name": "Adventure"}, {"id": 878, "name": "Science Fiction"}],
         "trailer_key": "eogpIG7cyls",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/78/watch",
+        "watch_link": None,
     },
     {
         "id": 299537,
@@ -171,7 +171,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 18, "name": "Drama"}, {"id": 28, "name": "Action"}],
         "trailer_key": "Z1BCujX3pw8",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/299537/watch",
+        "watch_link": None,
     },
     {
         "id": 11216,
@@ -186,7 +186,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 12, "name": "Adventure"}, {"id": 878, "name": "Science Fiction"}],
         "trailer_key": "C2-GX0Tltgw",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/11216/watch",
+        "watch_link": None,
     },
     {
         "id": 438631,
@@ -201,7 +201,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 18, "name": "Drama"}, {"id": 28, "name": "Action"}],
         "trailer_key": "n9xhJrPXop4",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/438631/watch",
+        "watch_link": None,
     },
     {
         "id": 550,
@@ -216,7 +216,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 12, "name": "Adventure"}, {"id": 878, "name": "Science Fiction"}],
         "trailer_key": "qtRKdVHc-cE",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/550/watch",
+        "watch_link": None,
     },
     {
         "id": 13,
@@ -231,7 +231,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 18, "name": "Drama"}, {"id": 28, "name": "Action"}],
         "trailer_key": "bLvqoHBptjg",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/13/watch",
+        "watch_link": None,
     },
     {
         "id": 600,
@@ -246,7 +246,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 12, "name": "Adventure"}, {"id": 878, "name": "Science Fiction"}],
         "trailer_key": "3hNgVhRhGLQ",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/600/watch",
+        "watch_link": None,
     },
     {
         "id": 98,
@@ -261,7 +261,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 12, "name": "Adventure"}, {"id": 878, "name": "Science Fiction"}],
         "trailer_key": "owK1qxDselE",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/98/watch",
+        "watch_link": None,
     },
     {
         "id": 489,
@@ -276,7 +276,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 18, "name": "Drama"}, {"id": 28, "name": "Action"}],
         "trailer_key": "HsukqZatPi4",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/489/watch",
+        "watch_link": None,
     },
     {
         "id": 769,
@@ -291,7 +291,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 18, "name": "Drama"}, {"id": 28, "name": "Action"}],
         "trailer_key": "rPmVEYrLzeA",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/769/watch",
+        "watch_link": None,
     },
     {
         "id": 27205,
@@ -306,7 +306,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 18, "name": "Drama"}, {"id": 28, "name": "Action"}],
         "trailer_key": "YoHD9XEInc0",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/27205/watch",
+        "watch_link": None,
     },
     {
         "id": 157336,
@@ -321,7 +321,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 12, "name": "Adventure"}, {"id": 878, "name": "Science Fiction"}],
         "trailer_key": "zSWdZVtXT7E",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/157336/watch",
+        "watch_link": None,
     },
     {
         "id": 475557,
@@ -336,7 +336,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 18, "name": "Drama"}, {"id": 28, "name": "Action"}],
         "trailer_key": "zAGVQLHvwOY",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/475557/watch",
+        "watch_link": None,
     },
     {
         "id": 1011985,
@@ -351,7 +351,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 18, "name": "Drama"}, {"id": 28, "name": "Action"}],
         "trailer_key": "_inKs4eeHjI",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/1011985/watch",
+        "watch_link": None,
     },
     {
         "id": 101,
@@ -366,7 +366,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 18, "name": "Drama"}, {"id": 28, "name": "Action"}],
         "trailer_key": "jawVxq1Iyl0",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/101/watch",
+        "watch_link": None,
     },
     {
         "id": 637,
@@ -381,7 +381,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 18, "name": "Drama"}, {"id": 28, "name": "Action"}],
         "trailer_key": "1d0n7sB3f6w",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/637/watch",
+        "watch_link": None,
     },
     {
         "id": 466272,
@@ -396,7 +396,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 12, "name": "Adventure"}, {"id": 878, "name": "Science Fiction"}],
         "trailer_key": "ELeMaP8EPAA",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/466272/watch",
+        "watch_link": None,
     },
     {
         "id": 872585,
@@ -411,7 +411,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 18, "name": "Drama"}, {"id": 28, "name": "Action"}],
         "trailer_key": "uYPbbksJxIg",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/872585/watch",
+        "watch_link": None,
     },
     {
         "id": 496243,
@@ -426,7 +426,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 18, "name": "Drama"}, {"id": 28, "name": "Action"}],
         "trailer_key": "5xH0HfJHsaY",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/496243/watch",
+        "watch_link": None,
     },
     {
         "id": 539,
@@ -441,7 +441,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 18, "name": "Drama"}, {"id": 28, "name": "Action"}],
         "trailer_key": "NG3-GlvUJbw",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/539/watch",
+        "watch_link": None,
     },
     {
         "id": 680,
@@ -456,7 +456,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 12, "name": "Adventure"}, {"id": 878, "name": "Science Fiction"}],
         "trailer_key": "s7EdQ4FqbhY",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/680/watch",
+        "watch_link": None,
     },
     {
         "id": 567,
@@ -471,7 +471,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 18, "name": "Drama"}, {"id": 28, "name": "Action"}],
         "trailer_key": "Fx0c4mK1n6Y",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/567/watch",
+        "watch_link": None,
     },
     {
         "id": 500,
@@ -486,7 +486,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 12, "name": "Adventure"}, {"id": 878, "name": "Science Fiction"}],
         "trailer_key": "sN73EUpUkX0",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/500/watch",
+        "watch_link": None,
     },
     {
         "id": 1892,
@@ -501,7 +501,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 12, "name": "Adventure"}, {"id": 878, "name": "Science Fiction"}],
         "trailer_key": "JNwNXF9Y6kY",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/1892/watch",
+        "watch_link": None,
     },
     {
         "id": 424,
@@ -516,7 +516,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 12, "name": "Adventure"}, {"id": 878, "name": "Science Fiction"}],
         "trailer_key": "gG22XFjibpg",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/424/watch",
+        "watch_link": None,
     },
     {
         "id": 807,
@@ -531,7 +531,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 18, "name": "Drama"}, {"id": 28, "name": "Action"}],
         "trailer_key": "znmZoVkCjpI",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/807/watch",
+        "watch_link": None,
     },
     {
         "id": 346,
@@ -546,7 +546,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 12, "name": "Adventure"}, {"id": 878, "name": "Science Fiction"}],
         "trailer_key": "7AFi5a2tL3k",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/346/watch",
+        "watch_link": None,
     },
     {
         "id": 508442,
@@ -561,7 +561,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 12, "name": "Adventure"}, {"id": 878, "name": "Science Fiction"}],
         "trailer_key": "gn5QmllQwqQ",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/508442/watch",
+        "watch_link": None,
     },
     {
         "id": 569094,
@@ -576,7 +576,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 12, "name": "Adventure"}, {"id": 878, "name": "Science Fiction"}],
         "trailer_key": "shW9i6k8qZk",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/569094/watch",
+        "watch_link": None,
     },
     {
         "id": 324857,
@@ -591,7 +591,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 18, "name": "Drama"}, {"id": 28, "name": "Action"}],
         "trailer_key": "tg52ovlbIec",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/324857/watch",
+        "watch_link": None,
     },
     {
         "id": 634649,
@@ -606,7 +606,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 18, "name": "Drama"}, {"id": 28, "name": "Action"}],
         "trailer_key": "JfVOs4VSpmA",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/634649/watch",
+        "watch_link": None,
     },
     {
         "id": 129,
@@ -621,7 +621,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 18, "name": "Drama"}, {"id": 28, "name": "Action"}],
         "trailer_key": "ByXuk9QqQkk",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/129/watch",
+        "watch_link": None,
     },
     {
         "id": 11,
@@ -636,7 +636,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 18, "name": "Drama"}, {"id": 28, "name": "Action"}],
         "trailer_key": "vZ734NWnAHA",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/11/watch",
+        "watch_link": None,
     },
     {
         "id": 1893,
@@ -651,7 +651,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 18, "name": "Drama"}, {"id": 28, "name": "Action"}],
         "trailer_key": "5UnjrG_N8hU",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/1893/watch",
+        "watch_link": None,
     },
     {
         "id": 1894,
@@ -666,7 +666,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 12, "name": "Adventure"}, {"id": 878, "name": "Science Fiction"}],
         "trailer_key": "bD7bpG4uRW0",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/1894/watch",
+        "watch_link": None,
     },
     {
         "id": 1895,
@@ -681,7 +681,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 18, "name": "Drama"}, {"id": 28, "name": "Action"}],
         "trailer_key": "5UnjrG_N8hU",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/1895/watch",
+        "watch_link": None,
     },
     {
         "id": 140607,
@@ -696,7 +696,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 18, "name": "Drama"}, {"id": 28, "name": "Action"}],
         "trailer_key": "sGbxmsDFVnE",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/140607/watch",
+        "watch_link": None,
     },
     {
         "id": 181808,
@@ -711,7 +711,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 12, "name": "Adventure"}, {"id": 878, "name": "Science Fiction"}],
         "trailer_key": "Q0CbN8sfihY",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/181808/watch",
+        "watch_link": None,
     },
     {
         "id": 181812,
@@ -726,7 +726,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 12, "name": "Adventure"}, {"id": 878, "name": "Science Fiction"}],
         "trailer_key": "8Qn_spdM5Zg",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/181812/watch",
+        "watch_link": None,
     },
     {
         "id": 577922,
@@ -741,7 +741,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 12, "name": "Adventure"}, {"id": 878, "name": "Science Fiction"}],
         "trailer_key": "LIsaHw70n0E",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/577922/watch",
+        "watch_link": None,
     },
     {
         "id": 24428,
@@ -756,7 +756,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 12, "name": "Adventure"}, {"id": 878, "name": "Science Fiction"}],
         "trailer_key": "eOrNdBpGMv8",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/24428/watch",
+        "watch_link": None,
     },
     {
         "id": 155,
@@ -771,7 +771,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 18, "name": "Drama"}, {"id": 28, "name": "Action"}],
         "trailer_key": "EXeTwQWrcwY",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/155/watch",
+        "watch_link": None,
     },
     {
         "id": 49026,
@@ -786,7 +786,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 12, "name": "Adventure"}, {"id": 878, "name": "Science Fiction"}],
         "trailer_key": "g8evyE9TuYk",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/49026/watch",
+        "watch_link": None,
     },
     {
         "id": 1891,
@@ -801,7 +801,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 18, "name": "Drama"}, {"id": 28, "name": "Action"}],
         "trailer_key": "sGbxmsDFVnE",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/1891/watch",
+        "watch_link": None,
     },
     {
         "id": 238,
@@ -816,7 +816,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 12, "name": "Adventure"}, {"id": 878, "name": "Science Fiction"}],
         "trailer_key": "sY1S34973zA",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/238/watch",
+        "watch_link": None,
     },
     {
         "id": 429,
@@ -831,7 +831,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 18, "name": "Drama"}, {"id": 28, "name": "Action"}],
         "trailer_key": "W6NJfN2g2k0",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/429/watch",
+        "watch_link": None,
     },
     {
         "id": 914,
@@ -846,7 +846,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 12, "name": "Adventure"}, {"id": 878, "name": "Science Fiction"}],
         "trailer_key": "kXXE1VuMZSk",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/914/watch",
+        "watch_link": None,
     },
     {
         "id": 497,
@@ -861,7 +861,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 18, "name": "Drama"}, {"id": 28, "name": "Action"}],
         "trailer_key": "Ki4haFrqSrw",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/497/watch",
+        "watch_link": None,
     },
     {
         "id": 120,
@@ -876,7 +876,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 12, "name": "Adventure"}, {"id": 878, "name": "Science Fiction"}],
         "trailer_key": "V75_PfBmH4A",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/120/watch",
+        "watch_link": None,
     },
     {
         "id": 122,
@@ -891,7 +891,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 12, "name": "Adventure"}, {"id": 878, "name": "Science Fiction"}],
         "trailer_key": "V75_PfBmH4A",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/122/watch",
+        "watch_link": None,
     },
     {
         "id": 121,
@@ -906,7 +906,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 18, "name": "Drama"}, {"id": 28, "name": "Action"}],
         "trailer_key": "LbfMDwc4grE",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/121/watch",
+        "watch_link": None,
     },
     {
         "id": 603,
@@ -921,7 +921,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 18, "name": "Drama"}, {"id": 28, "name": "Action"}],
         "trailer_key": "vKQi3bBA1y8",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/603/watch",
+        "watch_link": None,
     },
     {
         "id": 278,
@@ -936,7 +936,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 12, "name": "Adventure"}, {"id": 878, "name": "Science Fiction"}],
         "trailer_key": "6hB3S9bIaco",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/278/watch",
+        "watch_link": None,
     },
     {
         "id": 694,
@@ -951,7 +951,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 12, "name": "Adventure"}, {"id": 878, "name": "Science Fiction"}],
         "trailer_key": "FbpLzs21sC0",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/694/watch",
+        "watch_link": None,
     },
     {
         "id": 597,
@@ -966,7 +966,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 18, "name": "Drama"}, {"id": 28, "name": "Action"}],
         "trailer_key": "kVrqfYjkTdQ",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/597/watch",
+        "watch_link": None,
     },
     {
         "id": 862,
@@ -981,7 +981,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 12, "name": "Adventure"}, {"id": 878, "name": "Science Fiction"}],
         "trailer_key": "KYz2wyBy3kc",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/862/watch",
+        "watch_link": None,
     },
     {
         "id": 508947,
@@ -996,7 +996,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 18, "name": "Drama"}, {"id": 28, "name": "Action"}],
         "trailer_key": "wB9wuOnLT-g",
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/508947/watch",
+        "watch_link": None,
     },
     {
         "id": 693134,
@@ -1011,7 +1011,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 12, "name": "Adventure"}, {"id": 878, "name": "Science Fiction"}],
         "trailer_key": None,
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/693134/watch",
+        "watch_link": None,
     },
     {
         "id": 1075794,
@@ -1026,7 +1026,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 12, "name": "Adventure"}, {"id": 878, "name": "Science Fiction"}],
         "trailer_key": None,
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/1075794/watch",
+        "watch_link": None,
     },
     {
         "id": 530385,
@@ -1041,7 +1041,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 18, "name": "Drama"}, {"id": 28, "name": "Action"}],
         "trailer_key": None,
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/530385/watch",
+        "watch_link": None,
     },
     {
         "id": 937278,
@@ -1056,7 +1056,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 12, "name": "Adventure"}, {"id": 878, "name": "Science Fiction"}],
         "trailer_key": None,
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/937278/watch",
+        "watch_link": None,
     },
     {
         "id": 770,
@@ -1071,7 +1071,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 12, "name": "Adventure"}, {"id": 878, "name": "Science Fiction"}],
         "trailer_key": None,
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/770/watch",
+        "watch_link": None,
     },
     {
         "id": 574,
@@ -1086,7 +1086,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 12, "name": "Adventure"}, {"id": 878, "name": "Science Fiction"}],
         "trailer_key": None,
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/574/watch",
+        "watch_link": None,
     },
     {
         "id": 1022789,
@@ -1101,7 +1101,7 @@ DEMO_MOVIES = [
         "genres": [{"id": 18, "name": "Drama"}, {"id": 28, "name": "Action"}],
         "trailer_key": None,
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/1022789/watch",
+        "watch_link": None,
     },
     {
         "id": 906126,
@@ -1116,6 +1116,6 @@ DEMO_MOVIES = [
         "genres": [{"id": 12, "name": "Adventure"}, {"id": 878, "name": "Science Fiction"}],
         "trailer_key": None,
         "providers": [],
-        "watch_link": "https://www.themoviedb.org/movie/906126/watch",
+        "watch_link": None,
     },
 ]

@@ -130,14 +130,8 @@ def _demo_normalize(item: dict[str, Any]) -> dict[str, Any]:
         "runtime": item.get("runtime"),
         "genres": item.get("genres") or [],
         "trailer_key": item.get("trailer_key"),
-        "providers": [
-            {
-                **p,
-                "logo": logo_url(p.get("logo_path")),
-            }
-            for p in item.get("providers") or []
-        ],
-        "watch_link": item.get("watch_link"),
+        "providers": [],
+        "watch_link": None,
     }
 
 
@@ -306,14 +300,8 @@ def _all_trailer_keys(videos: list[dict[str, Any]]) -> list[str]:
         keys.append(key)
     return keys[:12]
 
-def legal_watch_url(movie_id: int, title: str | None = None) -> str:
-    """Legal where-to-watch page (TMDB). Never pirate indexes."""
-    return f"https://www.themoviedb.org/movie/{movie_id}/watch"
-
-
 def _providers_from_payload(payload: dict[str, Any]) -> tuple[list[dict[str, Any]], str | None]:
     country = payload.get(region()) or {}
-    # TMDB often returns a JustWatch aggregator URL; we use TMDB watch page instead.
     link = None
     collected: list[dict[str, Any]] = []
     seen: set[str] = set()
@@ -344,7 +332,8 @@ def get_movie(movie_id: int) -> dict[str, Any] | None:
         movie["similar"] = [
             _demo_normalize(m) for m in DEMO_MOVIES if m["id"] != movie_id
         ][:6]
-        movie["watch_link"] = legal_watch_url(movie_id, movie.get("title"))
+        movie["watch_link"] = None
+        movie["providers"] = []
         return movie
 
     try:
