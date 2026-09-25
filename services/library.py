@@ -1,4 +1,4 @@
-"""Load curated 2000–2026 year catalog (trailer-ready titles only)."""
+"""Load curated film catalog (trailer-ready titles only)."""
 
 from __future__ import annotations
 

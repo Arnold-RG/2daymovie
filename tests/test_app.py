@@ -44,7 +44,7 @@ def test_movies_ok():
     response = client.get("/movies")
     assert response.status_code == 200
     assert b"Movies" in response.data
-    assert b"2000" in response.data or b"2024" in response.data
+    assert b"2000" in response.data or b"2024" in response.data or b"2026" in response.data
 
 
 def test_categories_ok():

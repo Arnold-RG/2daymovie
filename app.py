@@ -161,6 +161,7 @@ Sitemap: {base}/sitemap.xml
             spotlight=spotlight,
             series_spotlight=series_spotlight,
             upcoming_movies=up["movies"][:8],
+            upcoming_movies_2027=up["movies_2027"][:8],
             upcoming_series=up["series"][:8],
             meta_title="2daymovie — Movies & TV Shows, Trailers & Where to Watch",
             meta_description=(
@@ -186,14 +187,15 @@ Sitemap: {base}/sitemap.xml
         return render_template(
             "upcoming.html",
             movies=payload["movies"],
+            movies_2027=payload["movies_2027"],
             shows=payload["series"],
             movie_count=payload["movie_count"],
             series_count=payload["series_count"],
             with_trailer=payload["with_trailer"],
-            meta_title="Upcoming Movies & Series 2026 | 2daymovie",
+            meta_title="Upcoming Movies & Series 2026–2027 | 2daymovie",
             meta_description=(
-                "Browse upcoming October–December 2026 movies and Fall 2026 series "
-                "on 2daymovie. On-site trailers when available."
+                "Browse upcoming 2026 and 2027 movies and series on 2daymovie. "
+                "On-site trailers when available."
             ),
         )
 
@@ -223,7 +225,7 @@ Sitemap: {base}/sitemap.xml
             selected_year=shelf["selected_year"],
             movies=shelf["movies"],
             meta_title="Movies by Year | 2daymovie",
-            meta_description="Browse curated movies from 2000–2026 with on-site official trailers on 2daymovie.",
+            meta_description="Browse curated movies from classic cinema through 2027 with on-site official trailers on 2daymovie.",
         )
 
     @app.route("/library")
