@@ -439,7 +439,7 @@ select {
   color: var(--gel);
 }
 
-.hero h1 {
+.hero h1:not(.hero-brand) {
   font-family: var(--font-display);
   font-weight: 700;
   font-size: clamp(1.4rem, 3vw, 2.05rem);
@@ -447,7 +447,16 @@ select {
   letter-spacing: -0.015em;
   color: var(--ink);
   margin-bottom: 0.9rem;
-  max-width: 22ch;
+  max-width: 28ch;
+}
+
+h1.hero-brand {
+  font-family: var(--font-brand);
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  margin-bottom: 1.15rem;
+  max-width: none;
 }
 
 .hero-lede {
@@ -735,16 +744,31 @@ select {
   font-size: 5rem;
 }
 
+.poster-meta {
+  min-width: 0;
+  max-width: 100%;
+}
+
 .poster-meta h3 {
   font-size: 0.94rem;
   font-weight: 700;
-  line-height: 1.25;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
 }
 
 .poster-meta p {
   color: var(--slate);
   font-size: 0.82rem;
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* —— Detail page —— */
@@ -2014,22 +2038,100 @@ select {
 
   .hero-brand,
   .library-brand {
-    font-size: clamp(2rem, 11vw, 3.1rem);
-    word-break: break-word;
+    font-size: clamp(2.15rem, 9.5vw, 3.25rem);
+    letter-spacing: 0.04em;
+    line-height: 1;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  .hero h1,
+  .hero h1:not(.hero-brand),
   .section-head h1,
-  .page-band h1 {
-    font-size: clamp(1.35rem, 6.5vw, 1.85rem);
-    overflow-wrap: anywhere;
+  .page-band h1,
+  .watch-panel h1,
+  .detail-copy h1,
+  .year-hero h1 {
+    font-size: clamp(1.45rem, 5.8vw, 1.9rem);
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-break: normal;
+    hyphens: none;
   }
 
   .hero-lede,
   .section-head p,
-  .page-band > p {
+  .page-band > p,
+  .overview,
+  .watch-note {
     font-size: 0.95rem;
+    line-height: 1.55;
     max-width: 100%;
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+
+  .row-head h2 {
+    font-size: clamp(1.2rem, 4.8vw, 1.45rem);
+    line-height: 1.2;
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+
+  .poster-meta h3 {
+    font-size: 0.82rem;
+    line-height: 1.3;
+    overflow-wrap: break-word;
+    word-break: normal;
+    hyphens: none;
+  }
+
+  .poster-meta p {
+    font-size: 0.74rem;
+  }
+
+  .category-tile-name {
+    font-size: 0.95rem;
+    line-height: 1.2;
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+
+  .category-chip {
+    font-size: 0.82rem;
+    line-height: 1.2;
+    padding: 0.5rem 0.45rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .year-panel-meta {
+    font-size: 0.8rem;
+    line-height: 1.3;
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+
+  .year-panel-year {
+    font-size: 1.15rem;
+  }
+
+  .detail-kicker,
+  .watch-stage-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+  }
+
+  .about-links a,
+  .footer-credit,
+  .footer-credit a {
+    overflow-wrap: break-word;
+    word-break: normal;
   }
 
   .hero-actions,
@@ -2125,10 +2227,6 @@ select {
     padding: 0 0.75rem 1rem;
   }
 
-  .year-panel-meta {
-    overflow-wrap: anywhere;
-  }
-
   .home-poster-grid,
   .shelf-grid,
   .poster-grid,
@@ -2148,12 +2246,6 @@ select {
   .upcoming-card {
     min-width: 0;
     width: 100%;
-  }
-
-  .poster-meta h3,
-  .category-tile-name {
-    overflow-wrap: anywhere;
-    word-break: break-word;
   }
 
   .row-head {
@@ -2188,11 +2280,6 @@ select {
   .about-links li {
     min-width: 0;
   }
-
-  .about-links a {
-    overflow-wrap: anywhere;
-    word-break: break-word;
-  }
 }
 
 @media (max-width: 480px) {
@@ -2206,11 +2293,34 @@ select {
   }
 
   .hero-brand {
-    font-size: clamp(1.85rem, 10.5vw, 2.6rem);
+    font-size: clamp(1.95rem, 9vw, 2.55rem);
+    letter-spacing: 0.03em;
   }
 
-  .hero h1 {
-    font-size: 1.2rem;
+  .hero h1:not(.hero-brand),
+  .section-head h1,
+  .page-band h1,
+  .watch-panel h1,
+  .detail-copy h1 {
+    font-size: 1.35rem;
+    line-height: 1.28;
+  }
+
+  .hero-lede {
+    font-size: 0.92rem;
+    line-height: 1.55;
+  }
+
+  .poster-meta h3 {
+    font-size: 0.78rem;
+  }
+
+  .poster-meta p {
+    font-size: 0.7rem;
+  }
+
+  .row-head h2 {
+    font-size: 1.15rem;
   }
 
   .hero-actions,
@@ -2259,12 +2369,6 @@ select {
 
   .site-footer {
     padding-bottom: max(1.5rem, env(safe-area-inset-bottom, 0px));
-  }
-
-  .footer-credit,
-  .footer-credit a {
-    overflow-wrap: anywhere;
-    word-break: break-word;
   }
 }
 
@@ -2533,11 +2637,4 @@ select {
 
 .shelf-grid {
   padding-top: 1rem;
-}
-
-.poster-meta h3 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
 }

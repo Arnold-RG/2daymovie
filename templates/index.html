@@ -7,8 +7,7 @@
 <section class="hero {% if featured and featured.backdrop %}has-backdrop{% endif %}" {% if featured and featured.backdrop %}style="--hero-image: url('{{ featured.backdrop }}')"{% endif %}>
   <div class="hero-veil" aria-hidden="true"></div>
   <div class="hero-copy">
-    <p class="hero-brand" aria-label="2daymovie"><span class="gel">2DAY</span>MOVIE</p>
-    <h1>2daymovie</h1>
+    <h1 class="hero-brand" aria-label="2daymovie"><span class="gel">2DAY</span>MOVIE</h1>
     <p class="hero-lede">Discover movies and TV shows. Watch official trailers on this site and find legal streaming options.</p>
     <div class="hero-actions">
       <a class="btn btn-primary" href="{{ url_for('categories_home') }}">Categories</a>
