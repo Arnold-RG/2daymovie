@@ -200,3 +200,37 @@ def test_reviews_migrate_legacy_json(tmp_path, monkeypatch):
     reviews_mod._init_db()
     rows = reviews_mod.list_reviews()
     assert any(r["name"] == "Sam" and r["id"] == "legacy-1" for r in rows)
+    # Legacy import wins; starter seed must not overwrite a non-empty DB.
+    assert not any(r["id"].startswith("seed-") for r in rows)
+
+
+def test_reviews_seed_starters_when_empty(tmp_path, monkeypatch):
+    reviews_db = tmp_path / "reviews-seed.db"
+    monkeypatch.setenv("REVIEWS_SQLITE_PATH", str(reviews_db))
+    monkeypatch.delenv("DATABASE_URL", raising=False)
+    monkeypatch.delenv("REVIEWS_PATH", raising=False)
+
+    from services import reviews as reviews_mod
+
+    reviews_mod._RATE.clear()
+    reviews_mod._INITIALIZED = False
+    reviews_mod._init_db()
+
+    rows = reviews_mod.list_reviews()
+    names = {r["name"] for r in rows}
+    assert "Tumukunde Diane" in names
+    assert "Hubert" in names
+    assert "Arnold Rurangwa" in names
+    assert reviews_mod.stats()["count"] == 3
+    assert reviews_mod.stats()["average"] == 5.0
+
+    # Re-init must not duplicate seeds.
+    reviews_mod._INITIALIZED = False
+    reviews_mod._init_db()
+    assert reviews_mod.stats()["count"] == 3
+
+    client = app.test_client()
+    home = client.get("/")
+    assert home.status_code == 200
+    assert b"Tumukunde Diane" in home.data
+    assert b"Average" in home.data

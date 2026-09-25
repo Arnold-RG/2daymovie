@@ -41,6 +41,38 @@ RATE_SECONDS = 45
 _RATE: dict[str, float] = {}
 _INITIALIZED = False
 
+# Featured visitor reviews restored from the live site so an empty DB
+# (ephemeral disk / fresh Postgres) still shows real feedback.
+STARTER_REVIEWS: list[dict[str, Any]] = [
+    {
+        "id": "seed-tumukunde-diane",
+        "name": "Tumukunde Diane",
+        "rating": 5,
+        "message": (
+            "It shows the upcoming movies and you can search for any movie "
+            "and it's easy and fast."
+        ),
+        "created_at": "2026-09-18T10:00:00+00:00",
+    },
+    {
+        "id": "seed-hubert",
+        "name": "Hubert",
+        "rating": 5,
+        "message": (
+            "This website is seriously impressive! The layout is sharp, "
+            "easy to navigate, and makes browsing movies actually fun."
+        ),
+        "created_at": "2026-09-19T14:30:00+00:00",
+    },
+    {
+        "id": "seed-arnold-rurangwa",
+        "name": "Arnold Rurangwa",
+        "rating": 5,
+        "message": "I'm the creator of this website and I'm happy with my work",
+        "created_at": "2026-09-20T09:15:00+00:00",
+    },
+]
+
 
 def _database_url() -> str:
     return os.getenv("DATABASE_URL", "").strip()
@@ -102,6 +134,7 @@ def _init_db() -> None:
         conn.commit()
     _INITIALIZED = True
     _import_legacy_json_once()
+    _seed_starter_reviews_if_empty()
 
 
 def _ensure_db() -> None:
@@ -109,30 +142,10 @@ def _ensure_db() -> None:
         _init_db()
 
 
-def _import_legacy_json_once() -> None:
-    """Best-effort restore from a leftover data/reviews.json (or REVIEWS_PATH)."""
-    candidates: list[Path] = []
-    legacy_env = os.getenv("REVIEWS_PATH", "").strip()
-    if legacy_env and legacy_env.lower().endswith(".json"):
-        candidates.append(Path(legacy_env))
-    candidates.append(LEGACY_JSON)
-
-    rows: list[dict[str, Any]] = []
-    source: Path | None = None
-    for path in candidates:
-        if not path.exists():
-            continue
-        try:
-            data = json.loads(path.read_text(encoding="utf-8"))
-        except Exception:
-            continue
-        if isinstance(data, list) and data:
-            rows = [r for r in data if isinstance(r, dict)]
-            source = path
-            break
-    if not rows or source is None:
-        return
-
+def _insert_review_rows(rows: list[dict[str, Any]]) -> int:
+    """Insert review dicts; skip invalid rows and duplicate primary keys."""
+    if not rows:
+        return 0
     p = _placeholder()
     imported = 0
     with _connect() as conn:
@@ -159,6 +172,52 @@ def _import_legacy_json_once() -> None:
                 # Duplicate primary key / already migrated.
                 continue
         conn.commit()
+    return imported
+
+
+def _review_count() -> int:
+    with _connect() as conn:
+        cur = conn.cursor()
+        cur.execute("SELECT COUNT(*) FROM reviews")
+        row = cur.fetchone()
+    return int(row[0] or 0) if row else 0
+
+
+def _seed_starter_reviews_if_empty() -> None:
+    """Restore featured reviews when the table is empty after deploy/reset."""
+    try:
+        if _review_count() > 0:
+            return
+    except Exception:
+        return
+    _insert_review_rows(STARTER_REVIEWS)
+
+
+def _import_legacy_json_once() -> None:
+    """Best-effort restore from a leftover data/reviews.json (or REVIEWS_PATH)."""
+    candidates: list[Path] = []
+    legacy_env = os.getenv("REVIEWS_PATH", "").strip()
+    if legacy_env and legacy_env.lower().endswith(".json"):
+        candidates.append(Path(legacy_env))
+    candidates.append(LEGACY_JSON)
+
+    rows: list[dict[str, Any]] = []
+    source: Path | None = None
+    for path in candidates:
+        if not path.exists():
+            continue
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        if isinstance(data, list) and data:
+            rows = [r for r in data if isinstance(r, dict)]
+            source = path
+            break
+    if not rows or source is None:
+        return
+
+    imported = _insert_review_rows(rows)
 
     if imported:
         # Keep the JSON as a backup, but stop re-importing by renaming.
