@@ -46,3 +46,31 @@ def test_year_page_ok():
     response = client.get("/year/2010")
     assert response.status_code == 200
     assert b"Inception" in response.data
+
+
+def test_healthz():
+    client = app.test_client()
+    response = client.get("/healthz")
+    assert response.status_code == 200
+    assert response.get_json()["status"] == "ok"
+
+
+def test_readyz():
+    client = app.test_client()
+    response = client.get("/readyz")
+    assert response.status_code == 200
+    assert response.get_json()["status"] == "ready"
+
+
+def test_metrics():
+    client = app.test_client()
+    response = client.get("/metrics")
+    assert response.status_code == 200
+    assert b"twodaymovie_http_requests_total" in response.data
+
+
+def test_security_headers():
+    client = app.test_client()
+    response = client.get("/")
+    assert response.headers.get("X-Content-Type-Options") == "nosniff"
+    assert response.headers.get("X-Frame-Options") == "SAMEORIGIN"

@@ -5,9 +5,10 @@
 {% block content %}
 {% set fallback = url_for('static', filename='img/poster-fallback.svg') %}
 <section class="watch-room {% if movie.backdrop %}has-backdrop{% endif %}" {% if movie.backdrop %}style="--watch-image: url('{{ movie.backdrop }}')"{% endif %}>
-  <div class="watch-veil"></div>
+  <div class="watch-veil" aria-hidden="true"></div>
   <div class="watch-layout">
     <div class="watch-stage">
+      <p class="watch-stage-label">Projection · Official trailer</p>
       {% if movie.trailer_key %}
       <div class="watch-player">
         <iframe
@@ -22,7 +23,7 @@
       <p class="watch-note">Official full trailer (YouTube). Teasers and clips are filtered out.</p>
       {% else %}
       <div class="watch-empty">
-        <img src="{{ movie.poster or fallback }}" alt="" width="280" height="420" />
+        <img src="{{ movie.poster or fallback }}" alt="" width="280" height="420" onerror="this.onerror=null;this.src='{{ fallback }}';" />
         <p>Full trailer not listed yet for this title.</p>
       </div>
       {% endif %}
@@ -36,7 +37,9 @@
         {% if movie.runtime %}<span>{{ movie.runtime }} min</span>{% endif %}
         {% if movie.vote_average %}<span>★ {{ movie.vote_average }}</span>{% endif %}
       </p>
+      {% if movie.overview %}
       <p class="overview">{{ movie.overview }}</p>
+      {% endif %}
 
       <div class="watch-cta">
         {% if movie.watch_link %}
@@ -55,7 +58,7 @@
       <ul class="provider-list watch-providers">
         {% for p in movie.providers %}
         <li>
-          {% if p.logo %}<img src="{{ p.logo }}" alt="" width="40" height="40" />{% endif %}
+          {% if p.logo %}<img src="{{ p.logo }}" alt="" width="40" height="40" loading="lazy" decoding="async" onerror="this.style.display='none'" />{% endif %}
           <div>
             <strong>{{ p.provider_name }}</strong>
             <span>{{ p.type }}</span>

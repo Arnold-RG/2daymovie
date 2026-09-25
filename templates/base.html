@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="theme-color" content="#0c0f12" />
+  <meta name="theme-color" content="#07090c" />
   <meta name="color-scheme" content="dark" />
   <title>{% block title %}{{ site_name }} — Find every film. Watch legally.{% endblock %}</title>
   <meta name="description" content="2daymovie.to is a free movie discovery platform. Browse the world catalog, watch official trailers, and find legal streaming options — no account required." />
@@ -33,7 +33,7 @@
 
     <form class="search-form" action="{{ url_for('search') }}" method="get" role="search">
       <label class="sr-only" for="q">Search movies</label>
-      <input id="q" name="q" type="search" placeholder="Search any movie…" value="{{ request.args.get('q', '') }}" autocomplete="off" />
+      <input id="q" name="q" type="search" placeholder="Search titles…" value="{{ request.args.get('q', '') }}" autocomplete="off" />
       <button type="submit">Search</button>
     </form>
   </header>
@@ -50,7 +50,7 @@
     </p>
     <p class="footer-credit">
       Official site:
-      <a href="https://twodaymovie.onrender.com/" rel="noopener">twodaymovie.onrender.com</a>
+      <a href="{{ official_url }}" rel="noopener">twodaymovie.onrender.com</a>
       · Movie data from
       <a href="https://www.themoviedb.org/" target="_blank" rel="noopener">TMDB</a>.
       This product uses the TMDB API but is not endorsed or certified by TMDB.

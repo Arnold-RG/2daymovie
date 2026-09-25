@@ -6,6 +6,7 @@
 {% block content %}
 {% set fallback = url_for('static', filename='img/poster-fallback.svg') %}
 <section class="page-band">
+  <p class="detail-kicker">Search</p>
   <h1>{% if query %}Results for “{{ query }}”{% else %}Search movies{% endif %}</h1>
   <p>
     {% if query %}

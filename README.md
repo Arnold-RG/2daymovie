@@ -6,38 +6,56 @@ Legal movie discovery — curated **2000–2026** library, **official full trail
 
 ## Features
 
+- Cinema-grade UI: full-bleed heroes, year archive, immersive Watch rooms
 - Library timeline for every year from 2000 → 2026
-- Year pages with poster grids and “Watch room”
 - Watch room: official full YouTube trailer + TMDB legal HD stream guide
 - Search / browse / genres via TMDB when `TMDB_API_KEY` is set
-- No login required
-
-## Routes
-
-- `/library` — year timeline
-- `/year/2010` — that year’s curated list
-- `/watch/<id>` — immersive trailer + legal stream CTA
-- `/movie/<id>` — full details
+- Production ops: Docker, Compose, Nginx, Kubernetes, Prometheus metrics, GitHub Actions CI
 
 ## Quick start
 
 ```bash
-cd 2daymovie
+cp .env.example .env
 python -m venv .venv
-.venv\Scripts\activate
+# Windows: .venv\Scripts\activate
+source .venv/bin/activate
 pip install -r requirements.txt
+pytest -q
 python app.py
 ```
 
-Rebuild metadata cache (optional):
+Open http://127.0.0.1:5000/
+
+## Docker (recommended)
 
 ```bash
-python -u scripts/resolve_year_catalog.py
+docker compose up --build -d
 ```
+
+- Site (Nginx → Gunicorn): http://localhost:8080/
+- Prometheus: http://localhost:9090/
+- Grafana: http://localhost:3000/ (admin/admin locally)
+
+Full runbook: [DEVOPS.md](./DEVOPS.md)
+
+## Routes
+
+| Path | Purpose |
+| --- | --- |
+| `/` | Home / spotlight |
+| `/library` | Year timeline |
+| `/year/2010` | Curated year shelf |
+| `/watch/<id>` | Trailer + legal HD guide |
+| `/movie/<id>` | Details |
+| `/healthz` | Liveness |
+| `/readyz` | Readiness |
+| `/metrics` | Prometheus |
 
 ## Deploy
 
-Render auto-deploys from `main`: https://twodaymovie.onrender.com/
+- **Render** auto-deploys from `main`: https://twodaymovie.onrender.com/
+- **Kubernetes**: `kubectl apply -f deploy/k8s/`
+- **CI**: `.github/workflows/ci.yml` — tests, Docker build, Compose validate
 
 ## Legal note
 

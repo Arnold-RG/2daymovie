@@ -6,15 +6,72 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
+    name: Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+          cache: pip
+
       - name: Install dependencies
         run: pip install -r requirements.txt
+
       - name: Run tests
         run: pytest -q
+
+      - name: Health & metrics smoke
+        run: |
+          python - <<'PY'
+          from app import app
+          c = app.test_client()
+          assert c.get("/healthz").status_code == 200
+          assert c.get("/readyz").status_code == 200
+          assert c.get("/metrics").status_code == 200
+          assert c.get("/library").status_code == 200
+          print("ops smoke ok")
+          PY
+
+  docker:
+    name: Docker build
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build image
+        run: docker build -t twodaymovie:ci .
+
+      - name: Container healthcheck
+        run: |
+          docker run -d --name twodaymovie-ci -p 18080:8080 -e FLASK_DEBUG=0 twodaymovie:ci
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:18080/healthz; then
+              curl -fsS http://127.0.0.1:18080/readyz
+              docker stop twodaymovie-ci
+              exit 0
+            fi
+            sleep 2
+          done
+          docker logs twodaymovie-ci || true
+          docker stop twodaymovie-ci || true
+          exit 1
+
+  lint-compose:
+    name: Compose config
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate compose file
+        run: docker compose config -q

@@ -4,8 +4,12 @@
 
 {% block content %}
 <section class="page-band narrow">
+  <p class="detail-kicker">404</p>
   <h1>Title not found</h1>
   <p>That movie isn’t in the catalog (or the ID is invalid).</p>
-  <a class="btn btn-primary" href="{{ url_for('home') }}">Back to browse</a>
+  <div class="hero-actions" style="margin-top: 1.25rem">
+    <a class="btn btn-primary" href="{{ url_for('home') }}">Back home</a>
+    <a class="btn btn-ghost" href="{{ url_for('library_home') }}">Open library</a>
+  </div>
 </section>
 {% endblock %}

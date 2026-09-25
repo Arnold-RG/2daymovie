@@ -3,26 +3,31 @@
 {% block content %}
 {% set fallback = url_for('static', filename='img/poster-fallback.svg') %}
 <section class="hero {% if featured and featured.backdrop %}has-backdrop{% endif %}" {% if featured and featured.backdrop %}style="--hero-image: url('{{ featured.backdrop }}')"{% endif %}>
-  <div class="hero-veil"></div>
+  <div class="hero-veil" aria-hidden="true"></div>
   <div class="hero-copy">
-    <p class="hero-brand">2daymovie.to</p>
-    <h1>2000–2026. Trailers. Legal HD guides.</h1>
-    <p class="hero-lede">{{ stats.planned }} curated films with official full trailers and licensed streaming links — no signup.</p>
+    <p class="hero-brand" aria-label="2daymovie"><span class="gel">2DAY</span>MOVIE</p>
+    <h1>Cinema discovery. Legal HD.</h1>
+    <p class="hero-lede">Official full trailers and licensed streaming guides for a curated 2000–2026 library — free to browse, no piracy.</p>
     <div class="hero-actions">
-      <a class="btn btn-primary" href="{{ url_for('library_home') }}">Open library</a>
+      <a class="btn btn-primary" href="{{ url_for('library_home') }}">Enter the library</a>
       {% if featured and featured.id %}
-      <a class="btn btn-ghost" href="{{ url_for('watch_page', movie_id=featured.id) }}">Watch {{ featured.title }}</a>
+      <a class="btn btn-ghost" href="{{ url_for('watch_page', movie_id=featured.id) }}">Open watch room</a>
+      {% else %}
+      <a class="btn btn-ghost" href="{{ url_for('year_page', year=spotlight_year or 2024) }}">Browse {{ spotlight_year or 2024 }}</a>
       {% endif %}
     </div>
   </div>
 </section>
 
 <section class="catalog" id="catalog">
-  <div class="genre-rail" aria-label="Years">
+  <div class="catalog-intro">
+    <h2 class="catalog-label">Browse by year</h2>
+  </div>
+  <div class="genre-rail" aria-label="Browse by year" data-rail>
     {% for y in year_cards[:14] %}
     <a class="genre-chip" href="{{ url_for('year_page', year=y.year) }}">{{ y.year }}</a>
     {% endfor %}
-    <a class="genre-chip" href="{{ url_for('library_home') }}">All years</a>
+    <a class="genre-chip genre-chip-accent" href="{{ url_for('library_home') }}">All years →</a>
   </div>
 
   {% for title, movies in rows %}
@@ -34,16 +39,21 @@
     <div class="poster-rail" data-rail>
       {% for movie in movies if movie.id %}
       <a class="poster-card" href="{{ url_for('watch_page', movie_id=movie.id) }}">
-        <img
-          class="poster-img"
-          src="{{ movie.poster or fallback }}"
-          alt="Poster for {{ movie.title }}"
-          loading="lazy"
-          decoding="async"
-          width="200"
-          height="300"
-          onerror="this.onerror=null;this.src='{{ fallback }}';"
-        />
+        <span class="poster-frame">
+          <img
+            class="poster-img"
+            src="{{ movie.poster or fallback }}"
+            alt="Poster for {{ movie.title }}"
+            loading="lazy"
+            decoding="async"
+            width="200"
+            height="300"
+            onerror="this.onerror=null;this.src='{{ fallback }}';"
+          />
+          <span class="poster-play" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+          </span>
+        </span>
         <div class="poster-meta">
           <h3>{{ movie.title }}</h3>
           <p>{{ movie.year }}{% if movie.vote_average %} · ★ {{ movie.vote_average }}{% endif %}</p>

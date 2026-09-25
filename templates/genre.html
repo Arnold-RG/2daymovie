@@ -6,6 +6,7 @@
 {% block content %}
 {% set fallback = url_for('static', filename='img/poster-fallback.svg') %}
 <section class="page-band">
+  <p class="detail-kicker">Genre</p>
   <h1>{{ genre_name }}</h1>
   <p>
     {{ "{:,}".format(total_results) }} titles — trailers and legal watch links on each page.
