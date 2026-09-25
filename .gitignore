@@ -7,6 +7,9 @@ __pycache__/
 .DS_Store
 *.pem
 
+data/reviews.json
+data/reviews.tmp
+
 _cmsg.txt
 commitmsg.txt
 

@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}{{ meta_title }}{% endblock %}
+
+{% block content %}
+<section class="page-band reviews-page">
+  <header class="section-head">
+    <p class="detail-kicker">Visitor feedback</p>
+    <h1>Live reviews</h1>
+    <p>
+      {% if stats.count %}
+        {{ stats.count }} review{{ '' if stats.count == 1 else 's' }}
+        · average ★ {{ '%.1f'|format(stats.average) }} / 5
+      {% else %}
+        Be the first to leave feedback about 2daymovie.
+      {% endif %}
+    </p>
+  </header>
+
+  {% if notice %}
+  <p class="review-flash is-success" role="status">{{ notice }}</p>
+  {% endif %}
+  {% if error %}
+  <p class="review-flash is-error" role="alert">{{ error }}</p>
+  {% endif %}
+
+  <div class="reviews-layout">
+    <form class="review-form" method="post" action="{{ url_for('reviews_home') }}" novalidate>
+      <h2>Leave a review</h2>
+      <p class="review-form-lede">Share what you think — ratings appear live on this page.</p>
+
+      <label class="hp-field" aria-hidden="true">
+        Website
+        <input type="text" name="website" tabindex="-1" autocomplete="off" />
+      </label>
+
+      <label for="review-name">Name</label>
+      <input id="review-name" name="name" type="text" maxlength="40" required placeholder="Your name" value="{{ form.name }}" />
+
+      <label for="review-rating">Rating</label>
+      <select id="review-rating" name="rating" required>
+        {% for value, label in [(5,'★★★★★ Excellent'),(4,'★★★★☆ Great'),(3,'★★★☆☆ Good'),(2,'★★☆☆☆ Okay'),(1,'★☆☆☆☆ Poor')] %}
+        <option value="{{ value }}" {% if form.rating == value|string or (not form.rating and value == 5) %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+
+      <label for="review-message">Your review</label>
+      <textarea id="review-message" name="message" rows="4" maxlength="500" required placeholder="What did you like about the trailers or site?">{{ form.message }}</textarea>
+
+      <button class="btn btn-primary" type="submit">Post review</button>
+    </form>
+
+    <div class="reviews-feed" data-reviews-feed>
+      <div class="row-head">
+        <h2>Latest from visitors</h2>
+        <span class="muted" data-reviews-live>Live</span>
+      </div>
+      <div class="reviews-list" data-reviews-list>
+        {% for review in reviews %}
+        <article class="review-card" data-review-id="{{ review.id }}">
+          <header class="review-card-head">
+            <strong>{{ review.name }}</strong>
+            <span class="review-stars" aria-label="{{ review.rating }} out of 5">{{ '★' * review.rating }}{{ '☆' * (5 - review.rating) }}</span>
+          </header>
+          <p>{{ review.message }}</p>
+          <time datetime="{{ review.created_at }}">{{ review.created_at.replace('T', ' ').replace('+00:00',' UTC') }}</time>
+        </article>
+        {% else %}
+        <p class="empty-state" data-reviews-empty>No reviews yet. Your feedback will show up here.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(() => {
+  const list = document.querySelector("[data-reviews-list]");
+  if (!list) return;
+
+  const esc = (value) => String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+
+  const stars = (n) => "★".repeat(n) + "☆".repeat(5 - n);
+  const fmt = (iso) => esc(iso).replace("T", " ").replace("+00:00", " UTC");
+
+  const render = (reviews) => {
+    if (!reviews.length) {
+      list.innerHTML = '<p class="empty-state" data-reviews-empty>No reviews yet. Your feedback will show up here.</p>';
+      return;
+    }
+    list.innerHTML = reviews.map((r) => `
+      <article class="review-card" data-review-id="${esc(r.id)}">
+        <header class="review-card-head">
+          <strong>${esc(r.name)}</strong>
+          <span class="review-stars" aria-label="${esc(r.rating)} out of 5">${stars(Number(r.rating) || 0)}</span>
+        </header>
+        <p>${esc(r.message)}</p>
+        <time datetime="${esc(r.created_at)}">${fmt(r.created_at)}</time>
+      </article>
+    `).join("");
+  };
+
+  const refresh = async () => {
+    try {
+      const res = await fetch("{{ url_for('reviews_api') }}", { headers: { Accept: "application/json" } });
+      if (!res.ok) return;
+      const data = await res.json();
+      render(data.reviews || []);
+    } catch (_) {}
+  };
+
+  setInterval(refresh, 20000);
+})();
+</script>
+{% endblock %}

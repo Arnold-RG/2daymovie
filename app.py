@@ -10,7 +10,7 @@ from flask import Flask, Response, abort, g, jsonify, redirect, render_template,
 from prometheus_client import CONTENT_TYPE_LATEST, Counter, Histogram, generate_latest
 
 from data.year_movies import all_years
-from services import library, series, tmdb, upcoming
+from services import library, series, tmdb, upcoming, reviews
 from services.search import search_catalog as unified_search
 
 load_dotenv()
@@ -32,6 +32,7 @@ def create_app() -> Flask:
     app.config["OFFICIAL_URL"] = os.getenv(
         "OFFICIAL_URL", "https://twodaymovie.onrender.com/"
     )
+    app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "2daymovie-dev-secret-change-me")
 
     @app.before_request
     def _start_timer():
@@ -122,6 +123,7 @@ Sitemap: {base}/sitemap.xml
             "/browse",
             "/about",
             "/search",
+            "/reviews",
         ]
         urls.extend(f"/year/{year}" for year in all_years())
         urls.extend(
@@ -153,6 +155,8 @@ Sitemap: {base}/sitemap.xml
         series_spotlight = [s for s in series.all_series_entries() if s.get("id")][:12]
         up = upcoming.upcoming_payload()
         featured = next((m for m in spotlight if m.get("backdrop")), None)
+        latest_reviews = reviews.list_reviews(limit=6)
+        review_stats = reviews.stats()
         return render_template(
             "index.html",
             featured=featured,
@@ -163,6 +167,8 @@ Sitemap: {base}/sitemap.xml
             upcoming_movies=up["movies"][:8],
             upcoming_movies_2027=up["movies_2027"][:8],
             upcoming_series=up["series"][:8],
+            latest_reviews=latest_reviews,
+            review_stats=review_stats,
             meta_title="2daymovie — Official HD Movie & TV Trailers",
             meta_description=(
                 "Discover movies and TV shows on 2daymovie through official HD trailers. "
@@ -180,6 +186,44 @@ Sitemap: {base}/sitemap.xml
                 "by Arnold Rurangwa. Official HD trailers only."
             ),
         )
+
+    @app.route("/reviews", methods=["GET", "POST"])
+    def reviews_home():
+        notice = request.args.get("thanks")
+        error = None
+        form = {"name": "", "rating": "5", "message": ""}
+        if request.method == "POST":
+            form = {
+                "name": request.form.get("name", ""),
+                "rating": request.form.get("rating", "5"),
+                "message": request.form.get("message", ""),
+            }
+            review, error = reviews.add_review(
+                name=form["name"],
+                rating=form["rating"],
+                message=form["message"],
+                ip=(request.headers.get("X-Forwarded-For") or request.remote_addr or "")
+                .split(",")[0]
+                .strip(),
+                honeypot=request.form.get("website", ""),
+            )
+            if review and not error:
+                return redirect(url_for("reviews_home", thanks="1"))
+        return render_template(
+            "reviews.html",
+            reviews=reviews.list_reviews(limit=40),
+            stats=reviews.stats(),
+            form=form,
+            error=error,
+            notice="Thanks — your review is live." if notice else None,
+            meta_title="Live Reviews | 2daymovie",
+            meta_description="Read and leave live visitor reviews for 2daymovie.",
+        )
+
+    @app.get("/api/reviews")
+    def reviews_api():
+        rows = reviews.list_reviews(limit=40)
+        return jsonify({"reviews": rows, "stats": reviews.stats()})
 
     @app.route("/upcoming")
     def upcoming_home():

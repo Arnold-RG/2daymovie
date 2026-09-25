@@ -163,5 +163,28 @@
     </div>
   </section>
   {% endif %}
+
+  <section class="home-block">
+    <div class="row-head">
+      <h2>Live reviews</h2>
+      <a class="text-link" href="{{ url_for('reviews_home') }}">Leave feedback →</a>
+    </div>
+    {% if review_stats and review_stats.count %}
+    <p class="reviews-home-summary">{{ review_stats.count }} review{{ '' if review_stats.count == 1 else 's' }} · average ★ {{ '%.1f'|format(review_stats.average) }}</p>
+    {% endif %}
+    <div class="reviews-home-grid">
+      {% for review in latest_reviews %}
+      <article class="review-card">
+        <header class="review-card-head">
+          <strong>{{ review.name }}</strong>
+          <span class="review-stars" aria-label="{{ review.rating }} out of 5">{{ '★' * review.rating }}{{ '☆' * (5 - review.rating) }}</span>
+        </header>
+        <p>{{ review.message }}</p>
+      </article>
+      {% else %}
+      <p class="empty-state">No visitor reviews yet. <a class="text-link" href="{{ url_for('reviews_home') }}">Be the first</a>.</p>
+      {% endfor %}
+    </div>
+  </section>
 </section>
 {% endblock %}
