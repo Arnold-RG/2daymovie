@@ -4,17 +4,19 @@
 
 {% block content %}
 <section class="page-band reviews-page">
-  <header class="section-head">
-    <p class="detail-kicker">Visitor feedback</p>
+  <header class="section-head reviews-hero">
+    <p class="detail-kicker">2daymovie</p>
     <h1>Live reviews</h1>
-    <p>
-      {% if stats.count %}
-        {{ stats.count }} review{{ '' if stats.count == 1 else 's' }}
-        · average ★ {{ '%.1f'|format(stats.average) }} / 5
-      {% else %}
-        Be the first to leave feedback about 2daymovie.
-      {% endif %}
-    </p>
+    {% if stats.count %}
+    <div class="reviews-home-summary">
+      <p class="reviews-avg">Average <span aria-hidden="true">★</span> {{ '%.1f'|format(stats.average) }} / 5</p>
+      {% set avg_stars = stats.average|round|int %}
+      <p class="review-stars reviews-avg-stars" aria-label="{{ avg_stars }} out of 5 average">{{ '★' * avg_stars }}{{ '☆' * (5 - avg_stars) }}</p>
+      <p class="reviews-count">({{ stats.count }} review{{ '' if stats.count == 1 else 's' }})</p>
+    </div>
+    {% else %}
+    <p>Be the first to leave feedback about 2daymovie.</p>
+    {% endif %}
   </header>
 
   {% if notice %}

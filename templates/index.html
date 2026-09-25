@@ -207,13 +207,18 @@
   </section>
   {% endif %}
 
-  <section class="home-block">
+  <section class="home-block reviews-home">
     <div class="row-head">
       <h2>Live reviews</h2>
       <a class="text-link" href="{{ url_for('reviews_home') }}">Leave feedback →</a>
     </div>
     {% if review_stats and review_stats.count %}
-    <p class="reviews-home-summary">{{ review_stats.count }} review{{ '' if review_stats.count == 1 else 's' }} · average ★ {{ '%.1f'|format(review_stats.average) }}</p>
+    <div class="reviews-home-summary">
+      <p class="reviews-avg">Average <span aria-hidden="true">★</span> {{ '%.1f'|format(review_stats.average) }} / 5</p>
+      {% set avg_stars = review_stats.average|round|int %}
+      <p class="review-stars reviews-avg-stars" aria-label="{{ avg_stars }} out of 5 average">{{ '★' * avg_stars }}{{ '☆' * (5 - avg_stars) }}</p>
+      <p class="reviews-count">({{ review_stats.count }} review{{ '' if review_stats.count == 1 else 's' }})</p>
+    </div>
     {% endif %}
     <div class="reviews-home-grid">
       {% for review in latest_reviews %}
