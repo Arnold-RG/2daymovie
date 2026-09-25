@@ -1,16 +1,23 @@
 # 2daymovie.to
 
-Legal movie discovery platform — browse a large catalog, watch **official full trailers**, and open **licensed streaming guides**. No accounts. We do **not** host or stream full copyrighted films.
+Legal movie discovery — curated **2000–2026** library, **official full trailers**, and **licensed HD streaming guides**. No accounts. We do **not** host copyrighted films.
 
 **Official live site:** https://twodaymovie.onrender.com/
 
 ## Features
 
-- Home rows: trending, popular, now playing, top rated
-- Full catalog browse with pagination and sorting
-- Search and genre browse
-- Movie pages with synopsis, cast, similar titles, official full trailer, and licensed “where to watch”
+- Library timeline for every year from 2000 → 2026
+- Year pages with poster grids and “Watch room”
+- Watch room: official full YouTube trailer + TMDB legal HD stream guide
+- Search / browse / genres via TMDB when `TMDB_API_KEY` is set
 - No login required
+
+## Routes
+
+- `/library` — year timeline
+- `/year/2010` — that year’s curated list
+- `/watch/<id>` — immersive trailer + legal stream CTA
+- `/movie/<id>` — full details
 
 ## Quick start
 
@@ -22,24 +29,16 @@ pip install -r requirements.txt
 python app.py
 ```
 
-Open [http://localhost:5000](http://localhost:5000).
+Rebuild metadata cache (optional):
 
-### Full live catalog (TMDB)
-
-Set `TMDB_API_KEY` in Render Environment (or local `.env`) to unlock the full TMDB catalog with pagination. Free key: https://www.themoviedb.org/settings/api
+```bash
+python -u scripts/resolve_year_catalog.py
+```
 
 ## Deploy
 
-Render auto-deploys from `main`. Live URL: https://twodaymovie.onrender.com/
-
-GitHub Pages mirror: https://arnold-rg.github.io/2daymovie/
-
-## Tests
-
-```bash
-pytest
-```
+Render auto-deploys from `main`: https://twodaymovie.onrender.com/
 
 ## Legal note
 
-Official full trailers come from YouTube via TMDB. “Where to watch” opens TMDB’s legal watch guide for licensed services. Pirate streaming indexes are not supported.
+Trailers are official YouTube embeds via TMDB. “Stream in HD” opens TMDB’s licensed-provider guide. Pirate streaming sites are not supported.

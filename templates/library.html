@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Library 2000–2026 · {{ site_name }}{% endblock %}
+
+{% block content %}
+<section class="library-hero">
+  <div class="library-hero-copy">
+    <p class="detail-kicker">2daymovie library</p>
+    <h1>2000 → 2026</h1>
+    <p>{{ stats.planned }} curated titles across {{ stats.years|length }} years — official full trailers and licensed HD streaming guides.</p>
+    <div class="library-stats">
+      <div><strong>{{ stats.planned }}</strong><span>titles</span></div>
+      <div><strong>{{ stats.resolved }}</strong><span>resolved</span></div>
+      <div><strong>{{ stats.with_trailer }}</strong><span>full trailers</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="year-timeline page-band">
+  <h2>Pick a year</h2>
+  <div class="year-grid">
+    {% for y in years %}
+    <a class="year-card" href="{{ url_for('year_page', year=y.year) }}">
+      <span class="year-card-year">{{ y.year }}</span>
+      <span class="year-card-meta">{{ y.planned }} films</span>
+      <span class="year-card-trail">{{ y.with_trailer }} trailers</span>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

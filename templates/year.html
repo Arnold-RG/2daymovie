@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}{{ year }} · Library · {{ site_name }}{% endblock %}
+
+{% block content %}
+{% set fallback = url_for('static', filename='img/poster-fallback.svg') %}
+<section class="year-hero">
+  <div class="year-hero-inner">
+    <div>
+      <p class="detail-kicker">Curated library</p>
+      <h1>{{ year }}</h1>
+      <p>{{ count }} titles · {{ with_trailer }} official full trailers</p>
+    </div>
+    <div class="year-switcher" aria-label="Jump year">
+      {% for y in years %}
+      <a class="year-pill {% if y == year %}is-active{% endif %}" href="{{ url_for('year_page', year=y) }}">{{ y }}</a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="page-band">
+  <div class="library-poster-grid">
+    {% for movie in movies %}
+    <article class="library-card {% if movie.pending %}is-pending{% endif %}">
+      <a class="library-card-media" href="{% if movie.id %}{{ url_for('watch_page', movie_id=movie.id) }}{% else %}#{% endif %}">
+        <img
+          src="{{ movie.poster or fallback }}"
+          alt="Poster for {{ movie.title }}"
+          loading="lazy"
+          decoding="async"
+          width="240"
+          height="360"
+          onerror="this.onerror=null;this.src='{{ fallback }}';"
+        />
+        {% if movie.trailer_key %}
+        <span class="library-badge">Full trailer</span>
+        {% endif %}
+      </a>
+      <div class="library-card-body">
+        <h3>{{ movie.title }}</h3>
+        <p>{{ movie.year }}{% if movie.vote_average %} · ★ {{ movie.vote_average }}{% endif %}</p>
+        <div class="library-card-actions">
+          {% if movie.id %}
+          <a class="btn btn-primary" href="{{ url_for('watch_page', movie_id=movie.id) }}">Watch room</a>
+          <a class="btn btn-ghost" href="{{ url_for('movie_details', movie_id=movie.id) }}">Details</a>
+          {% else %}
+          <span class="text-link">Syncing metadata…</span>
+          {% endif %}
+        </div>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

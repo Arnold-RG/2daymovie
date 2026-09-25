@@ -34,7 +34,15 @@ def test_search():
     assert b"The Matrix" in response.data
 
 
-def test_genre_page():
+def test_library_ok():
     client = app.test_client()
-    response = client.get("/genre/878")
+    response = client.get("/library")
     assert response.status_code == 200
+    assert b"2000" in response.data
+
+
+def test_year_page_ok():
+    client = app.test_client()
+    response = client.get("/year/2010")
+    assert response.status_code == 200
+    assert b"Inception" in response.data

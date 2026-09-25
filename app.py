@@ -7,7 +7,8 @@ import os
 from dotenv import load_dotenv
 from flask import Flask, abort, render_template, request
 
-from services import tmdb
+from data.year_movies import all_years
+from services import library, tmdb
 
 load_dotenv()
 
@@ -28,26 +29,81 @@ def inject_globals():
         "site_name": "2daymovie.to",
         "live_api": tmdb.using_live_api(),
         "genres": tmdb.get_genres(),
+        "library_years": all_years(),
+        "official_url": "https://twodaymovie.onrender.com/",
     }
 
 
 @app.route("/")
 def home():
+    stats = library.library_stats()
+    years = library.year_index()
+    # spotlight: latest resolved year with movies
+    spotlight_year = years[0]["year"] if years else 2024
+    spotlight = library.movies_for_year(spotlight_year)[:12]
     trending = tmdb.get_trending()
-    popular = tmdb.get_popular()
-    now_playing = tmdb.get_now_playing()
-    top_rated = tmdb.get_top_rated()
-    featured = trending["results"][0] if trending["results"] else None
+    featured = next((m for m in spotlight if m.get("backdrop")), None) or (
+        trending["results"][0] if trending["results"] else None
+    )
     return render_template(
         "index.html",
         featured=featured,
+        stats=stats,
+        year_cards=years,
+        spotlight_year=spotlight_year,
+        spotlight=spotlight,
         rows=[
+            (f"Library spotlight · {spotlight_year}", spotlight),
             ("Trending this week", trending["results"]),
-            ("Popular", popular["results"]),
-            ("Now playing", now_playing["results"]),
-            ("Top rated", top_rated["results"]),
         ],
     )
+
+
+@app.route("/library")
+def library_home():
+    return render_template(
+        "library.html",
+        stats=library.library_stats(),
+        years=library.year_index(),
+    )
+
+
+@app.route("/year/<int:year>")
+def year_page(year: int):
+    if year not in all_years():
+        abort(404)
+    movies = library.movies_for_year(year)
+    return render_template(
+        "year.html",
+        year=year,
+        movies=movies,
+        years=all_years(),
+        count=len(movies),
+        with_trailer=sum(1 for m in movies if m.get("trailer_key")),
+    )
+
+
+@app.route("/watch/<int:movie_id>")
+def watch_page(movie_id: int):
+    """Immersive legal watch room: official full trailer + licensed stream guide."""
+    movie = tmdb.get_movie(movie_id)
+    catalog_hit = None
+    for row in library._load_resolved():
+        if row.get("id") == movie_id:
+            catalog_hit = library._normalize_entry(row)
+            break
+    if movie is None:
+        movie = catalog_hit
+    elif catalog_hit:
+        # Prefer curated trailer key / backdrop when API trailer missing
+        if not movie.get("trailer_key") and catalog_hit.get("trailer_key"):
+            movie["trailer_key"] = catalog_hit["trailer_key"]
+        if not movie.get("year") and catalog_hit.get("year"):
+            movie["year"] = catalog_hit["year"]
+    if movie is None:
+        abort(404)
+    movie["watch_link"] = movie.get("watch_link") or tmdb.legal_watch_url(movie_id)
+    return render_template("watch.html", movie=movie)
 
 
 @app.route("/browse")
@@ -77,12 +133,11 @@ def browse():
 def search():
     query = request.args.get("q", "").strip()
     page = _page()
-    payload = tmdb.search_movies(query, page=page) if query else {
-        "results": [],
-        "page": 1,
-        "total_pages": 1,
-        "total_results": 0,
-    }
+    payload = (
+        tmdb.search_movies(query, page=page)
+        if query
+        else {"results": [], "page": 1, "total_pages": 1, "total_results": 0}
+    )
     return render_template(
         "search.html",
         query=query,
