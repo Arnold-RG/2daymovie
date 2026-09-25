@@ -426,12 +426,12 @@ select {
 .library-brand {
   font-family: var(--font-brand);
   font-weight: 800;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--ink);
-  font-size: clamp(3.1rem, 10vw, 6.4rem);
-  line-height: 0.9;
-  margin-bottom: 1.15rem;
+  font-size: clamp(2.4rem, 7vw, 5.5rem);
+  line-height: 0.95;
+  margin-bottom: 1rem;
 }
 
 .hero-brand .gel,
@@ -453,10 +453,10 @@ select {
 h1.hero-brand {
   font-family: var(--font-brand);
   font-weight: 800;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  margin-bottom: 1.15rem;
-  max-width: none;
+  margin-bottom: 1rem;
+  max-width: 100%;
 }
 
 .hero-lede {
@@ -2037,14 +2037,20 @@ h1.hero-brand {
   }
 
   .hero-brand,
-  .library-brand {
-    font-size: clamp(2.15rem, 9.5vw, 3.25rem);
-    letter-spacing: 0.04em;
-    line-height: 1;
+  .library-brand,
+  h1.hero-brand {
+    font-size: 1.85rem;
+    letter-spacing: 0.035em;
+    line-height: 1.05;
+    margin-bottom: 0.75rem;
     max-width: 100%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+  }
+
+  .hero-brand .gel {
+    display: inline;
   }
 
   .hero h1:not(.hero-brand),
@@ -2095,14 +2101,20 @@ h1.hero-brand {
   }
 
   .category-tile-name {
+    font-family: var(--font-body);
     font-size: 0.95rem;
-    line-height: 1.2;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    line-height: 1.25;
     overflow-wrap: break-word;
     word-break: normal;
   }
 
   .category-chip {
-    font-size: 0.82rem;
+    font-family: var(--font-body);
+    font-size: 0.84rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
     line-height: 1.2;
     padding: 0.5rem 0.45rem;
     overflow: hidden;
@@ -2128,10 +2140,16 @@ h1.hero-brand {
   }
 
   .about-links a,
+  .about-plain,
   .footer-credit,
   .footer-credit a {
     overflow-wrap: break-word;
     word-break: normal;
+  }
+
+  .about-plain {
+    color: var(--ink);
+    font-weight: 600;
   }
 
   .hero-actions,
@@ -2292,9 +2310,11 @@ h1.hero-brand {
     padding-top: 1.25rem;
   }
 
-  .hero-brand {
-    font-size: clamp(1.95rem, 9vw, 2.55rem);
+  .hero-brand,
+  h1.hero-brand {
+    font-size: 1.55rem;
     letter-spacing: 0.03em;
+    line-height: 1.08;
   }
 
   .hero h1:not(.hero-brand),
@@ -2321,6 +2341,16 @@ h1.hero-brand {
 
   .row-head h2 {
     font-size: 1.15rem;
+  }
+
+  .category-tile-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .category-chip {
+    font-size: 0.8rem;
+    font-weight: 600;
   }
 
   .hero-actions,
@@ -2486,9 +2516,9 @@ h1.hero-brand {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 0.75rem;
-  min-height: 5.5rem;
-  padding: 1rem 1.05rem;
+  gap: 0.65rem;
+  min-height: 5.1rem;
+  padding: 0.95rem 1rem;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: rgba(18, 22, 28, 0.75);
@@ -2509,17 +2539,20 @@ h1.hero-brand {
 }
 
 .category-tile-name {
-  font-family: var(--font-brand);
-  font-weight: 800;
-  font-size: 1.05rem;
-  letter-spacing: 0.02em;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.01em;
+  line-height: 1.25;
+  color: var(--ink);
 }
 
 .category-tile-go {
   color: var(--gel);
-  font-size: 0.75rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
@@ -2540,9 +2573,12 @@ h1.hero-brand {
   border-radius: var(--radius-sm);
   background: rgba(255, 255, 255, 0.03);
   color: var(--ink);
-  font-weight: 700;
-  font-size: 0.88rem;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.01em;
   text-align: center;
+  line-height: 1.2;
 }
 
 .category-chip:hover,

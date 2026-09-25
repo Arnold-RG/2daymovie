@@ -89,6 +89,7 @@ def test_about_ok():
     response = client.get("/about")
     assert response.status_code == 200
     assert b"Arnold Rurangwa" in response.data
+    assert b"GitHub" not in response.data
 
 
 def test_robots_and_sitemap():
