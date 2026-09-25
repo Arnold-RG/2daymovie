@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Series 2000–2026 · {{ site_name }}{% endblock %}
+
+{% block content %}
+{% set fallback = url_for('static', filename='img/poster-fallback.svg') %}
+<section class="library-hero series-hero">
+  <div class="library-hero-copy">
+    <p class="library-brand" aria-label="2daymovie"><span class="gel">2DAY</span>SERIES</p>
+    <h1>TV series</h1>
+    <p class="library-lede">{{ stats.planned }} standout shows from 2000–2026 — official trailers and licensed streaming guides.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#series-archive">Browse series</a>
+      <a class="btn btn-ghost" href="{{ url_for('library_home') }}">Movie library</a>
+    </div>
+  </div>
+</section>
+
+<section class="library-stats-band" aria-label="Series statistics">
+  <div class="library-stats">
+    <div><strong>{{ stats.planned }}</strong><span>series</span></div>
+    <div><strong>{{ stats.resolved }}</strong><span>resolved</span></div>
+    <div><strong>{{ stats.with_trailer }}</strong><span>trailers</span></div>
+  </div>
+</section>
+
+<section class="page-band year-wall" id="series-archive">
+  {% for block in decades %}
+  <div class="decade-block series-decade">
+    <h2 class="decade-label">{{ block.label }}</h2>
+    <div class="library-poster-grid">
+      {% for show in block.shows %}
+      <article class="library-card {% if show.pending %}is-pending{% endif %}">
+        <a
+          class="library-card-media"
+          href="{% if show.id %}{{ url_for('series_watch', tv_id=show.id) }}{% else %}#{% endif %}"
+          {% if not show.id %}aria-disabled="true"{% endif %}
+        >
+          <img
+            src="{{ show.poster or fallback }}"
+            alt="Poster for {{ show.title }}"
+            loading="lazy"
+            decoding="async"
+            width="240"
+            height="360"
+            onerror="this.onerror=null;this.src='{{ fallback }}';"
+          />
+          <span class="poster-scrim" aria-hidden="true"></span>
+          {% if show.id %}
+          <span class="library-play" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+          </span>
+          {% endif %}
+          {% if show.trailer_key %}
+          <span class="library-badge">Trailer</span>
+          {% endif %}
+        </a>
+        <div class="library-card-body">
+          <h3>
+            {% if show.id %}
+            <a href="{{ url_for('series_watch', tv_id=show.id) }}">{{ show.title }}</a>
+            {% else %}
+            {{ show.title }}
+            {% endif %}
+          </h3>
+          <p>{{ show.years }}{% if show.pending %} · Syncing…{% endif %}</p>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+  {% endfor %}
+</section>
+{% endblock %}

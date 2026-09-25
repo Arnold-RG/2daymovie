@@ -69,6 +69,14 @@ def test_metrics():
     assert b"twodaymovie_http_requests_total" in response.data
 
 
+def test_series_ok():
+    client = app.test_client()
+    response = client.get("/series")
+    assert response.status_code == 200
+    assert b"Series" in response.data
+    assert b"The Wire" in response.data or b"Breaking Bad" in response.data
+
+
 def test_security_headers():
     client = app.test_client()
     response = client.get("/")

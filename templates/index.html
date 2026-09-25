@@ -10,10 +10,9 @@
     <p class="hero-lede">Official full trailers and licensed streaming guides for a curated 2000–2026 library — free to browse, no piracy.</p>
     <div class="hero-actions">
       <a class="btn btn-primary" href="{{ url_for('library_home') }}">Enter the library</a>
+      <a class="btn btn-ghost" href="{{ url_for('series_home') }}">Browse series</a>
       {% if featured and featured.id %}
       <a class="btn btn-ghost" href="{{ url_for('watch_page', movie_id=featured.id) }}">Open watch room</a>
-      {% else %}
-      <a class="btn btn-ghost" href="{{ url_for('year_page', year=spotlight_year or 2024) }}">Browse {{ spotlight_year or 2024 }}</a>
       {% endif %}
     </div>
   </div>
@@ -38,7 +37,7 @@
     </div>
     <div class="poster-grid home-poster-grid">
       {% for movie in movies if movie.id %}
-      <a class="poster-card" href="{{ url_for('watch_page', movie_id=movie.id) }}">
+      <a class="poster-card" href="{% if movie.media_type == 'tv' %}{{ url_for('series_watch', tv_id=movie.id) }}{% else %}{{ url_for('watch_page', movie_id=movie.id) }}{% endif %}">
         <span class="poster-frame">
           <img
             class="poster-img"

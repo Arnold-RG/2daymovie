@@ -8,6 +8,7 @@ Legal movie discovery — curated **2000–2026** library, **official full trail
 
 - Cinema-grade UI: full-bleed heroes, year archive, immersive Watch rooms
 - Library timeline for every year from 2000 → 2026
+- Curated **TV series** archive (`/series`) with decade shelves and watch rooms
 - Watch room: official full YouTube trailer + TMDB legal HD stream guide
 - Search / browse / genres via TMDB when `TMDB_API_KEY` is set
 - Production ops: Docker, Compose, Nginx, Kubernetes, Prometheus metrics, GitHub Actions CI
@@ -44,6 +45,8 @@ Full runbook: [DEVOPS.md](./DEVOPS.md)
 | --- | --- |
 | `/` | Home / spotlight |
 | `/library` | Year timeline |
+| `/series` | TV series archive |
+| `/series/watch/<id>` | Series trailer + legal guide |
 | `/year/2010` | Curated year shelf |
 | `/watch/<id>` | Trailer + legal HD guide |
 | `/movie/<id>` | Details |

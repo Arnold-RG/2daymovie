@@ -10,7 +10,7 @@ from flask import Flask, Response, abort, g, jsonify, render_template, request
 from prometheus_client import CONTENT_TYPE_LATEST, Counter, Histogram, generate_latest
 
 from data.year_movies import all_years
-from services import library, tmdb
+from services import library, series, tmdb
 
 load_dotenv()
 
@@ -95,10 +95,16 @@ def create_app() -> Flask:
         years = library.year_index()
         spotlight_year = years[0]["year"] if years else 2024
         spotlight = library.movies_for_year(spotlight_year)[:12]
+        series_spotlight = [s for s in series.all_series_entries() if s.get("id")][:12]
         trending = tmdb.get_trending()
         featured = next((m for m in spotlight if m.get("backdrop")), None) or (
             trending["results"][0] if trending["results"] else None
         )
+        rows = [
+            (f"Library spotlight · {spotlight_year}", spotlight),
+            ("Standout series", series_spotlight),
+            ("Trending this week", trending["results"]),
+        ]
         return render_template(
             "index.html",
             featured=featured,
@@ -106,10 +112,7 @@ def create_app() -> Flask:
             year_cards=years,
             spotlight_year=spotlight_year,
             spotlight=spotlight,
-            rows=[
-                (f"Library spotlight · {spotlight_year}", spotlight),
-                ("Trending this week", trending["results"]),
-            ],
+            rows=rows,
         )
 
     @app.route("/library")
@@ -119,6 +122,21 @@ def create_app() -> Flask:
             stats=library.library_stats(),
             years=library.year_index(),
         )
+
+    @app.route("/series")
+    def series_home():
+        return render_template(
+            "series.html",
+            stats=series.series_stats(),
+            decades=series.series_by_decade(),
+        )
+
+    @app.route("/series/watch/<int:tv_id>")
+    def series_watch(tv_id: int):
+        show = series.get_series(tv_id)
+        if show is None:
+            abort(404)
+        return render_template("series_watch.html", show=show)
 
     @app.route("/year/<int:year>")
     def year_page(year: int):
