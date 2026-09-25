@@ -11,20 +11,13 @@
     <div class="watch-stage">
       <p class="watch-stage-label">Projection · Official HD trailer{% if trailers|length > 1 %}s ({{ trailers|length }}){% endif %}</p>
       {% if trailers %}
-      <div class="trailer-stack">
+      <div class="trailer-stack" data-embed-stack>
         {% for key in trailers %}
-        <div class="watch-player">
-          <iframe
-            src="https://www.youtube-nocookie.com/embed/{{ key }}?rel=0&modestbranding=1&playsinline=1"
-            title="Official HD trailer {{ loop.index }} — {{ movie.title }}"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen
-            loading="{% if loop.first %}eager{% else %}lazy{% endif %}"
-            referrerpolicy="strict-origin-when-cross-origin"
-          ></iframe>
+        <div class="watch-player" data-embed-slot data-yt-key="{{ key }}">
+          <div class="watch-yt-host" id="watch-yt-{{ loop.index0 }}"></div>
         </div>
         {% if trailers|length > 1 %}
-        <p class="watch-note">Trailer {{ loop.index }} of {{ trailers|length }}</p>
+        <p class="watch-note" data-embed-label>Trailer {{ loop.index }} of {{ trailers|length }}</p>
         {% endif %}
         {% endfor %}
       </div>

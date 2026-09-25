@@ -4,7 +4,28 @@
 
 {% block content %}
 {% set fallback = url_for('static', filename='img/poster-fallback.svg') %}
-<section class="hero {% if featured and featured.backdrop %}has-backdrop{% endif %}" {% if featured and featured.backdrop %}style="--hero-image: url('{{ featured.backdrop }}')"{% endif %}>
+{% set slides = hero_slides or [] %}
+<section
+  class="hero {% if slides %}has-slides{% elif featured and featured.backdrop %}has-backdrop{% endif %}"
+  {% if not slides and featured and featured.backdrop %}style="--hero-image: url('{{ featured.backdrop }}')"{% endif %}
+  {% if slides %}data-hero-slider{% endif %}
+>
+  {% if slides %}
+  <div class="hero-slides" aria-hidden="true">
+    {% for slide in slides %}
+    <div
+      class="hero-slide {% if loop.first %}is-active{% endif %}"
+      data-trailer-key="{{ slide.trailer_key }}"
+      data-title="{{ slide.title }}"
+      data-year="{{ slide.year or '' }}"
+      data-href="{{ slide.href }}"
+      style="--hero-image: url('{{ slide.backdrop }}')"
+    >
+      <div class="hero-slide-media" data-yt-mount></div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
   <div class="hero-veil" aria-hidden="true"></div>
   <div class="hero-copy">
     <h1 class="hero-brand" aria-label="2daymovie"><span class="gel">2DAY</span>MOVIE</h1>
@@ -14,6 +35,28 @@
       <a class="btn btn-ghost" href="{{ url_for('upcoming_home') }}">Upcoming</a>
       <a class="btn btn-ghost" href="{{ url_for('movies_home') }}">Movies</a>
     </div>
+    {% if slides %}
+    <div class="hero-now">
+      <button type="button" class="hero-sound-btn" data-hero-sound aria-pressed="false">
+        Turn sound on
+      </button>
+      <p class="hero-now-label">
+        Now playing
+        <a class="hero-now-title" data-hero-title href="{{ slides[0].href }}">{{ slides[0].title }}{% if slides[0].year %} · {{ slides[0].year }}{% endif %}</a>
+      </p>
+      <div class="hero-dots" role="tablist" aria-label="Featured trailers">
+        {% for slide in slides %}
+        <button
+          type="button"
+          class="hero-dot {% if loop.first %}is-active{% endif %}"
+          data-hero-dot="{{ loop.index0 }}"
+          aria-label="Play {{ slide.title }}"
+          {% if loop.first %}aria-current="true"{% endif %}
+        ></button>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
   </div>
 </section>
 

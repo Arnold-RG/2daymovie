@@ -9,6 +9,7 @@ __pycache__/
 
 data/reviews.json
 data/reviews.tmp
+data/_embed_cache.json
 
 _cmsg.txt
 commitmsg.txt

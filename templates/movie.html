@@ -105,17 +105,10 @@
   <section id="trailer" class="trailer-block" aria-labelledby="trailer-heading">
     <h2 id="trailer-heading">Official HD trailer{% if trailers|length > 1 %}s{% endif %}</h2>
     <p class="providers-note">Official trailers play on this page.</p>
-    <div class="trailer-stack">
+    <div class="trailer-stack" data-embed-stack>
       {% for key in trailers %}
-      <div class="trailer-frame">
-        <iframe
-          src="https://www.youtube-nocookie.com/embed/{{ key }}?rel=0&modestbranding=1&playsinline=1"
-          title="Official HD trailer {{ loop.index }} — {{ movie.title }}"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowfullscreen
-          loading="{% if loop.first %}eager{% else %}lazy{% endif %}"
-          referrerpolicy="strict-origin-when-cross-origin"
-        ></iframe>
+      <div class="trailer-frame" data-embed-slot data-yt-key="{{ key }}">
+        <div class="watch-yt-host" id="detail-yt-{{ loop.index0 }}"></div>
       </div>
       {% endfor %}
     </div>

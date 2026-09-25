@@ -8,6 +8,7 @@ def test_home_ok():
     assert response.status_code == 200
     assert b"2daymovie" in response.data
     assert b"Upcoming" in response.data
+    assert b"data-hero-slider" in response.data or b"hero" in response.data
 
 
 def test_browse_ok():

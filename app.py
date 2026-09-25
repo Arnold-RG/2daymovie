@@ -27,6 +27,35 @@ LATENCY = Histogram(
 )
 
 
+def _hero_slides(limit: int = 8) -> list[dict]:
+    """Curated trailer-ready movies for the home hero slideshow."""
+    slides: list[dict] = []
+    seen: set[int] = set()
+    years = library.year_index()
+    for entry in years[:6]:
+        for movie in library.movies_for_year(entry["year"]):
+            mid = movie.get("id")
+            key = movie.get("trailer_key")
+            backdrop = movie.get("backdrop")
+            if not mid or mid in seen or not key or not backdrop:
+                continue
+            seen.add(mid)
+            slides.append(
+                {
+                    "id": mid,
+                    "title": movie.get("title") or "Trailer",
+                    "year": movie.get("year"),
+                    "trailer_key": key,
+                    "backdrop": backdrop,
+                    "poster": movie.get("poster"),
+                    "href": f"/watch/{mid}",
+                }
+            )
+            if len(slides) >= limit:
+                return slides
+    return slides
+
+
 def create_app() -> Flask:
     app = Flask(__name__)
     app.config["OFFICIAL_URL"] = os.getenv(
@@ -155,11 +184,13 @@ Sitemap: {base}/sitemap.xml
         series_spotlight = [s for s in series.all_series_entries() if s.get("id")][:12]
         up = upcoming.upcoming_payload()
         featured = next((m for m in spotlight if m.get("backdrop")), None)
+        hero_slides = _hero_slides(limit=8)
         latest_reviews = reviews.list_reviews(limit=6)
         review_stats = reviews.stats()
         return render_template(
             "index.html",
-            featured=featured,
+            featured=featured or (hero_slides[0] if hero_slides else None),
+            hero_slides=hero_slides,
             stats=stats,
             spotlight_year=spotlight_year,
             spotlight=spotlight,
