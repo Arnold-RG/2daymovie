@@ -269,14 +269,22 @@ def search_movies(query: str, page: int = 1) -> dict[str, Any]:
 
 
 def _pick_trailer(videos: list[dict[str, Any]]) -> str | None:
-    """Prefer a full official YouTube Trailer (not teaser/clip)."""
-    trailers = [
-        v
-        for v in videos
-        if v.get("site") == "YouTube" and v.get("type") == "Trailer" and v.get("key")
-    ]
-    if not trailers:
-        return None
+    keys = _all_trailer_keys(videos)
+    return keys[0] if keys else None
+
+
+def _all_trailer_keys(videos: list[dict[str, Any]]) -> list[str]:
+    """All official YouTube trailers (full trailers preferred, then teasers)."""
+    preferred = []
+    secondary = []
+    for v in videos:
+        if v.get("site") != "YouTube" or not v.get("key"):
+            continue
+        vtype = (v.get("type") or "").lower()
+        if vtype == "trailer":
+            preferred.append(v)
+        elif vtype in {"teaser", "clip"}:
+            secondary.append(v)
 
     def score(v: dict[str, Any]) -> tuple[int, int, int]:
         name = (v.get("name") or "").lower()
@@ -286,9 +294,17 @@ def _pick_trailer(videos: list[dict[str, Any]]) -> str | None:
             1 if "trailer" in name else 0,
         )
 
-    trailers.sort(key=score, reverse=True)
-    return trailers[0]["key"]
-
+    preferred.sort(key=score, reverse=True)
+    secondary.sort(key=score, reverse=True)
+    keys: list[str] = []
+    seen: set[str] = set()
+    for v in preferred + secondary:
+        key = v.get("key")
+        if not key or key in seen:
+            continue
+        seen.add(key)
+        keys.append(key)
+    return keys[:12]
 
 def legal_watch_url(movie_id: int, title: str | None = None) -> str:
     """Legal where-to-watch page (TMDB). Never pirate indexes."""
@@ -381,6 +397,7 @@ def get_movie(movie_id: int) -> dict[str, Any] | None:
         "backdrop_srcset": backdrop_srcset(detail.get("backdrop_path")),
         "fallback_poster": PLACEHOLDER_POSTER,
         "trailer_key": _pick_trailer(videos),
+        "trailer_keys": _all_trailer_keys(videos),
         "providers": providers,
         "watch_link": legal_watch_url(detail["id"], detail.get("title")),
         "tagline": detail.get("tagline") or "",

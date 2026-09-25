@@ -4,23 +4,31 @@
 
 {% block content %}
 {% set fallback = url_for('static', filename='img/poster-fallback.svg') %}
+{% set trailers = show.trailer_keys if show.trailer_keys else ([show.trailer_key] if show.trailer_key else []) %}
 <section class="watch-room {% if show.backdrop %}has-backdrop{% endif %}" {% if show.backdrop %}style="--watch-image: url('{{ show.backdrop }}')"{% endif %}>
   <div class="watch-veil" aria-hidden="true"></div>
   <div class="watch-layout">
     <div class="watch-stage">
-      <p class="watch-stage-label">Series · Official HD trailer</p>
-      {% if show.trailer_key %}
-      <div class="watch-player">
-        <iframe
-          src="https://www.youtube-nocookie.com/embed/{{ show.trailer_key }}?rel=0&modestbranding=1&hd=1"
-          title="Official HD trailer — {{ show.title }}"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowfullscreen
-          loading="lazy"
-          referrerpolicy="strict-origin-when-cross-origin"
-        ></iframe>
+      <p class="watch-stage-label">Series · Official HD trailer{% if trailers|length > 1 %}s ({{ trailers|length }}){% endif %}</p>
+      {% if trailers %}
+      <div class="trailer-stack">
+        {% for key in trailers %}
+        <div class="watch-player">
+          <iframe
+            src="https://www.youtube-nocookie.com/embed/{{ key }}?rel=0&modestbranding=1&playsinline=1"
+            title="Official HD trailer {{ loop.index }} — {{ show.title }}"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+            loading="{% if loop.first %}eager{% else %}lazy{% endif %}"
+            referrerpolicy="strict-origin-when-cross-origin"
+          ></iframe>
+        </div>
+        {% if trailers|length > 1 %}
+        <p class="watch-note">Trailer {{ loop.index }} of {{ trailers|length }}</p>
+        {% endif %}
+        {% endfor %}
       </div>
-      <p class="watch-note">Official HD trailer only. We do not host or stream episodes.</p>
+      <p class="watch-note">Official HD trailers play on this page. We do not host or stream episodes.</p>
       {% else %}
       <div class="watch-empty">
         <img src="{{ show.poster or fallback }}" alt="" width="280" height="420" onerror="this.onerror=null;this.src='{{ fallback }}';" />
@@ -35,6 +43,7 @@
       <p class="detail-meta">
         <span>{{ show.years }}</span>
         {% if show.vote_average %}<span>★ {{ show.vote_average }}</span>{% endif %}
+        {% if trailers|length > 1 %}<span>{{ trailers|length }} trailers</span>{% endif %}
       </p>
       {% if show.overview %}
       <p class="overview">{{ show.overview }}</p>

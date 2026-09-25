@@ -100,19 +100,24 @@
   </section>
   {% endif %}
 
-  {% if movie.trailer_key %}
+  {% set trailers = movie.trailer_keys if movie.trailer_keys else ([movie.trailer_key] if movie.trailer_key else []) %}
+  {% if trailers %}
   <section id="trailer" class="trailer-block" aria-labelledby="trailer-heading">
-    <h2 id="trailer-heading">Official HD trailer</h2>
-    <p class="providers-note">Official YouTube trailer only — teasers and clips are filtered out.</p>
-    <div class="trailer-frame">
-      <iframe
-        src="https://www.youtube-nocookie.com/embed/{{ movie.trailer_key }}"
-        title="Trailer for {{ movie.title }}"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowfullscreen
-        loading="lazy"
-        referrerpolicy="strict-origin-when-cross-origin"
-      ></iframe>
+    <h2 id="trailer-heading">Official HD trailer{% if trailers|length > 1 %}s{% endif %}</h2>
+    <p class="providers-note">Official trailers play on this page.</p>
+    <div class="trailer-stack">
+      {% for key in trailers %}
+      <div class="trailer-frame">
+        <iframe
+          src="https://www.youtube-nocookie.com/embed/{{ key }}?rel=0&modestbranding=1&playsinline=1"
+          title="Official HD trailer {{ loop.index }} — {{ movie.title }}"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+          loading="{% if loop.first %}eager{% else %}lazy{% endif %}"
+          referrerpolicy="strict-origin-when-cross-origin"
+        ></iframe>
+      </div>
+      {% endfor %}
     </div>
   </section>
   {% endif %}

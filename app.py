@@ -392,9 +392,17 @@ Sitemap: {base}/sitemap.xml
             abort(404)
         detail = tmdb.get_movie(movie_id)
         if detail:
+            catalog_keys = list(movie.get("trailer_keys") or [])
+            detail_keys = list(detail.get("trailer_keys") or [])
             movie = {**detail, **movie}
-            if not movie.get("trailer_key") and detail.get("trailer_key"):
-                movie["trailer_key"] = detail["trailer_key"]
+            merged = []
+            seen = set()
+            for key in catalog_keys + detail_keys + [movie.get("trailer_key"), detail.get("trailer_key")]:
+                if key and key not in seen:
+                    seen.add(key)
+                    merged.append(key)
+            movie["trailer_keys"] = merged
+            movie["trailer_key"] = merged[0] if merged else None
         if not movie.get("trailer_key"):
             abort(404)
         year = movie.get("year") or ""

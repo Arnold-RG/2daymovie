@@ -27,22 +27,30 @@ def _valid_trailer(key: str | None) -> bool:
     return True
 
 
+def _trailer_keys(row: dict[str, Any]) -> list[str]:
+    keys: list[str] = []
+    seen: set[str] = set()
+    for key in list(row.get("trailer_keys") or []) + [row.get("trailer_key")]:
+        if not _valid_trailer(key) or key in seen:
+            continue
+        seen.add(key)
+        keys.append(key)
+    return keys
+
+
 def _load_resolved() -> list[dict[str, Any]]:
     if not CATALOG_PATH.exists():
         return []
     try:
         data = json.loads(CATALOG_PATH.read_text(encoding="utf-8"))
-        return [
-            row
-            for row in data
-            if row.get("id") and _valid_trailer(row.get("trailer_key"))
-        ]
+        return [row for row in data if row.get("id") and _trailer_keys(row)]
     except Exception:
         return []
 
 
 def _normalize_entry(row: dict[str, Any]) -> dict[str, Any]:
     mid = row["id"]
+    keys = _trailer_keys(row)
     return {
         "id": mid,
         "title": row.get("title") or row.get("query") or "Untitled",
@@ -54,7 +62,8 @@ def _normalize_entry(row: dict[str, Any]) -> dict[str, Any]:
         "backdrop": backdrop_url(row.get("backdrop_path"))
         or poster_url(row.get("poster_path"))
         or PLACEHOLDER_POSTER,
-        "trailer_key": row.get("trailer_key"),
+        "trailer_key": keys[0] if keys else None,
+        "trailer_keys": keys,
         "watch_link": row.get("watch_link") or legal_watch_url(mid),
         "query": row.get("query"),
         "genre_ids": list(row.get("genre_ids") or []),

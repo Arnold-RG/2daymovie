@@ -1786,6 +1786,12 @@ h1.hero-brand {
     0 48px 120px rgba(0, 0, 0, 0.7);
 }
 
+.trailer-stack {
+  display: grid;
+  gap: 1rem;
+  width: 100%;
+}
+
 .watch-player::before {
   content: "";
   position: absolute;
