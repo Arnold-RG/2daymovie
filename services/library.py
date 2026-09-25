@@ -11,7 +11,6 @@ from data.year_movies import YEAR_MOVIES, all_years, titles_for_year, total_titl
 from services.tmdb import (
     PLACEHOLDER_POSTER,
     backdrop_url,
-    legal_watch_url,
     poster_url,
 )
 
@@ -64,7 +63,7 @@ def _normalize_entry(row: dict[str, Any]) -> dict[str, Any]:
         or PLACEHOLDER_POSTER,
         "trailer_key": keys[0] if keys else None,
         "trailer_keys": keys,
-        "watch_link": row.get("watch_link") or legal_watch_url(mid),
+        "watch_link": None,
         "query": row.get("query"),
         "genre_ids": list(row.get("genre_ids") or []),
         "media_type": "movie",

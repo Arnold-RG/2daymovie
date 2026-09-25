@@ -17,8 +17,6 @@ Official **HD movie and TV trailers** only — curated library, on-site embeds, 
 
 We do **not** host copyrighted films or provide full-movie streaming.
 
-## Quick start
-
 ```bash
 cp .env.example .env
 python -m venv .venv
@@ -53,11 +51,12 @@ Full runbook: [DEVOPS.md](./DEVOPS.md)
 | `/movies` | Movies by year |
 | `/series` | TV series archive |
 | `/upcoming` | 2026 upcoming movies & series |
-| `/series/watch/<id>` | Series trailer + legal guide |
+| `/series/watch/<id>` | Series trailer room |
 | `/year/2010` | Curated year shelf |
-| `/watch/<id>` | On-site trailer + legal HD guide |
+| `/watch/<id>` | On-site trailer room |
 | `/movie/<id>` | Details |
 | `/search` | Catalog search |
+| `/reviews` | Live visitor reviews |
 | `/about` | Creator / project identity |
 | `/robots.txt` | Crawler rules |
 | `/sitemap.xml` | URL sitemap |
@@ -84,4 +83,4 @@ Buying `2daymovie.com` (or `.net`) and pointing it at Render is recommended for 
 
 ## Legal note
 
-Trailers are official YouTube embeds shown on this site (youtube-nocookie). “Stream in HD” opens TMDB’s licensed-provider guide. Pirate streaming sites are not supported. Titles without an on-site trailer are removed from browse/search catalogs.
+Trailers are official embeds shown on this site. We do not host or stream full films. Titles without an on-site trailer are removed from browse/search catalogs.

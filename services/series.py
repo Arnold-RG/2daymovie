@@ -14,10 +14,6 @@ CATALOG_PATH = Path(__file__).resolve().parents[1] / "data" / "series_catalog.js
 _YT = re.compile(r"^[A-Za-z0-9_-]{11}$")
 
 
-def legal_watch_tv_url(tv_id: int) -> str:
-    return f"https://www.themoviedb.org/tv/{tv_id}/watch"
-
-
 def _valid_trailer(key: str | None) -> bool:
     if not key or not _YT.fullmatch(key):
         return False
@@ -72,7 +68,7 @@ def _normalize_entry(row: dict[str, Any], planned: dict[str, Any] | None = None)
         or PLACEHOLDER_POSTER,
         "trailer_key": keys[0] if keys else None,
         "trailer_keys": keys,
-        "watch_link": row.get("watch_link") or legal_watch_tv_url(mid),
+        "watch_link": None,
         "query": row.get("query"),
         "media_type": "tv",
     }

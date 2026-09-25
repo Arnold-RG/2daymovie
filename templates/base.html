@@ -22,7 +22,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', v='20260925e') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', v='20260925f') }}" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -90,11 +90,7 @@
     <p class="footer-credit">
       Created by <strong>Arnold Rurangwa</strong>
       · <a href="{{ url_for('about') }}">About</a>
-      · Official site:
-      <a href="{{ official_url }}" rel="noopener">{{ official_url.replace('https://','').rstrip('/') }}</a>
-      · Movie data from
-      <a href="https://www.themoviedb.org/" target="_blank" rel="noopener">TMDB</a>.
-      This product uses the TMDB API but is not endorsed or certified by TMDB.
+      · <a href="{{ url_for('reviews_home') }}">Reviews</a>
     </p>
   </footer>
 
