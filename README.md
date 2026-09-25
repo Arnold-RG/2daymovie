@@ -1,24 +1,21 @@
 # 2daymovie
 
-Legal movie discovery — curated **2000–2026** library, **official full trailers embedded on-site**, and **licensed HD streaming guides**. No accounts. We do **not** host copyrighted films.
+Official **HD movie and TV trailers** only — curated library, on-site embeds, no full-film streaming.
 
-**2daymovie** is a movie discovery web application created and developed by **Arnold Rurangwa** (Arnold-RG).
+**2daymovie** is created and developed by **Arnold Rurangwa**.
 
 - **Website:** https://twodaymovie.onrender.com/
-- **GitHub:** https://github.com/Arnold-RG/2daymovie
 - **Creator:** Arnold Rurangwa
-
-Once a custom domain is connected, set `OFFICIAL_URL` to `https://2daymovie.com/` (or `.net`) and update this README.
 
 ## Features
 
-- Cinema-grade UI: full-bleed heroes, year shelves, immersive Watch rooms
-- Categories with honest sort (Top rated / Newest / Oldest / Title)
-- Curated **TV series** archive with on-site trailers
-- **Upcoming** Oct–Dec 2026 movies and Fall 2026 series
-- Search across movies and series (trailer-ready titles only)
-- SEO: `/robots.txt`, `/sitemap.xml`, Open Graph, Schema.org, `/about`
-- Production ops: Docker, Compose, Nginx, Kubernetes, Prometheus, GitHub Actions CI
+- Official HD trailers embedded on-site (YouTube nocookie)
+- Categories, year shelves, series archive, upcoming titles
+- Search across trailer-ready movies and series
+- SEO: robots, sitemap, About, Open Graph
+- Production ops: Docker, Compose, Nginx, Kubernetes, Prometheus, CI
+
+We do **not** host copyrighted films or provide full-movie streaming.
 
 ## Quick start
 

@@ -46,46 +46,10 @@
 
       <div class="detail-actions">
         {% if movie.trailer_key %}
-        <a class="btn btn-primary" href="{{ url_for('watch_page', movie_id=movie.id) }}">Open watch room</a>
-        {% endif %}
-        {% if movie.watch_link %}
-        <a class="btn btn-ghost" href="{{ movie.watch_link }}" target="_blank" rel="noopener">Stream HD legally</a>
+        <a class="btn btn-primary" href="{{ url_for('watch_page', movie_id=movie.id) }}">Watch official trailer</a>
         {% endif %}
         <a class="text-link" href="{{ url_for('home') }}">← Back to browse</a>
       </div>
-
-      {% if movie.providers %}
-      <section class="providers" aria-labelledby="providers-heading">
-        <h2 id="providers-heading">Licensed streaming options</h2>
-        <p class="providers-note">Availability varies by region. Links open TMDB’s legal watch guide (Netflix, Prime, Disney+, Max, and more).</p>
-        <ul class="provider-list">
-          {% for p in movie.providers %}
-          <li>
-            {% if p.logo %}
-            <img
-              src="{{ p.logo }}"
-              alt=""
-              width="40"
-              height="40"
-              loading="lazy"
-              decoding="async"
-              onerror="this.style.display='none'"
-            />
-            {% endif %}
-            <div>
-              <strong>{{ p.provider_name }}</strong>
-              <span>{{ p.type }}</span>
-            </div>
-          </li>
-          {% endfor %}
-        </ul>
-      </section>
-      {% else %}
-      <section class="providers">
-        <h2>Licensed streaming options</h2>
-        <p class="providers-note">Use “Where to watch” for TMDB’s legal streaming guide for this title.</p>
-      </section>
-      {% endif %}
     </div>
   </div>
 
@@ -138,8 +102,8 @@
 
   {% if movie.trailer_key %}
   <section id="trailer" class="trailer-block" aria-labelledby="trailer-heading">
-    <h2 id="trailer-heading">Official full trailer</h2>
-    <p class="providers-note">YouTube official trailer only — teasers and clips are filtered out.</p>
+    <h2 id="trailer-heading">Official HD trailer</h2>
+    <p class="providers-note">Official YouTube trailer only — teasers and clips are filtered out.</p>
     <div class="trailer-frame">
       <iframe
         src="https://www.youtube-nocookie.com/embed/{{ movie.trailer_key }}"

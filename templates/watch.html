@@ -8,29 +8,29 @@
   <div class="watch-veil" aria-hidden="true"></div>
   <div class="watch-layout">
     <div class="watch-stage">
-      <p class="watch-stage-label">Projection · Official trailer</p>
+      <p class="watch-stage-label">Projection · Official HD trailer</p>
       {% if movie.trailer_key %}
       <div class="watch-player">
         <iframe
-          src="https://www.youtube-nocookie.com/embed/{{ movie.trailer_key }}?rel=0&modestbranding=1"
-          title="Official full trailer — {{ movie.title }}"
+          src="https://www.youtube-nocookie.com/embed/{{ movie.trailer_key }}?rel=0&modestbranding=1&hd=1"
+          title="Official HD trailer — {{ movie.title }}"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowfullscreen
           loading="lazy"
           referrerpolicy="strict-origin-when-cross-origin"
         ></iframe>
       </div>
-      <p class="watch-note">Official full trailer (YouTube). Teasers and clips are filtered out.</p>
+      <p class="watch-note">Official HD trailer only. We do not host or stream full films.</p>
       {% else %}
       <div class="watch-empty">
         <img src="{{ movie.poster or fallback }}" alt="" width="280" height="420" onerror="this.onerror=null;this.src='{{ fallback }}';" />
-        <p>Full trailer not listed yet for this title.</p>
+        <p>Official trailer not listed yet for this title.</p>
       </div>
       {% endif %}
     </div>
 
     <aside class="watch-panel">
-      <p class="detail-kicker">Watch room · HD legal guide</p>
+      <p class="detail-kicker">Trailer room</p>
       <h1>{{ movie.title }}</h1>
       <p class="detail-meta">
         <span>{{ movie.year }}</span>
@@ -42,31 +42,11 @@
       {% endif %}
 
       <div class="watch-cta">
-        {% if movie.watch_link %}
-        <a class="btn btn-primary btn-xl" href="{{ movie.watch_link }}" target="_blank" rel="noopener">
-          Stream in HD on licensed platforms
-        </a>
-        <p class="watch-note">Opens TMDB’s legal watch guide (Netflix, Prime, Disney+, Max, rent/buy, and more). Pirate stream sites are not supported.</p>
-        {% endif %}
         <a class="btn btn-ghost" href="{{ url_for('movie_details', movie_id=movie.id) }}">Full details</a>
         {% if movie.year %}
         <a class="text-link" href="{{ url_for('year_page', year=movie.year) }}">← Back to {{ movie.year }}</a>
         {% endif %}
       </div>
-
-      {% if movie.providers %}
-      <ul class="provider-list watch-providers">
-        {% for p in movie.providers %}
-        <li>
-          {% if p.logo %}<img src="{{ p.logo }}" alt="" width="40" height="40" loading="lazy" decoding="async" onerror="this.style.display='none'" />{% endif %}
-          <div>
-            <strong>{{ p.provider_name }}</strong>
-            <span>{{ p.type }}</span>
-          </div>
-        </li>
-        {% endfor %}
-      </ul>
-      {% endif %}
     </aside>
   </div>
 </section>

@@ -8,29 +8,29 @@
   <div class="watch-veil" aria-hidden="true"></div>
   <div class="watch-layout">
     <div class="watch-stage">
-      <p class="watch-stage-label">Series · Official trailer</p>
+      <p class="watch-stage-label">Series · Official HD trailer</p>
       {% if show.trailer_key %}
       <div class="watch-player">
         <iframe
-          src="https://www.youtube-nocookie.com/embed/{{ show.trailer_key }}?rel=0&modestbranding=1"
-          title="Official trailer — {{ show.title }}"
+          src="https://www.youtube-nocookie.com/embed/{{ show.trailer_key }}?rel=0&modestbranding=1&hd=1"
+          title="Official HD trailer — {{ show.title }}"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowfullscreen
           loading="lazy"
           referrerpolicy="strict-origin-when-cross-origin"
         ></iframe>
       </div>
-      <p class="watch-note">Official trailer (YouTube). We never host episodes.</p>
+      <p class="watch-note">Official HD trailer only. We do not host or stream episodes.</p>
       {% else %}
       <div class="watch-empty">
         <img src="{{ show.poster or fallback }}" alt="" width="280" height="420" onerror="this.onerror=null;this.src='{{ fallback }}';" />
-        <p>Trailer not listed yet for this series.</p>
+        <p>Official trailer not listed yet for this series.</p>
       </div>
       {% endif %}
     </div>
 
     <aside class="watch-panel">
-      <p class="detail-kicker">Series watch room · HD legal guide</p>
+      <p class="detail-kicker">Series trailer room</p>
       <h1>{{ show.title }}</h1>
       <p class="detail-meta">
         <span>{{ show.years }}</span>
@@ -41,12 +41,6 @@
       {% endif %}
 
       <div class="watch-cta">
-        {% if show.watch_link %}
-        <a class="btn btn-primary btn-xl" href="{{ show.watch_link }}" target="_blank" rel="noopener">
-          Stream on licensed platforms
-        </a>
-        <p class="watch-note">Opens TMDB’s legal TV watch guide. Pirate stream sites are not supported.</p>
-        {% endif %}
         <a class="btn btn-ghost" href="{{ url_for('series_home') }}">← All series</a>
       </div>
     </aside>

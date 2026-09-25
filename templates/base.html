@@ -6,34 +6,33 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="theme-color" content="#07090c" />
   <meta name="color-scheme" content="dark" />
-  <title>{% block title %}{{ meta_title|default('2daymovie — Movies & TV Shows, Trailers & Where to Watch') }}{% endblock %}</title>
+  <title>{% block title %}{{ meta_title|default('2daymovie — Official HD Movie & TV Trailers') }}{% endblock %}</title>
   <meta name="description" content="{{ meta_description|default(page_description) }}" />
   <link rel="canonical" href="{{ official_url.rstrip('/') }}{{ request.path }}" />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="{{ meta_title|default('2daymovie — Movies & TV Shows') }}" />
+  <meta property="og:title" content="{{ meta_title|default('2daymovie — Official HD Trailers') }}" />
   <meta property="og:description" content="{{ meta_description|default(page_description) }}" />
   <meta property="og:url" content="{{ official_url.rstrip('/') }}{{ request.path }}" />
   <meta property="og:site_name" content="2daymovie" />
   <meta property="og:image" content="{{ url_for('static', filename='img/og-image.svg', _external=True) }}" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="{{ meta_title|default('2daymovie — Movies & TV Shows') }}" />
+  <meta name="twitter:title" content="{{ meta_title|default('2daymovie — Official HD Trailers') }}" />
   <meta name="twitter:description" content="{{ meta_description|default(page_description) }}" />
   <link rel="icon" href="{{ url_for('static', filename='img/poster-fallback.svg') }}" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', v='20260925b') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', v='20260925c') }}" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "2daymovie",
     "url": "{{ official_url }}",
-    "description": "Movie and TV show discovery platform with official trailers and legal streaming guides.",
+    "description": "Official HD movie and TV trailer discovery platform.",
     "creator": {
       "@type": "Person",
-      "name": "Arnold Rurangwa",
-      "url": "https://github.com/Arnold-RG"
+      "name": "Arnold Rurangwa"
     },
     "potentialAction": {
       "@type": "SearchAction",
@@ -84,8 +83,8 @@
   <footer class="site-footer">
     <div class="footer-brand">2daymovie</div>
     <p>
-      Free to browse. No accounts. Official full trailers embedded on this site and licensed streaming guides only —
-      we never host copyrighted films.
+      Free to browse. No accounts. Official HD movie and TV trailers only —
+      we never host or stream full films.
     </p>
     <p class="footer-credit">
       Created by <strong>Arnold Rurangwa</strong>

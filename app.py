@@ -68,8 +68,8 @@ def create_app() -> Flask:
             "official_url": app.config["OFFICIAL_URL"],
             "sort_options": library.SORT_OPTIONS,
             "page_description": (
-                "Discover movies and TV shows on 2daymovie. Browse films by year, "
-                "genre and title, watch official trailers, and find legal streaming options."
+                "Discover movies and TV shows on 2daymovie through official HD trailers. "
+                "Browse by year, genre and title. We do not host or stream full films."
             ),
         }
 
@@ -163,10 +163,10 @@ Sitemap: {base}/sitemap.xml
             upcoming_movies=up["movies"][:8],
             upcoming_movies_2027=up["movies_2027"][:8],
             upcoming_series=up["series"][:8],
-            meta_title="2daymovie — Movies & TV Shows, Trailers & Where to Watch",
+            meta_title="2daymovie — Official HD Movie & TV Trailers",
             meta_description=(
-                "Discover movies and TV shows on 2daymovie. Browse films by year, "
-                "genre and title, watch official trailers, and find legal streaming options."
+                "Discover movies and TV shows on 2daymovie through official HD trailers. "
+                "Browse by year, genre and title."
             ),
         )
 
@@ -176,8 +176,8 @@ Sitemap: {base}/sitemap.xml
             "about.html",
             meta_title="About 2daymovie — Created by Arnold Rurangwa",
             meta_description=(
-                "2daymovie is a movie and TV discovery platform created and developed "
-                "by Arnold Rurangwa. Official trailers and legal streaming guides only."
+                "2daymovie is a movie and TV trailer discovery platform created and developed "
+                "by Arnold Rurangwa. Official HD trailers only."
             ),
         )
 
@@ -263,10 +263,9 @@ Sitemap: {base}/sitemap.xml
         return render_template(
             "series_watch.html",
             show=show,
-            meta_title=f"{show['title']} — Trailer & Where to Watch | 2daymovie",
+            meta_title=f"{show['title']} — Official HD Trailer | 2daymovie",
             meta_description=(
-                f"Watch the official trailer for {show['title']} on 2daymovie "
-                f"and find legal streaming options."
+                f"Watch the official HD trailer for {show['title']} on 2daymovie."
             ),
         )
 
@@ -285,7 +284,7 @@ Sitemap: {base}/sitemap.xml
             meta_title=f"Movies of {year} | 2daymovie",
             meta_description=(
                 f"Browse movies from {year} on 2daymovie. Discover titles, "
-                f"on-site trailers, ratings and legal streaming options."
+                f"official HD trailers and ratings."
             ),
         )
 
@@ -302,16 +301,15 @@ Sitemap: {base}/sitemap.xml
                     movie[key] = detail[key]
             if detail.get("overview") and len(detail["overview"]) > len(movie.get("overview") or ""):
                 movie["overview"] = detail["overview"]
-        movie["watch_link"] = movie.get("watch_link") or tmdb.legal_watch_url(movie_id)
+        movie["watch_link"] = None
         year = movie.get("year") or ""
         title = movie.get("title") or "Movie"
         return render_template(
             "watch.html",
             movie=movie,
-            meta_title=f"{title} ({year}) — Trailer, Details & Where to Watch | 2daymovie",
+            meta_title=f"{title} ({year}) — Official HD Trailer | 2daymovie",
             meta_description=(
-                f"Discover {title} ({year}) on 2daymovie. View the overview, rating, "
-                f"on-site trailer and legal streaming options."
+                f"Watch the official HD trailer for {title} ({year}) on 2daymovie."
             ),
         )
 
@@ -404,10 +402,9 @@ Sitemap: {base}/sitemap.xml
         return render_template(
             "movie.html",
             movie=movie,
-            meta_title=f"{title} ({year}) — Trailer, Details & Where to Watch | 2daymovie",
+            meta_title=f"{title} ({year}) — Official HD Trailer | 2daymovie",
             meta_description=(
-                f"Discover {title} ({year}) on 2daymovie. View the movie overview, "
-                f"rating, trailer and legal streaming options."
+                f"Discover {title} ({year}) on 2daymovie. View details and the official HD trailer."
             ),
         )
 
