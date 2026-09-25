@@ -10,7 +10,12 @@
     "start": 1995,
     "end": 1995,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/890/watch"
+    "watch_link": "https://www.themoviedb.org/tv/890/watch",
+    "trailer_keys": [
+      "Ni8kEQi1BwA",
+      "2o_9GjAs-sc",
+      "13nSISwxrY4"
+    ]
   },
   {
     "query": "Cowboy Bebop",
@@ -23,7 +28,11 @@
     "start": 1998,
     "end": 1999,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/30991/watch"
+    "watch_link": "https://www.themoviedb.org/tv/30991/watch",
+    "trailer_keys": [
+      "QCaEJZqLeTU",
+      "RI08P5SaJNU"
+    ]
   },
   {
     "query": "One Piece",
@@ -36,7 +45,12 @@
     "start": 1999,
     "end": null,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/111110/watch"
+    "watch_link": "https://www.themoviedb.org/tv/111110/watch",
+    "trailer_keys": [
+      "l6kp780S-os",
+      "lNMSqxQtO0w",
+      "Ades3pQbeh8"
+    ]
   },
   {
     "query": "Curb Your Enthusiasm",
@@ -49,7 +63,10 @@
     "backdrop_path": "/u98PeujOJCXCowph9mxRzo9Nw1s.jpg",
     "trailer_key": "ltY335eAbOA",
     "watch_link": "https://www.themoviedb.org/tv/4546/watch",
-    "vote_average": 0
+    "vote_average": 0,
+    "trailer_keys": [
+      "ltY335eAbOA"
+    ]
   },
   {
     "query": "Gilmore Girls",
@@ -62,7 +79,10 @@
     "backdrop_path": "/8U2ndZrneigI2zkvGuTJtt1ZsxK.jpg",
     "trailer_key": "Ac47mma8XRA",
     "watch_link": "https://www.themoviedb.org/tv/4586/watch",
-    "vote_average": 0
+    "vote_average": 0,
+    "trailer_keys": [
+      "Ac47mma8XRA"
+    ]
   },
   {
     "query": "24",
@@ -75,7 +95,10 @@
     "backdrop_path": "/be6mDIMv7cg8duWkcYVnTB8rphO.jpg",
     "trailer_key": "kyWafhzs6zw",
     "watch_link": "https://www.themoviedb.org/tv/1973/watch",
-    "vote_average": 0
+    "vote_average": 0,
+    "trailer_keys": [
+      "kyWafhzs6zw"
+    ]
   },
   {
     "query": "Six Feet Under",
@@ -88,7 +111,10 @@
     "backdrop_path": "/5NOQNDMVXe8t5wIuY6r6b6iUXcc.jpg",
     "trailer_key": "E3gYi-KvKug",
     "watch_link": "https://www.themoviedb.org/tv/1274/watch",
-    "vote_average": 0
+    "vote_average": 0,
+    "trailer_keys": [
+      "E3gYi-KvKug"
+    ]
   },
   {
     "query": "The Shield",
@@ -101,7 +127,11 @@
     "backdrop_path": "/AuQGIa3ZarPdS0bhWjQWJR0mhJj.jpg",
     "trailer_key": "8YiqPv3Ha68",
     "watch_link": "https://www.themoviedb.org/tv/1414/watch",
-    "vote_average": 0
+    "vote_average": 0,
+    "trailer_keys": [
+      "8YiqPv3Ha68",
+      "klSVH4dJrGU"
+    ]
   },
   {
     "query": "The Wire",
@@ -114,7 +144,10 @@
     "backdrop_path": "/aQTtua5pG490fMfeKgtYg5B853e.jpg",
     "trailer_key": "uDcQbk78CSw",
     "watch_link": "https://www.themoviedb.org/tv/1438/watch",
-    "vote_average": 0
+    "vote_average": 0,
+    "trailer_keys": [
+      "uDcQbk78CSw"
+    ]
   },
   {
     "query": "Arrested Development",
@@ -127,7 +160,10 @@
     "backdrop_path": "/q9yVRPakPnsIngnXwjW7F9GVcnD.jpg",
     "trailer_key": "4oIk04OQ1Ec",
     "watch_link": "https://www.themoviedb.org/tv/4589/watch",
-    "vote_average": 0
+    "vote_average": 0,
+    "trailer_keys": [
+      "4oIk04OQ1Ec"
+    ]
   },
   {
     "query": "Deadwood",
@@ -140,7 +176,10 @@
     "backdrop_path": "/31oYoyp69L8Bo6Vuz2ogB5JoipV.jpg",
     "trailer_key": "mFIojradr4Y",
     "watch_link": "https://www.themoviedb.org/tv/1406/watch",
-    "vote_average": 0
+    "vote_average": 0,
+    "trailer_keys": [
+      "mFIojradr4Y"
+    ]
   },
   {
     "query": "Lost",
@@ -153,7 +192,11 @@
     "backdrop_path": "/yUOFocKDW7MCC5isx4FK8A68QFp.jpg",
     "trailer_key": "72kQIIDBIUU",
     "watch_link": "https://www.themoviedb.org/tv/4607/watch",
-    "vote_average": 0
+    "vote_average": 0,
+    "trailer_keys": [
+      "72kQIIDBIUU",
+      "KTu8iDynwNc"
+    ]
   },
   {
     "query": "Friday Night Lights",
@@ -166,7 +209,10 @@
     "backdrop_path": "/dzHSMD1IY6RriYxkS3T2ysFdvdp.jpg",
     "trailer_key": "gU6pKnGJTwM",
     "watch_link": "https://www.themoviedb.org/tv/4278/watch",
-    "vote_average": 0
+    "vote_average": 0,
+    "trailer_keys": [
+      "gU6pKnGJTwM"
+    ]
   },
   {
     "query": "Borgen",
@@ -179,7 +225,11 @@
     "start": 2010,
     "end": 2022,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/42445/watch"
+    "watch_link": "https://www.themoviedb.org/tv/42445/watch",
+    "trailer_keys": [
+      "K2wWVrrpb80",
+      "Nw41sTh2mds"
+    ]
   },
   {
     "query": "Sherlock",
@@ -192,7 +242,10 @@
     "backdrop_path": "/8rvLEmdI4gLrMO1rLqbNdnNcPFE.jpg",
     "trailer_key": "gGqWqGOSTGQ",
     "watch_link": "https://www.themoviedb.org/tv/19885/watch",
-    "vote_average": 0
+    "vote_average": 0,
+    "trailer_keys": [
+      "gGqWqGOSTGQ"
+    ]
   },
   {
     "query": "Empresses in the Palace",
@@ -205,7 +258,10 @@
     "start": 2011,
     "end": 2012,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/50878/watch"
+    "watch_link": "https://www.themoviedb.org/tv/50878/watch",
+    "trailer_keys": [
+      "b7CgbcQXDXA"
+    ]
   },
   {
     "query": "The Bridge",
@@ -218,7 +274,10 @@
     "start": 2011,
     "end": 2018,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/47141/watch"
+    "watch_link": "https://www.themoviedb.org/tv/47141/watch",
+    "trailer_keys": [
+      "y9Nln23PaOc"
+    ]
   },
   {
     "query": "Peaky Blinders",
@@ -231,7 +290,10 @@
     "backdrop_path": "/dzq83RHwQcnP6WGJ6YkenIqeaa5.jpg",
     "trailer_key": "EM12mcTEI88",
     "watch_link": "https://www.themoviedb.org/tv/60574/watch",
-    "vote_average": 0
+    "vote_average": 0,
+    "trailer_keys": [
+      "EM12mcTEI88"
+    ]
   },
   {
     "query": "Happy Valley",
@@ -244,7 +306,11 @@
     "backdrop_path": "/zG1K7njAaHcLElUKqNRqmVEbXdh.jpg",
     "trailer_key": "TXdBMaocR_E",
     "watch_link": "https://www.themoviedb.org/tv/61244/watch",
-    "vote_average": 0
+    "vote_average": 0,
+    "trailer_keys": [
+      "TXdBMaocR_E",
+      "GeSSqcgzWss"
+    ]
   },
   {
     "query": "Call My Agent!",
@@ -257,7 +323,10 @@
     "start": 2015,
     "end": 2020,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/64165/watch"
+    "watch_link": "https://www.themoviedb.org/tv/64165/watch",
+    "trailer_keys": [
+      "GzSSZRgnZdg"
+    ]
   },
   {
     "query": "Club de Cuervos",
@@ -270,7 +339,10 @@
     "start": 2015,
     "end": 2019,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/63314/watch"
+    "watch_link": "https://www.themoviedb.org/tv/63314/watch",
+    "trailer_keys": [
+      "9x3c8P3ooik"
+    ]
   },
   {
     "query": "Narcos",
@@ -283,7 +355,10 @@
     "start": 2015,
     "end": 2017,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/63351/watch"
+    "watch_link": "https://www.themoviedb.org/tv/63351/watch",
+    "trailer_keys": [
+      "RNWAKZzgbp4"
+    ]
   },
   {
     "query": "Nirvana in Fire",
@@ -296,7 +371,10 @@
     "start": 2015,
     "end": 2015,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/64197/watch"
+    "watch_link": "https://www.themoviedb.org/tv/64197/watch",
+    "trailer_keys": [
+      "m8SvjkPa3VM"
+    ]
   },
   {
     "query": "Reply 1988",
@@ -309,7 +387,10 @@
     "start": 2015,
     "end": 2016,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/64010/watch"
+    "watch_link": "https://www.themoviedb.org/tv/64010/watch",
+    "trailer_keys": [
+      "c-EMf3JdxUA"
+    ]
   },
   {
     "query": "3%",
@@ -322,7 +403,10 @@
     "start": 2016,
     "end": 2020,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/62102/watch"
+    "watch_link": "https://www.themoviedb.org/tv/62102/watch",
+    "trailer_keys": [
+      "DShlie2CAeE"
+    ]
   },
   {
     "query": "Fleabag",
@@ -335,7 +419,11 @@
     "backdrop_path": "/hXdQ4MWsEOX6qg6VydKrLb3YJ4g.jpg",
     "trailer_key": "I5Uv6cb9YRs",
     "watch_link": "https://www.themoviedb.org/tv/67070/watch",
-    "vote_average": 0
+    "vote_average": 0,
+    "trailer_keys": [
+      "I5Uv6cb9YRs",
+      "aX2ViKQFL_k"
+    ]
   },
   {
     "query": "Westworld",
@@ -348,7 +436,15 @@
     "backdrop_path": "/rX5hvSRB2k4YoIvRg6Zky52rWk0.jpg",
     "trailer_key": "OM8HNuRLIBI",
     "watch_link": "https://www.themoviedb.org/tv/63247/watch",
-    "vote_average": 0
+    "vote_average": 0,
+    "trailer_keys": [
+      "OM8HNuRLIBI",
+      "eX3u0IlBBO4",
+      "IuS5huqOND4",
+      "JctIuZfSsa4",
+      "9BqKiZhEFFw",
+      "kEkZdgWu7mM"
+    ]
   },
   {
     "query": "Babylon Berlin",
@@ -361,7 +457,11 @@
     "start": 2017,
     "end": null,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/66980/watch"
+    "watch_link": "https://www.themoviedb.org/tv/66980/watch",
+    "trailer_keys": [
+      "HAn3RXeCrLg",
+      "j_qN5bFfOTE"
+    ]
   },
   {
     "query": "Dark",
@@ -374,7 +474,10 @@
     "start": 2017,
     "end": 2020,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/70523/watch"
+    "watch_link": "https://www.themoviedb.org/tv/70523/watch",
+    "trailer_keys": [
+      "ESEUoa-mz2c"
+    ]
   },
   {
     "query": "Money Heist",
@@ -387,7 +490,10 @@
     "start": 2017,
     "end": 2021,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/71446/watch"
+    "watch_link": "https://www.themoviedb.org/tv/71446/watch",
+    "trailer_keys": [
+      "_InqQJRqGW4"
+    ]
   },
   {
     "query": "Killing Eve",
@@ -400,7 +506,10 @@
     "backdrop_path": "/2eR0H27Us1tvbjd95oW7WhiKioC.jpg",
     "trailer_key": "XiSJUo-Ntqc",
     "watch_link": "https://www.themoviedb.org/tv/72750/watch",
-    "vote_average": 0
+    "vote_average": 0,
+    "trailer_keys": [
+      "XiSJUo-Ntqc"
+    ]
   },
   {
     "query": "My Mister",
@@ -413,7 +522,10 @@
     "start": 2018,
     "end": 2018,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/76662/watch"
+    "watch_link": "https://www.themoviedb.org/tv/76662/watch",
+    "trailer_keys": [
+      "f-Eaa3f3gDo"
+    ]
   },
   {
     "query": "Sacred Games",
@@ -426,7 +538,10 @@
     "start": 2018,
     "end": 2019,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/79352/watch"
+    "watch_link": "https://www.themoviedb.org/tv/79352/watch",
+    "trailer_keys": [
+      "w-Xe8gLBc5I"
+    ]
   },
   {
     "query": "Sky Castle",
@@ -439,7 +554,10 @@
     "start": 2018,
     "end": 2019,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/84327/watch"
+    "watch_link": "https://www.themoviedb.org/tv/84327/watch",
+    "trailer_keys": [
+      "P6coIgyV9e0"
+    ]
   },
   {
     "query": "Story of Yanxi Palace",
@@ -452,7 +570,11 @@
     "start": 2018,
     "end": 2018,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/81133/watch"
+    "watch_link": "https://www.themoviedb.org/tv/81133/watch",
+    "trailer_keys": [
+      "WaBfoB2slns",
+      "Z4xLnxser7s"
+    ]
   },
   {
     "query": "Chernobyl",
@@ -465,7 +587,11 @@
     "backdrop_path": "/900tHlUYUkp7Ol04XFSoAaEIXcT.jpg",
     "trailer_key": "PMlwjCID3Io",
     "watch_link": "https://www.themoviedb.org/tv/87108/watch",
-    "vote_average": 0
+    "vote_average": 0,
+    "trailer_keys": [
+      "PMlwjCID3Io",
+      "s9APLXM9Ei8"
+    ]
   },
   {
     "query": "Crash Landing on You",
@@ -478,7 +604,11 @@
     "start": 2019,
     "end": 2020,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/94796/watch"
+    "watch_link": "https://www.themoviedb.org/tv/94796/watch",
+    "trailer_keys": [
+      "K58Z1RORRaI",
+      "eXMjTXL2Vks"
+    ]
   },
   {
     "query": "Delhi Crime",
@@ -491,7 +621,10 @@
     "start": 2019,
     "end": null,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/87508/watch"
+    "watch_link": "https://www.themoviedb.org/tv/87508/watch",
+    "trailer_keys": [
+      "jNuKwlKJx2E"
+    ]
   },
   {
     "query": "Demon Slayer: Kimetsu no Yaiba",
@@ -504,7 +637,15 @@
     "start": 2019,
     "end": null,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/85937/watch"
+    "watch_link": "https://www.themoviedb.org/tv/85937/watch",
+    "trailer_keys": [
+      "SWAMTXfqer0",
+      "VQGCKyvzIM4",
+      "Sl2k7bfBeCw",
+      "6vMuWuWlW4I",
+      "gxM1j64w4fk",
+      "t6MXHczeEqc"
+    ]
   },
   {
     "query": "Kingdom",
@@ -517,7 +658,10 @@
     "start": 2019,
     "end": 2021,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/46437/watch"
+    "watch_link": "https://www.themoviedb.org/tv/46437/watch",
+    "trailer_keys": [
+      "Rx7K2K4BzUQ"
+    ]
   },
   {
     "query": "Kota Factory",
@@ -530,7 +674,10 @@
     "start": 2019,
     "end": 2021,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/89113/watch"
+    "watch_link": "https://www.themoviedb.org/tv/89113/watch",
+    "trailer_keys": [
+      "pNZQ6msbOvM"
+    ]
   },
   {
     "query": "Made in Heaven",
@@ -543,7 +690,10 @@
     "start": 2019,
     "end": null,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/87407/watch"
+    "watch_link": "https://www.themoviedb.org/tv/87407/watch",
+    "trailer_keys": [
+      "Qyg9_a7avTI"
+    ]
   },
   {
     "query": "Alice in Borderland",
@@ -556,7 +706,11 @@
     "start": 2020,
     "end": null,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/110316/watch"
+    "watch_link": "https://www.themoviedb.org/tv/110316/watch",
+    "trailer_keys": [
+      "EEJ7nUvXUYA",
+      "49_44FFKZ1M"
+    ]
   },
   {
     "query": "Blood & Water",
@@ -569,7 +723,10 @@
     "start": 2020,
     "end": null,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/103411/watch"
+    "watch_link": "https://www.themoviedb.org/tv/103411/watch",
+    "trailer_keys": [
+      "2m0Cm2kMOBU"
+    ]
   },
   {
     "query": "Dark Desire",
@@ -582,7 +739,10 @@
     "start": 2020,
     "end": 2022,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/105214/watch"
+    "watch_link": "https://www.themoviedb.org/tv/105214/watch",
+    "trailer_keys": [
+      "RaJtl46ADRU"
+    ]
   },
   {
     "query": "Followers",
@@ -595,7 +755,10 @@
     "start": 2020,
     "end": 2020,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/98772/watch"
+    "watch_link": "https://www.themoviedb.org/tv/98772/watch",
+    "trailer_keys": [
+      "otf-9H4sOsc"
+    ]
   },
   {
     "query": "It's Okay to Not Be Okay",
@@ -608,7 +771,11 @@
     "start": 2020,
     "end": 2020,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/241506/watch"
+    "watch_link": "https://www.themoviedb.org/tv/241506/watch",
+    "trailer_keys": [
+      "KwP3VzowPhE",
+      "ppg4VjLvMG0"
+    ]
   },
   {
     "query": "Kings of Jo'burg",
@@ -621,7 +788,10 @@
     "start": 2020,
     "end": null,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/114187/watch"
+    "watch_link": "https://www.themoviedb.org/tv/114187/watch",
+    "trailer_keys": [
+      "JHQSRvAf8kI"
+    ]
   },
   {
     "query": "Queen Sono",
@@ -634,7 +804,10 @@
     "start": 2020,
     "end": 2020,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/96676/watch"
+    "watch_link": "https://www.themoviedb.org/tv/96676/watch",
+    "trailer_keys": [
+      "1zgxDFEifyI"
+    ]
   },
   {
     "query": "D.P.",
@@ -647,7 +820,10 @@
     "start": 2021,
     "end": 2023,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/110534/watch"
+    "watch_link": "https://www.themoviedb.org/tv/110534/watch",
+    "trailer_keys": [
+      "ru0PmaWoHxM"
+    ]
   },
   {
     "query": "Hellbound",
@@ -660,7 +836,11 @@
     "start": 2021,
     "end": null,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/106651/watch"
+    "watch_link": "https://www.themoviedb.org/tv/106651/watch",
+    "trailer_keys": [
+      "UWfgm20-LTM",
+      "LtdXK6yNFN0"
+    ]
   },
   {
     "query": "Lupin",
@@ -673,7 +853,10 @@
     "backdrop_path": "/aY7zv2pfk9H0QxaaL3PBjvalbKQ.jpg",
     "trailer_key": "ga0iTWXCGa0",
     "watch_link": "https://www.themoviedb.org/tv/96677/watch",
-    "vote_average": 0
+    "vote_average": 0,
+    "trailer_keys": [
+      "ga0iTWXCGa0"
+    ]
   },
   {
     "query": "Move to Heaven",
@@ -686,7 +869,10 @@
     "start": 2021,
     "end": 2021,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/96571/watch"
+    "watch_link": "https://www.themoviedb.org/tv/96571/watch",
+    "trailer_keys": [
+      "80XSCaQIlko"
+    ]
   },
   {
     "query": "Squid Game",
@@ -699,7 +885,10 @@
     "backdrop_path": "/2meX1nMdScFOoV4370rqHWKmXhY.jpg",
     "trailer_key": "oqxAJKy0ii4",
     "watch_link": "https://www.themoviedb.org/tv/93405/watch",
-    "vote_average": 0
+    "vote_average": 0,
+    "trailer_keys": [
+      "oqxAJKy0ii4"
+    ]
   },
   {
     "query": "Vincenzo",
@@ -712,7 +901,10 @@
     "start": 2021,
     "end": 2021,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/117376/watch"
+    "watch_link": "https://www.themoviedb.org/tv/117376/watch",
+    "trailer_keys": [
+      "S12-4mXCNj4"
+    ]
   },
   {
     "query": "Yellowjackets",
@@ -725,7 +917,11 @@
     "backdrop_path": "/ibFWJDWS8cTO6s2vZVd2uKDm8p.jpg",
     "trailer_key": "Axx9Qhct49w",
     "watch_link": "https://www.themoviedb.org/tv/117488/watch",
-    "vote_average": 0
+    "vote_average": 0,
+    "trailer_keys": [
+      "Axx9Qhct49w",
+      "mX22D65TqAs"
+    ]
   },
   {
     "query": "All of Us Are Dead",
@@ -738,7 +934,10 @@
     "start": 2022,
     "end": null,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/99966/watch"
+    "watch_link": "https://www.themoviedb.org/tv/99966/watch",
+    "trailer_keys": [
+      "IN5TD4VRcSM"
+    ]
   },
   {
     "query": "Extraordinary Attorney Woo",
@@ -751,7 +950,11 @@
     "start": 2022,
     "end": null,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/197067/watch"
+    "watch_link": "https://www.themoviedb.org/tv/197067/watch",
+    "trailer_keys": [
+      "MxeXECe2t-c",
+      "9SdYFYflVbw"
+    ]
   },
   {
     "query": "The Glory",
@@ -764,7 +967,10 @@
     "start": 2022,
     "end": 2023,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/136283/watch"
+    "watch_link": "https://www.themoviedb.org/tv/136283/watch",
+    "trailer_keys": [
+      "tqVVrTvrI8U"
+    ]
   },
   {
     "query": "Tokyo Vice",
@@ -777,7 +983,11 @@
     "start": 2022,
     "end": 2024,
     "vote_average": 0,
-    "watch_link": "https://www.themoviedb.org/tv/90296/watch"
+    "watch_link": "https://www.themoviedb.org/tv/90296/watch",
+    "trailer_keys": [
+      "uKNw8OLU0I4",
+      "l3oWrNQo_Ng"
+    ]
   },
   {
     "query": "Shōgun",
@@ -790,7 +1000,12 @@
     "backdrop_path": "/bwSmgmd90hCWwqOKQYTEraeOZhJ.jpg",
     "trailer_key": "yAN5uspO_hk",
     "watch_link": "https://www.themoviedb.org/tv/126308/watch",
-    "vote_average": 0
+    "vote_average": 0,
+    "trailer_keys": [
+      "yAN5uspO_hk",
+      "wPL80Xqc_f4",
+      "HIs9x49DK7I"
+    ]
   },
   {
     "query": "A Knight of the Seven Kingdoms",
@@ -803,7 +1018,11 @@
     "backdrop_path": "/7mkUu1F2hVUNgz24xO8HPx0D6mK.jpg",
     "trailer_key": "UPFRItMOgPo",
     "watch_link": "https://www.themoviedb.org/tv/224372/watch",
-    "vote_average": 0
+    "vote_average": 0,
+    "trailer_keys": [
+      "UPFRItMOgPo",
+      "sItUCKJQLTU"
+    ]
   },
   {
     "query": "Blade Runner 2099",
@@ -816,7 +1035,10 @@
     "backdrop_path": "/uOlIq21Rx0Sl7y39b1znTfQYGb7.jpg",
     "trailer_key": "0Dr8I_RyRCg",
     "watch_link": "https://www.themoviedb.org/tv/171802/watch",
-    "vote_average": 0
+    "vote_average": 0,
+    "trailer_keys": [
+      "0Dr8I_RyRCg"
+    ]
   },
   {
     "query": "Carrie",
@@ -830,7 +1052,10 @@
     "backdrop_path": "/vVaNTaRHlL1i8JVsZsNtRHGBhPm.jpg",
     "watch_link": "https://www.themoviedb.org/tv/288673/watch",
     "vote_average": 0,
-    "trailer_key": "jkUw2nh6fT0"
+    "trailer_key": "jkUw2nh6fT0",
+    "trailer_keys": [
+      "jkUw2nh6fT0"
+    ]
   },
   {
     "query": "Crystal Lake",
@@ -844,7 +1069,10 @@
     "backdrop_path": "/c1RP38PbwfCaQjSSotniS01uvuY.jpg",
     "watch_link": "https://www.themoviedb.org/tv/213562/watch",
     "vote_average": 0,
-    "trailer_key": "Rs49eRHFD9c"
+    "trailer_key": "Rs49eRHFD9c",
+    "trailer_keys": [
+      "Rs49eRHFD9c"
+    ]
   },
   {
     "query": "Pride & Prejudice",
@@ -858,7 +1086,10 @@
     "backdrop_path": "/6d1yCaiI7AexmtGX2vORqEbZ0oV.jpg",
     "watch_link": "https://www.themoviedb.org/tv/1457/watch",
     "vote_average": 0,
-    "trailer_key": "NZKmzkdXPoo"
+    "trailer_key": "NZKmzkdXPoo",
+    "trailer_keys": [
+      "NZKmzkdXPoo"
+    ]
   },
   {
     "query": "VisionQuest",
@@ -872,6 +1103,9 @@
     "backdrop_path": "/v50p9hearMiu6BlYfp4O7FACmXl.jpg",
     "watch_link": "https://www.themoviedb.org/tv/213375/watch",
     "vote_average": 0,
-    "trailer_key": "oSVTAUKyrL8"
+    "trailer_key": "oSVTAUKyrL8",
+    "trailer_keys": [
+      "oSVTAUKyrL8"
+    ]
   }
 ]
