@@ -27,23 +27,30 @@
   </div>
   {% endif %}
   <div class="hero-veil" aria-hidden="true"></div>
-  <div class="hero-copy">
-    <h1 class="hero-brand" aria-label="2daymovie"><span class="gel">2DAY</span>MOVIE</h1>
-    <p class="hero-lede">Discover movies and TV shows through official HD trailers on this site.</p>
-    <div class="hero-actions">
-      <a class="btn btn-primary" href="{{ url_for('categories_home') }}">Categories</a>
-      <a class="btn btn-ghost" href="{{ url_for('upcoming_home') }}">Upcoming</a>
-      <a class="btn btn-ghost" href="{{ url_for('movies_home') }}">Movies</a>
+
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <p class="hero-kicker">Official HD trailers</p>
+      <h1 class="hero-brand" aria-label="2daymovie"><span class="gel">2DAY</span>MOVIE</h1>
+      <p class="hero-lede">Discover movies and TV shows through official HD trailers on this site.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="{{ url_for('categories_home') }}">Categories</a>
+        <a class="btn btn-ghost" href="{{ url_for('upcoming_home') }}">Upcoming</a>
+        <a class="btn btn-ghost" href="{{ url_for('movies_home') }}">Movies</a>
+      </div>
     </div>
+
     {% if slides %}
-    <div class="hero-now">
-      <button type="button" class="hero-sound-btn" data-hero-sound aria-pressed="false">
-        Turn sound on
-      </button>
-      <p class="hero-now-label">
-        Now playing
-        <a class="hero-now-title" data-hero-title href="{{ slides[0].href }}">{{ slides[0].title }}{% if slides[0].year %} · {{ slides[0].year }}{% endif %}</a>
-      </p>
+    <div class="hero-playback">
+      <div class="hero-playback-main">
+        <button type="button" class="hero-sound-btn" data-hero-sound aria-pressed="false">
+          Turn sound on
+        </button>
+        <div class="hero-now-text">
+          <span class="hero-now-kicker">Now playing</span>
+          <a class="hero-now-title" data-hero-title href="{{ slides[0].href }}">{{ slides[0].title }}{% if slides[0].year %} · {{ slides[0].year }}{% endif %}</a>
+        </div>
+      </div>
       <div class="hero-dots" role="tablist" aria-label="Featured trailers">
         {% for slide in slides %}
         <button
