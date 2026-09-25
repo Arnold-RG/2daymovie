@@ -18,3 +18,5 @@ services:
         value: US
       - key: DATABASE_URL
         sync: false
+      - key: OFFICIAL_DATABASE_URL_FILE
+        sync: false

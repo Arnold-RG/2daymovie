@@ -144,13 +144,17 @@ def test_security_headers():
 
 def test_reviews_live(tmp_path, monkeypatch):
     reviews_db = tmp_path / "reviews.db"
+    vault = tmp_path / "site_vault.json"
     monkeypatch.setenv("REVIEWS_SQLITE_PATH", str(reviews_db))
     monkeypatch.delenv("DATABASE_URL", raising=False)
+    monkeypatch.setenv("OFFICIAL_DATABASE_URL_FILE", str(tmp_path / "missing.url"))
 
     from services import reviews as reviews_mod
 
     reviews_mod._RATE.clear()
     reviews_mod._INITIALIZED = False
+    reviews_mod.SITE_VAULT = vault
+    reviews_mod.OFFICIAL_DB_LINK = tmp_path / "official_database.url"
     reviews_mod._init_db()
 
     client = app.test_client()
@@ -175,11 +179,29 @@ def test_reviews_live(tmp_path, monkeypatch):
     payload = api.get_json()
     assert payload["stats"]["count"] >= 1
     assert any(r["name"] == "Alex" for r in payload["reviews"])
+    assert vault.exists()
 
     home = client.get("/")
     assert home.status_code == 200
     assert b"Live reviews" in home.data
     assert b"Alex" in home.data
+    assert b"hero-cinema" in home.data or b"hero-stage" in home.data
+
+
+def test_reviews_official_link_file(tmp_path, monkeypatch):
+    link = tmp_path / "official_database.url"
+    link.write_text(
+        "# comment\npostgresql://example:pass@db.example/app?sslmode=require\n",
+        encoding="utf-8",
+    )
+    monkeypatch.delenv("DATABASE_URL", raising=False)
+    monkeypatch.delenv("OFFICIAL_DATABASE_URL_FILE", raising=False)
+
+    from services import reviews as reviews_mod
+
+    reviews_mod.OFFICIAL_DB_LINK = link
+    assert reviews_mod._database_url().startswith("postgresql://example:")
+    assert reviews_mod._is_postgres() is True
 
 
 def test_reviews_migrate_legacy_json(tmp_path, monkeypatch):
@@ -189,14 +211,18 @@ def test_reviews_migrate_legacy_json(tmp_path, monkeypatch):
         encoding="utf-8",
     )
     db = tmp_path / "reviews.db"
+    vault = tmp_path / "site_vault.json"
     monkeypatch.setenv("REVIEWS_PATH", str(legacy))
     monkeypatch.setenv("REVIEWS_SQLITE_PATH", str(db))
     monkeypatch.delenv("DATABASE_URL", raising=False)
+    monkeypatch.setenv("OFFICIAL_DATABASE_URL_FILE", str(tmp_path / "missing.url"))
 
     from services import reviews as reviews_mod
 
     reviews_mod._RATE.clear()
     reviews_mod._INITIALIZED = False
+    reviews_mod.SITE_VAULT = vault
+    reviews_mod.OFFICIAL_DB_LINK = tmp_path / "official_database.url"
     reviews_mod._init_db()
     rows = reviews_mod.list_reviews()
     assert any(r["name"] == "Sam" and r["id"] == "legacy-1" for r in rows)

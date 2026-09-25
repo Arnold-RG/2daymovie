@@ -13,6 +13,9 @@ data/reviews.db
 data/reviews.db-*
 data/*.json.migrated
 data/_embed_cache.json
+data/official_database.url
+data/site_vault.json
+data/site_vault.tmp
 
 _cmsg.txt
 commitmsg.txt

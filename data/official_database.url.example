@@ -1,0 +1,10 @@
+# Official durable database link for 2daymovie.
+# One connection string per line. Lines starting with # are ignored.
+#
+# Production: copy this file to data/official_database.url (gitignored)
+# and/or set DATABASE_URL on Render to the same value.
+#
+# Example:
+# postgresql://USER:PASSWORD@HOST/DBNAME?sslmode=require
+
+postgresql://USER:PASSWORD@HOST/DBNAME?sslmode=require

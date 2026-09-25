@@ -1,23 +1,13 @@
 """Visitor feedback / live reviews storage.
 
-Persists to Postgres in production (set DATABASE_URL). Falls back to a local
-SQLite file for local development only.
+Primary store: Postgres when an official database link is available
+(DATABASE_URL env, or data/official_database.url). Local SQLite is only
+used as a last-resort fallback for offline development.
 
-Why this replaced the old JSON-file version:
-1. Render's free web service plan has NO persistent disk. Every redeploy
-   (every git push) rebuilds the container from scratch, so a local
-   data/reviews.json file resets to whatever was last committed — any
-   reviews submitted since the last deploy are gone.
-2. render.yaml runs gunicorn with 2 worker PROCESSES. The old code used
-   threading.Lock(), which only protects against concurrent threads in the
-   SAME process — it does nothing across separate worker processes. Two
-   visitors submitting at the same moment, routed to different workers,
-   could each read-modify-write the file and one submission would silently
-   overwrite the other.
-
-Using a real database (Postgres) fixes both: the data lives outside the
-container entirely, and the database itself handles concurrent writes
-safely.
+Also writes data/site_vault.json as a local mirror of reviews so you always
+have a proper file snapshot of visitor data on disk (useful for backups /
+migrations). On Render free tier that local file is still ephemeral — the
+official durable store is the Postgres link in official_database.url.
 """
 
 from __future__ import annotations
@@ -34,6 +24,8 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 LEGACY_JSON = ROOT / "data" / "reviews.json"
+OFFICIAL_DB_LINK = ROOT / "data" / "official_database.url"
+SITE_VAULT = ROOT / "data" / "site_vault.json"
 
 NAME_RE = re.compile(r"^[\w\s.'-]{2,40}$", re.UNICODE)
 MAX_REVIEWS = 500
@@ -42,8 +34,35 @@ _RATE: dict[str, float] = {}
 _INITIALIZED = False
 
 
+def _read_official_database_url() -> str:
+    """Official durable DB link: env first, then the project link file."""
+    env = os.getenv("DATABASE_URL", "").strip()
+    if env:
+        return env
+
+    candidates: list[Path] = []
+    override = os.getenv("OFFICIAL_DATABASE_URL_FILE", "").strip()
+    if override:
+        candidates.append(Path(override))
+    candidates.append(OFFICIAL_DB_LINK)
+
+    for path in candidates:
+        try:
+            if path.is_file():
+                raw = path.read_text(encoding="utf-8").strip()
+                # Allow comments / blank lines in the official link file.
+                for line in raw.splitlines():
+                    line = line.strip()
+                    if not line or line.startswith("#"):
+                        continue
+                    return line
+        except Exception:
+            continue
+    return ""
+
+
 def _database_url() -> str:
-    return os.getenv("DATABASE_URL", "").strip()
+    return _read_official_database_url()
 
 
 def _is_postgres() -> bool:
@@ -51,16 +70,21 @@ def _is_postgres() -> bool:
     return url.startswith(("postgres://", "postgresql://"))
 
 
+def storage_backend() -> str:
+    """Human-readable active store (for ops / health)."""
+    if _is_postgres():
+        return "postgres"
+    return "sqlite"
+
+
 def _sqlite_path() -> Path:
     override = os.getenv("REVIEWS_SQLITE_PATH", "").strip()
     if override:
         return Path(override)
-    # Back-compat: older tests/docs used REVIEWS_PATH for a JSON file.
     legacy = os.getenv("REVIEWS_PATH", "").strip()
     if legacy and legacy.lower().endswith(".db"):
         return Path(legacy)
     if legacy:
-        # Point SQLite next to the old JSON path during migration/tests.
         return Path(legacy).with_suffix(".db")
     return ROOT / "data" / "reviews.db"
 
@@ -102,6 +126,7 @@ def _init_db() -> None:
         conn.commit()
     _INITIALIZED = True
     _import_legacy_json_once()
+    _mirror_vault()
 
 
 def _ensure_db() -> None:
@@ -109,13 +134,50 @@ def _ensure_db() -> None:
         _init_db()
 
 
+def _all_reviews_raw() -> list[dict[str, Any]]:
+    p = _placeholder()
+    with _connect() as conn:
+        cur = conn.cursor()
+        cur.execute(
+            f"SELECT id, name, rating, message, created_at FROM reviews "
+            f"ORDER BY created_at DESC LIMIT {p}",
+            (MAX_REVIEWS,),
+        )
+        rows = cur.fetchall()
+    return [
+        {"id": r[0], "name": r[1], "rating": r[2], "message": r[3], "created_at": r[4]}
+        for r in rows
+    ]
+
+
+def _mirror_vault() -> None:
+    """Keep a proper on-disk JSON vault mirroring the official DB contents."""
+    try:
+        rows = _all_reviews_raw()
+        payload = {
+            "version": 1,
+            "updated_at": _now_iso(),
+            "backend": storage_backend(),
+            "official_database_link_file": str(OFFICIAL_DB_LINK.name),
+            "count": len(rows),
+            "reviews": rows,
+        }
+        SITE_VAULT.parent.mkdir(parents=True, exist_ok=True)
+        tmp = SITE_VAULT.with_suffix(".tmp")
+        tmp.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+        tmp.replace(SITE_VAULT)
+    except Exception:
+        # Vault is a mirror only — never fail a user-facing write because of it.
+        pass
+
+
 def _import_legacy_json_once() -> None:
-    """Best-effort restore from a leftover data/reviews.json (or REVIEWS_PATH)."""
+    """Best-effort restore from leftover JSON / vault files."""
     candidates: list[Path] = []
     legacy_env = os.getenv("REVIEWS_PATH", "").strip()
     if legacy_env and legacy_env.lower().endswith(".json"):
         candidates.append(Path(legacy_env))
-    candidates.append(LEGACY_JSON)
+    candidates.extend([LEGACY_JSON, SITE_VAULT])
 
     rows: list[dict[str, Any]] = []
     source: Path | None = None
@@ -126,8 +188,14 @@ def _import_legacy_json_once() -> None:
             data = json.loads(path.read_text(encoding="utf-8"))
         except Exception:
             continue
-        if isinstance(data, list) and data:
-            rows = [r for r in data if isinstance(r, dict)]
+        if isinstance(data, dict) and isinstance(data.get("reviews"), list):
+            parsed = [r for r in data["reviews"] if isinstance(r, dict)]
+        elif isinstance(data, list):
+            parsed = [r for r in data if isinstance(r, dict)]
+        else:
+            continue
+        if parsed:
+            rows = parsed
             source = path
             break
     if not rows or source is None:
@@ -156,12 +224,10 @@ def _import_legacy_json_once() -> None:
                 )
                 imported += 1
             except Exception:
-                # Duplicate primary key / already migrated.
                 continue
         conn.commit()
 
-    if imported:
-        # Keep the JSON as a backup, but stop re-importing by renaming.
+    if imported and source in {LEGACY_JSON}:
         bak = source.with_suffix(source.suffix + ".migrated")
         try:
             if not bak.exists():
@@ -177,28 +243,16 @@ def _now_iso() -> str:
 def list_reviews(limit: int = 50) -> list[dict[str, Any]]:
     _ensure_db()
     limit = max(1, min(limit, 100))
-    p = _placeholder()
-    with _connect() as conn:
-        cur = conn.cursor()
-        cur.execute(
-            f"SELECT id, name, rating, message, created_at FROM reviews "
-            f"ORDER BY created_at DESC LIMIT {p}",
-            (limit,),
-        )
-        rows = cur.fetchall()
-    return [
-        {"id": r[0], "name": r[1], "rating": r[2], "message": r[3], "created_at": r[4]}
-        for r in rows
-    ]
+    return _all_reviews_raw()[:limit]
 
 
 def stats() -> dict[str, Any]:
     rows = list_reviews(limit=MAX_REVIEWS)
     if not rows:
-        return {"count": 0, "average": 0.0}
+        return {"count": 0, "average": 0.0, "backend": storage_backend()}
     ratings = [int(r.get("rating") or 0) for r in rows if r.get("rating")]
     avg = round(sum(ratings) / len(ratings), 1) if ratings else 0.0
-    return {"count": len(rows), "average": avg}
+    return {"count": len(rows), "average": avg, "backend": storage_backend()}
 
 
 def _allowed_ip(ip: str) -> bool:
@@ -270,7 +324,6 @@ def add_review(
         )
         conn.commit()
 
-        # Prune beyond MAX_REVIEWS, oldest first.
         cur.execute("SELECT id FROM reviews ORDER BY created_at DESC")
         all_ids = [r[0] for r in cur.fetchall()]
         if len(all_ids) > MAX_REVIEWS:
@@ -279,4 +332,5 @@ def add_review(
             cur.execute(f"DELETE FROM reviews WHERE id IN ({qmarks})", stale)
             conn.commit()
 
+    _mirror_vault()
     return review, None

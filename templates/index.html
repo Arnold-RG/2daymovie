@@ -6,7 +6,7 @@
 {% set fallback = url_for('static', filename='img/poster-fallback.svg') %}
 {% set slides = hero_slides or [] %}
 <section
-  class="hero {% if slides %}has-slides{% elif featured and featured.backdrop %}has-backdrop{% endif %}"
+  class="hero hero-cinema {% if slides %}has-slides{% elif featured and featured.backdrop %}has-backdrop{% endif %}"
   {% if not slides and featured and featured.backdrop %}style="--hero-image: url('{{ featured.backdrop }}')"{% endif %}
   {% if slides %}data-hero-slider{% endif %}
 >
@@ -27,30 +27,31 @@
   </div>
   {% endif %}
   <div class="hero-veil" aria-hidden="true"></div>
+  <div class="hero-grain" aria-hidden="true"></div>
 
-  <div class="hero-inner">
-    <div class="hero-copy">
-      <p class="hero-kicker">Official HD trailers</p>
+  <div class="hero-stage">
+    <div class="hero-lead">
+      <div class="hero-mark" aria-hidden="true"></div>
+      <p class="hero-kicker">Projection · Official HD</p>
       <h1 class="hero-brand" aria-label="2daymovie"><span class="gel">2DAY</span>MOVIE</h1>
-      <p class="hero-lede">Discover movies and TV shows through official HD trailers on this site.</p>
+      <p class="hero-lede">Curated movies and series — official HD trailers play right here on this site.</p>
       <div class="hero-actions">
-        <a class="btn btn-primary" href="{{ url_for('categories_home') }}">Categories</a>
-        <a class="btn btn-ghost" href="{{ url_for('upcoming_home') }}">Upcoming</a>
+        <a class="btn btn-primary" href="{{ url_for('categories_home') }}">Browse categories</a>
         <a class="btn btn-ghost" href="{{ url_for('movies_home') }}">Movies</a>
+        <a class="btn btn-ghost" href="{{ url_for('upcoming_home') }}">Upcoming</a>
       </div>
     </div>
 
     {% if slides %}
-    <div class="hero-playback">
-      <div class="hero-playback-main">
+    <aside class="hero-card">
+      <div class="hero-card-top">
+        <span class="hero-card-live">Live trailer</span>
         <button type="button" class="hero-sound-btn" data-hero-sound aria-pressed="false">
           Turn sound on
         </button>
-        <div class="hero-now-text">
-          <span class="hero-now-kicker">Now playing</span>
-          <a class="hero-now-title" data-hero-title href="{{ slides[0].href }}">{{ slides[0].title }}{% if slides[0].year %} · {{ slides[0].year }}{% endif %}</a>
-        </div>
       </div>
+      <p class="hero-card-label">Now playing</p>
+      <a class="hero-now-title" data-hero-title href="{{ slides[0].href }}">{{ slides[0].title }}{% if slides[0].year %} · {{ slides[0].year }}{% endif %}</a>
       <div class="hero-dots" role="tablist" aria-label="Featured trailers">
         {% for slide in slides %}
         <button
@@ -62,7 +63,7 @@
         ></button>
         {% endfor %}
       </div>
-    </div>
+    </aside>
     {% endif %}
   </div>
 </section>
