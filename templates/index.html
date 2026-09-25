@@ -11,7 +11,11 @@
   {% if slides %}data-hero-slider{% endif %}
 >
   {% if slides %}
-  <div class="hero-slides" aria-hidden="true">
+  <div class="hero-video-layer" aria-hidden="true">
+    <div class="hero-video-fallback" data-hero-fallback style="--hero-image: url('{{ slides[0].backdrop }}')"></div>
+    <div class="hero-video-host" data-hero-player></div>
+  </div>
+  <div class="hero-slides" hidden>
     {% for slide in slides %}
     <div
       class="hero-slide {% if loop.first %}is-active{% endif %}"
@@ -19,11 +23,13 @@
       data-title="{{ slide.title }}"
       data-year="{{ slide.year or '' }}"
       data-href="{{ slide.href }}"
-      style="--hero-image: url('{{ slide.backdrop }}')"
-    >
-      <div class="hero-slide-media" data-yt-mount></div>
-    </div>
+      data-backdrop="{{ slide.backdrop }}"
+    ></div>
     {% endfor %}
+  </div>
+  {% elif featured and featured.backdrop %}
+  <div class="hero-video-layer is-static" aria-hidden="true">
+    <div class="hero-video-fallback" style="--hero-image: url('{{ featured.backdrop }}')"></div>
   </div>
   {% endif %}
   <div class="hero-veil" aria-hidden="true"></div>

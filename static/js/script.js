@@ -20,7 +20,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Year accordion: only one panel open; navigate to load that year's shelf
   const accordion = document.querySelector("[data-year-accordion]");
   if (accordion) {
     accordion.querySelectorAll("details.year-panel").forEach((panel) => {
@@ -133,7 +132,6 @@ function initEmbedStacks() {
             rel: 0,
             modestbranding: 1,
             playsinline: 1,
-            origin: window.location.origin,
           },
           events: {
             onError: (event) => {
@@ -164,11 +162,14 @@ function initHeroSlider(prefersReduced) {
 
   const soundBtn = root.querySelector("[data-hero-sound]");
   const titleLink = root.querySelector("[data-hero-title]");
+  const fallback = root.querySelector("[data-hero-fallback]");
+  const playerHost = root.querySelector("[data-hero-player]");
   const dots = Array.from(root.querySelectorAll("[data-hero-dot]"));
   let index = 0;
   let soundOn = false;
-  let players = [];
+  let player = null;
   let advanceTimer = null;
+  let ready = false;
   const SLIDE_MS = 28000;
 
   const setSoundUi = () => {
@@ -177,12 +178,19 @@ function initHeroSlider(prefersReduced) {
     soundBtn.textContent = soundOn ? "Sound on" : "Turn sound on";
   };
 
+  const syncFallback = (slide) => {
+    if (!fallback || !slide) return;
+    const backdrop = slide.dataset.backdrop;
+    if (backdrop) fallback.style.setProperty("--hero-image", `url('${backdrop}')`);
+  };
+
   const updateMeta = (slide) => {
     if (!titleLink || !slide) return;
     const title = slide.dataset.title || "Trailer";
     const year = slide.dataset.year || "";
     titleLink.textContent = year ? `${title} · ${year}` : title;
     titleLink.href = slide.dataset.href || "#";
+    syncFallback(slide);
   };
 
   const clearAdvance = () => {
@@ -199,51 +207,42 @@ function initHeroSlider(prefersReduced) {
   };
 
   const applyMute = () => {
-    players.forEach((p, i) => {
-      if (!p || typeof p.mute !== "function") return;
-      if (soundOn && i === index) {
-        p.unMute();
-        p.setVolume(100);
+    if (!player || typeof player.mute !== "function") return;
+    try {
+      if (soundOn) {
+        player.unMute();
+        player.setVolume(100);
       } else {
-        p.mute();
+        player.mute();
       }
-    });
+    } catch (_) {
+      /* ignore */
+    }
   };
 
-  const playActive = () => {
-    players.forEach((p, i) => {
-      if (!p || typeof p.pauseVideo !== "function") return;
-      if (i === index) {
-        try {
-          p.seekTo(0, true);
-          if (soundOn) {
-            p.unMute();
-            p.setVolume(100);
-          } else {
-            p.mute();
-          }
-          p.playVideo();
-        } catch (_) {
-          /* ignore */
-        }
-      } else {
-        try {
-          p.pauseVideo();
-          p.mute();
-        } catch (_) {
-          /* ignore */
-        }
+  const playCurrent = () => {
+    if (!player || !ready) return;
+    const key = slides[index] && slides[index].dataset.trailerKey;
+    if (!key) return;
+    try {
+      const current = typeof player.getVideoData === "function" ? player.getVideoData() : null;
+      const same = current && current.video_id === key;
+      if (same) {
+        applyMute();
+        player.playVideo();
+      } else if (typeof player.loadVideoById === "function") {
+        player.mute();
+        player.loadVideoById({ videoId: key, startSeconds: 0 });
+        window.setTimeout(applyMute, 300);
       }
-    });
+    } catch (_) {
+      /* ignore */
+    }
+    scheduleAdvance();
   };
 
   const goTo = (next) => {
-    if (next === index && players[next]) {
-      playActive();
-      scheduleAdvance();
-      return;
-    }
-    index = next;
+    index = ((next % slides.length) + slides.length) % slides.length;
     slides.forEach((slide, i) => slide.classList.toggle("is-active", i === index));
     dots.forEach((dot, i) => {
       const on = i === index;
@@ -252,8 +251,7 @@ function initHeroSlider(prefersReduced) {
       else dot.removeAttribute("aria-current");
     });
     updateMeta(slides[index]);
-    playActive();
-    scheduleAdvance();
+    playCurrent();
   };
 
   if (soundBtn) {
@@ -261,10 +259,9 @@ function initHeroSlider(prefersReduced) {
       soundOn = !soundOn;
       setSoundUi();
       applyMute();
-      const active = players[index];
-      if (active && typeof active.playVideo === "function") {
+      if (player && typeof player.playVideo === "function") {
         try {
-          active.playVideo();
+          player.playVideo();
         } catch (_) {
           /* ignore */
         }
@@ -282,65 +279,63 @@ function initHeroSlider(prefersReduced) {
   updateMeta(slides[0]);
   setSoundUi();
 
-  if (prefersReduced) {
-    // Still-image wallpaper only — no autoplay video.
+  if (prefersReduced || !playerHost) {
     return;
   }
 
-  const bootPlayers = () => {
-    players = slides.map((slide, i) => {
-      const mount = slide.querySelector("[data-yt-mount]");
-      const key = slide.dataset.trailerKey;
-      if (!mount || !key || !window.YT || !window.YT.Player) return null;
-      const host = document.createElement("div");
-      host.id = `hero-yt-${i}`;
-      mount.appendChild(host);
-      return new window.YT.Player(host.id, {
-        videoId: key,
-        playerVars: {
-          autoplay: i === 0 ? 1 : 0,
-          mute: 1,
-          controls: 0,
-          rel: 0,
-          modestbranding: 1,
-          playsinline: 1,
-          fs: 0,
-          disablekb: 1,
-          iv_load_policy: 3,
-          origin: window.location.origin,
+  const bootPlayer = () => {
+    if (!window.YT || !window.YT.Player) return;
+    const firstKey = slides[0].dataset.trailerKey;
+    if (!firstKey) return;
+
+    if (!playerHost.id) playerHost.id = "hero-yt-player";
+    playerHost.innerHTML = "";
+
+    player = new window.YT.Player(playerHost.id, {
+      width: "100%",
+      height: "100%",
+      videoId: firstKey,
+      playerVars: {
+        autoplay: 1,
+        mute: 1,
+        controls: 0,
+        rel: 0,
+        modestbranding: 1,
+        playsinline: 1,
+        fs: 0,
+        disablekb: 1,
+        iv_load_policy: 3,
+      },
+      events: {
+        onReady: (event) => {
+          ready = true;
+          player = event.target;
+          try {
+            player.mute();
+            player.playVideo();
+          } catch (_) {
+            /* ignore */
+          }
+          scheduleAdvance();
         },
-        events: {
-          onReady: (event) => {
-            event.target.mute();
-            soundOn = false;
-            setSoundUi();
-            if (i === index) {
-              event.target.playVideo();
-              scheduleAdvance();
-            } else {
-              event.target.pauseVideo();
-            }
-          },
-          onStateChange: (event) => {
-            if (i !== index) return;
-            if (event.data === window.YT.PlayerState.ENDED) {
-              goTo((index + 1) % slides.length);
-            }
-            if (event.data === window.YT.PlayerState.PLAYING) {
-              applyMute();
-            }
-          },
-          onError: (event) => {
-            // 101 / 150 = embedding disabled by owner — skip this slide.
-            const code = event && event.data;
-            if ((code === 101 || code === 150 || code === 100 || code === 2) && slides.length > 1) {
-              if (i === index) goTo((index + 1) % slides.length);
-            }
-          },
+        onStateChange: (event) => {
+          if (event.data === window.YT.PlayerState.PLAYING) {
+            applyMute();
+            root.classList.add("is-playing");
+          }
+          if (event.data === window.YT.PlayerState.ENDED && slides.length > 1) {
+            goTo((index + 1) % slides.length);
+          }
         },
-      });
+        onError: (event) => {
+          const code = event && event.data;
+          if ((code === 101 || code === 150 || code === 100 || code === 2) && slides.length > 1) {
+            goTo((index + 1) % slides.length);
+          }
+        },
+      },
     });
   };
 
-  loadYouTubeApi(bootPlayers);
+  loadYouTubeApi(bootPlayer);
 }
