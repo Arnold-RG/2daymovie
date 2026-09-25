@@ -9416,5 +9416,334 @@
     "trailer_keys": [
       "g5Rc_MTTO9M"
     ]
+  },
+  {
+    "id": 1300926,
+    "year": 2026,
+    "query": "The Angry Birds Movie 3",
+    "title": "The Angry Birds Movie 3",
+    "overview": "Red faces his greatest challenge yet: surviving fatherhood… while saving the world.",
+    "vote_average": 0,
+    "poster_path": "/oxaW6X3xohnzdFSBKCrCjRDckMe.jpg",
+    "backdrop_path": "/ieAytQ8YcWEZGQpbBy7vHVddwd.jpg",
+    "release_date": "2026-01-01",
+    "genre_ids": [
+      16,
+      35,
+      10751
+    ],
+    "trailer_key": "a9DB_aUMzME",
+    "trailer_keys": [
+      "a9DB_aUMzME",
+      "8_nX4qQU1Wc"
+    ],
+    "watch_link": null
+  },
+  {
+    "id": 1567605,
+    "year": 2026,
+    "query": "Ebenezer",
+    "title": "Ebenezer",
+    "overview": "Tale of an elderly miser who embarks on a supernatural journey after visits from the ghost of his former business partner and the Spirits of Christmas Past, Present, and Yet to Come force him to confront his past and fight for a second chance at happiness.",
+    "vote_average": 0,
+    "poster_path": "/wmuMZrelOQBAN2KlA30yOIeIUJl.jpg",
+    "backdrop_path": "/6VlTpWnm6DjNlK1NKFv1o4eMU33.jpg",
+    "release_date": "2026-01-01",
+    "genre_ids": [
+      14,
+      35
+    ],
+    "trailer_key": "A7lyvgnDuDE",
+    "trailer_keys": [
+      "A7lyvgnDuDE"
+    ],
+    "watch_link": null
+  },
+  {
+    "id": 1401586,
+    "year": 2027,
+    "query": "Sonic the Hedgehog 4",
+    "title": "Sonic the Hedgehog 4",
+    "overview": "Sonic the Hedgehog, joined by a new hero named Amy, faces a new technological nemesis known as Metal Sonic.",
+    "vote_average": 0,
+    "poster_path": "/t8uoHBODkFlSQJRL6qc4IclUBlH.jpg",
+    "backdrop_path": "/99E1awkT9I8EoTY3OJZzOPjzFal.jpg",
+    "release_date": "2027-01-01",
+    "genre_ids": [
+      35,
+      28,
+      10751,
+      878
+    ],
+    "trailer_key": "YShjCIA9aXk",
+    "trailer_keys": [
+      "YShjCIA9aXk"
+    ],
+    "watch_link": null
+  },
+  {
+    "id": 421892,
+    "year": 2027,
+    "query": "Shrek 5",
+    "title": "Shrek 5",
+    "overview": "Shrek and Donkey team up for another whirlwind, big-city adventure, this time in the magical city of Further Further Away.",
+    "vote_average": 0,
+    "poster_path": "/m9jLiemA7t2umlXKptDwtIUHU8l.jpg",
+    "backdrop_path": "/wHbZr627WHFPMpfskRwX6NBgjxv.jpg",
+    "release_date": "2027-01-01",
+    "genre_ids": [
+      35,
+      16,
+      14,
+      12,
+      10751
+    ],
+    "trailer_key": "Swiz1XyfhcI",
+    "trailer_keys": [
+      "Swiz1XyfhcI",
+      "BhCSpmVOGow"
+    ],
+    "watch_link": null
+  },
+  {
+    "id": 1084244,
+    "year": 2026,
+    "query": "Toy Story 5",
+    "title": "Toy Story 5",
+    "overview": "When Bonnie receives a Lilypad tablet as a gift and becomes obsessed, Buzz, Woody, Jessie and the rest of the gang's jobs become exponentially harder when they have to go head to head with the all-new threat to playtime.",
+    "vote_average": 0,
+    "poster_path": "/sfQtVlIHljToOwYjhe21KPGzZWK.jpg",
+    "backdrop_path": "/qjTqY5coNiz6sVtPng40IzltsoN.jpg",
+    "release_date": "2026-01-01",
+    "genre_ids": [
+      16,
+      10751,
+      35,
+      12
+    ],
+    "trailer_key": "QftAW9TTmuQ",
+    "trailer_keys": [
+      "QftAW9TTmuQ",
+      "GGBgf8dcgyY"
+    ],
+    "watch_link": null
+  },
+  {
+    "id": 1384758,
+    "year": 2026,
+    "query": "Ice Age: Boiling Point",
+    "title": "Ice Age: Boiling Point",
+    "overview": "A dinosaur-and-lava-filled madcap adventure takes Manny, Sid, Diego, Ellie, Buck, acorn-obsessed Scrat – this time joined by Baby Scrat and the enormous Jurassic Scrat – and the rest of the herd to visit never before-seen corners of the treacherous Lost World.",
+    "vote_average": 0,
+    "poster_path": "/mPhAreyZLLcZ9pl4KRyEaqSu1Zv.jpg",
+    "backdrop_path": "/pJfMliqzzVzTU634zpYDMfYNX6c.jpg",
+    "release_date": "2026-01-01",
+    "genre_ids": [
+      12,
+      16,
+      35,
+      10751
+    ],
+    "trailer_key": "3fjmjX0QOIg",
+    "trailer_keys": [
+      "3fjmjX0QOIg",
+      "f93TgnGk66k"
+    ],
+    "watch_link": null
+  },
+  {
+    "id": 533533,
+    "year": 2025,
+    "query": "TRON: Ares",
+    "title": "TRON: Ares",
+    "overview": "A highly sophisticated Program called Ares is sent from the digital world into the real world on a dangerous mission, marking humankind's first encounter with A.I. beings.",
+    "vote_average": 0,
+    "poster_path": "/chpWmskl3aKm1aTZqUHRCtviwPy.jpg",
+    "backdrop_path": "/pUNfHmVqfwRdILhCkU8TdysVOXo.jpg",
+    "release_date": "2025-01-01",
+    "genre_ids": [
+      878,
+      12,
+      28
+    ],
+    "trailer_key": "gNa0j4mQo1k",
+    "trailer_keys": [
+      "gNa0j4mQo1k",
+      "ukY6NX_Our4"
+    ],
+    "watch_link": null
+  },
+  {
+    "id": 83533,
+    "year": 2025,
+    "query": "Avatar: Fire and Ash",
+    "title": "Avatar: Fire and Ash",
+    "overview": "In the wake of the devastating war against the RDA and the loss of their eldest son, Jake Sully and Neytiri face a new threat on Pandora: the Ash People, a violent and power-hungry Na'vi tribe led by the ruthless Varang. Jake's family must fight for their survival and the future of Pandora in a conflict that pushes them to their emotional and physical limits.",
+    "vote_average": 0,
+    "poster_path": "/bRBeSHfGHwkEpImlhxPmOcUsaeg.jpg",
+    "backdrop_path": "/iN41Ccw4DctL8npfmYg1j5Tr1eb.jpg",
+    "release_date": "2025-01-01",
+    "genre_ids": [
+      878,
+      12,
+      14
+    ],
+    "trailer_key": "Ma1x7ikpid8",
+    "trailer_keys": [
+      "Ma1x7ikpid8",
+      "nb_fFj_0rq8"
+    ],
+    "watch_link": null
+  },
+  {
+    "id": 1314481,
+    "year": 2026,
+    "query": "The Devil Wears Prada 2",
+    "title": "The Devil Wears Prada 2",
+    "overview": "Andy Sachs returns to Runway as Miranda Priestly navigates a new media landscape and Runway's position within. The duo reconnect with former assistant Emily Charlton, now the head of a luxury brand that possesses funding which could ensure Runway's survival.",
+    "vote_average": 0,
+    "poster_path": "/xTI42pmsP5EDnvsNJPEDubwWBQO.jpg",
+    "backdrop_path": "/Af907x5h9W1wVis8XrSd7ynTWuy.jpg",
+    "release_date": "2026-01-01",
+    "genre_ids": [
+      35,
+      18
+    ],
+    "trailer_key": "PMd1at7OwiE",
+    "trailer_keys": [
+      "PMd1at7OwiE",
+      "mJtjWBxb4CA"
+    ],
+    "watch_link": null
+  },
+  {
+    "id": 1384216,
+    "year": 2026,
+    "query": "The Dog Stars",
+    "title": "The Dog Stars",
+    "overview": "After the world's population has been ravaged by a pandemic, a man lives a lonesome existence in a Colorado airplane hangar with his dog and a dour gunman he has befriended. When a mysterious transmission comes through on the radio while he’s flying his old Cessna, it sparks a hunt for the provenance of the sound.",
+    "vote_average": 0,
+    "poster_path": "/A7i16oDi03qrKep5pBfuTWNUTb.jpg",
+    "backdrop_path": "/quAHqi4zBrB5fIfHvgrqiG4xzAC.jpg",
+    "release_date": "2026-01-01",
+    "genre_ids": [
+      878,
+      53,
+      12
+    ],
+    "trailer_key": "-xSxaE1ClEE",
+    "trailer_keys": [
+      "-xSxaE1ClEE",
+      "cmzVY1goqwQ"
+    ],
+    "watch_link": null
+  },
+  {
+    "id": 1198994,
+    "year": 2026,
+    "query": "Send Help",
+    "title": "Send Help",
+    "overview": "Two colleagues become stranded on a deserted island, the only survivors of a plane crash. On the island, they must overcome past grievances and work together to survive, but ultimately, it's a battle of wills and wits to make it out alive.",
+    "vote_average": 0,
+    "poster_path": "/zbJWVHOtj3ljBzWgL1P8pxP03Up.jpg",
+    "backdrop_path": "/hO2jx1H3XafR7Y8QbFgVH1sHTY9.jpg",
+    "release_date": "2026-01-01",
+    "genre_ids": [
+      27,
+      53,
+      35
+    ],
+    "trailer_key": "cOmnmFz_Uzs",
+    "trailer_keys": [
+      "cOmnmFz_Uzs",
+      "R4wiXj9NmEE"
+    ],
+    "watch_link": null
+  },
+  {
+    "id": 1107166,
+    "year": 2026,
+    "query": "Psycho Killer",
+    "title": "Psycho Killer",
+    "overview": "Following the brutal murder of her husband, a Kansas highway patrol officer sets out on a journey to track down the perpetrator. As the hunt progresses, she comes to realize the man responsible is a sadistic serial killer, and the depth of his mental depravity and his sinister agenda is more twisted than anyone could have imagined.",
+    "vote_average": 0,
+    "poster_path": "/5xgxxmLivJXL8aF0HdZfpx8aAIo.jpg",
+    "backdrop_path": "/gOcgmSwbCFW7h1rmEqMvYPzvjh7.jpg",
+    "release_date": "2026-01-01",
+    "genre_ids": [
+      80,
+      27,
+      9648
+    ],
+    "trailer_key": "pwq8gwdVxts",
+    "trailer_keys": [
+      "pwq8gwdVxts"
+    ],
+    "watch_link": null
+  },
+  {
+    "id": 1401281,
+    "year": 2026,
+    "query": "The Testament of Ann Lee",
+    "title": "The Testament of Ann Lee",
+    "overview": "The extraordinary true legend of Ann Lee, founder of the devotional sect known as the Shakers, who preached gender and social equality and was revered by her followers as the female Christ.",
+    "vote_average": 0,
+    "poster_path": "/hBGg3IGRM7LM6ydMmDrl8mEx33Y.jpg",
+    "backdrop_path": "/jZNR5onRZijwyGr5iWbs3J9QcYr.jpg",
+    "release_date": "2026-01-01",
+    "genre_ids": [
+      36,
+      18,
+      10402
+    ],
+    "trailer_key": "Rb0ZhiDD9J0",
+    "trailer_keys": [
+      "Rb0ZhiDD9J0",
+      "hV42LhFefeE"
+    ],
+    "watch_link": null
+  },
+  {
+    "id": 1266127,
+    "year": 2026,
+    "query": "Ready or Not 2: Here I Come",
+    "title": "Ready or Not: Here I Come",
+    "overview": "Moments after surviving an all-out attack from the Le Domas family, Grace discovers she’s reached the next level of the nightmarish game — and this time with her estranged sister Faith at her side. Grace has one chance to survive, keep her sister alive, and claim the High Seat of the Council that controls the world. Four rival families are hunting her for the throne, and whoever wins rules it all.",
+    "vote_average": 0,
+    "poster_path": "/13ZcJzSGEqVgDSqsS9U5EkQwPkV.jpg",
+    "backdrop_path": "/fx2cEuadZK28VHKkc0F1nFR96i0.jpg",
+    "release_date": "2026-01-01",
+    "genre_ids": [
+      27,
+      35
+    ],
+    "trailer_key": "jczr0KCloXk",
+    "trailer_keys": [
+      "jczr0KCloXk",
+      "b_WR4sh2ncM"
+    ],
+    "watch_link": null
+  },
+  {
+    "id": 1228710,
+    "year": 2026,
+    "query": "Star Wars: The Mandalorian and Grogu",
+    "title": "The Mandalorian and Grogu",
+    "overview": "The evil Empire has fallen, and Imperial warlords remain scattered throughout the galaxy. As the fledgling New Republic works to protect everything the Rebellion fought for, they have enlisted the help of legendary Mandalorian bounty hunter Din Djarin and his young apprentice Grogu.",
+    "vote_average": 0,
+    "poster_path": "/uwMKWjcNID0D9jjplsjkQS2OrB4.jpg",
+    "backdrop_path": "/ysLlsAxwgNSxBWHCgTKJrmjxpRQ.jpg",
+    "release_date": "2026-01-01",
+    "genre_ids": [
+      28,
+      12,
+      878
+    ],
+    "trailer_key": "uwild1rw7Aw",
+    "trailer_keys": [
+      "uwild1rw7Aw",
+      "b68nrxVDsMY"
+    ],
+    "watch_link": null
   }
 ]

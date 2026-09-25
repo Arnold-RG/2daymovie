@@ -9,10 +9,44 @@
     <p class="detail-kicker">Coming soon</p>
     <h1>Upcoming movies &amp; series</h1>
     <p>
-      2026 and 2027 titles from the curated list.
+      2025–2027 titles from the curated list.
       Trailers open in a watch room on this site when available; otherwise they stay listed as coming soon.
     </p>
   </header>
+
+  <section class="home-block">
+    <div class="row-head">
+      <h2>Movies · 2025</h2>
+      <span class="muted">{{ movies_2025|length }} titles</span>
+    </div>
+    <div class="poster-grid shelf-grid">
+      {% for movie in movies_2025 %}
+        {% if movie.status == 'trailer' and movie.id %}
+        <a class="poster-card is-visible" href="{{ url_for('watch_page', movie_id=movie.id) }}">
+          <span class="poster-frame">
+            <img class="poster-img" src="{{ movie.poster or fallback }}" alt="Poster for {{ movie.title }}" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='{{ fallback }}';" />
+            <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
+          </span>
+          <div class="poster-meta">
+            <h3>{{ movie.title }}</h3>
+            <p>2025 · Trailer ready</p>
+          </div>
+        </a>
+        {% else %}
+        <div class="poster-card is-visible upcoming-card">
+          <span class="poster-frame upcoming-frame">
+            <span class="upcoming-badge">Coming soon</span>
+            <span class="upcoming-title-mark">{{ movie.title[:1] }}</span>
+          </span>
+          <div class="poster-meta">
+            <h3>{{ movie.title }}</h3>
+            <p>2025</p>
+          </div>
+        </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </section>
 
   <section class="home-block">
     <div class="row-head">

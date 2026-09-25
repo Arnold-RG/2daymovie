@@ -261,15 +261,16 @@ Sitemap: {base}/sitemap.xml
         payload = upcoming.upcoming_payload()
         return render_template(
             "upcoming.html",
+            movies_2025=payload.get("movies_2025") or [],
             movies=payload["movies"],
             movies_2027=payload["movies_2027"],
             shows=payload["series"],
             movie_count=payload["movie_count"],
             series_count=payload["series_count"],
             with_trailer=payload["with_trailer"],
-            meta_title="Upcoming Movies & Series 2026–2027 | 2daymovie",
+            meta_title="Upcoming Movies & Series 2025–2027 | 2daymovie",
             meta_description=(
-                "Browse upcoming 2026 and 2027 movies and series on 2daymovie. "
+                "Browse upcoming 2025–2027 movies and series on 2daymovie. "
                 "On-site trailers when available."
             ),
         )
