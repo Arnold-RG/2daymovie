@@ -37,13 +37,16 @@ Optional: set `TMDB_WATCH_REGION` (default `US`) for regional provider results.
 
 ## Deploy (permanent live URL)
 
-### Render (free)
+**Live now (GitHub Pages):** https://arnold-rg.github.io/2daymovie/
+
+Paste a free TMDB API key in the site header to unlock the full catalog.
+
+### Render (optional Flask hosting)
 
 1. Open: https://render.com/deploy?repo=https://github.com/Arnold-RG/2daymovie
 2. Sign in with GitHub and click **Apply** / **Deploy**
-3. Your permanent URL will look like: `https://twodaymovie.onrender.com`
-4. Optional: set `TMDB_API_KEY` in Render → Environment
-5. Every push to `main` redeploys automatically
+3. Optional: set `TMDB_API_KEY` in Render → Environment
+4. Every push to `main` redeploys automatically
 
 ### Docker
 
