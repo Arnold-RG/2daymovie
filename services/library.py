@@ -124,3 +124,18 @@ def year_index() -> list[dict[str, Any]]:
         }
         for y in all_years()
     ]
+
+
+def movies_shelf(selected_year: int | None = None) -> dict[str, Any]:
+    """Year accordion data: all year summaries + movies for the open year only."""
+    years = year_index()
+    if not years:
+        return {"years": [], "selected_year": None, "movies": []}
+    valid = {y["year"] for y in years}
+    if selected_year not in valid:
+        selected_year = years[0]["year"]
+    return {
+        "years": years,
+        "selected_year": selected_year,
+        "movies": movies_for_year(selected_year),
+    }

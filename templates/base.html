@@ -7,7 +7,7 @@
   <meta name="theme-color" content="#07090c" />
   <meta name="color-scheme" content="dark" />
   <title>{% block title %}{{ site_name }} — Find every film. Watch legally.{% endblock %}</title>
-  <meta name="description" content="2daymovie.to is a free movie discovery platform. Browse the world catalog, watch official trailers, and find legal streaming options — no account required." />
+  <meta name="description" content="2daymovie.to is a free movie discovery platform. Browse by category, year, or series — official trailers and legal streaming options." />
   <link rel="icon" href="{{ url_for('static', filename='img/poster-fallback.svg') }}" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -19,13 +19,22 @@
   <a class="skip-link" href="#main">Skip to content</a>
 
   <header class="site-header">
-    <a class="brand" href="{{ url_for('home') }}" aria-label="2daymovie.to home">
-      <span class="brand-mark">2DAY</span><span class="brand-dot">.</span><span class="brand-rest">MOVIE</span>
-    </a>
+    <div class="header-bar">
+      <a class="brand" href="{{ url_for('home') }}" aria-label="2daymovie.to home">
+        <span class="brand-mark">2DAY</span><span class="brand-dot">.</span><span class="brand-rest">MOVIE</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>
+        <span class="sr-only">Menu</span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </button>
+    </div>
 
-    <nav class="site-nav" aria-label="Primary">
+    <nav class="site-nav" id="site-nav" aria-label="Primary" data-site-nav>
       <a href="{{ url_for('home') }}">Home</a>
-      <a href="{{ url_for('library_home') }}">Movies</a>
+      <a href="{{ url_for('categories_home') }}">Categories</a>
+      <a href="{{ url_for('movies_home') }}">Movies</a>
       <a href="{{ url_for('series_home') }}">Series</a>
       <a href="{{ url_for('browse') }}">Catalog</a>
       <a href="{{ url_for('search') }}">Search</a>

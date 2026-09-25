@@ -125,3 +125,45 @@ def series_by_decade() -> list[dict[str, Any]]:
         if shows:
             blocks.append({"label": label, "shows": shows})
     return blocks
+
+
+def series_year_index() -> list[dict[str, Any]]:
+    entries = all_series_entries()
+    counts: dict[int, int] = {}
+    trailers: dict[int, int] = {}
+    for show in entries:
+        y = show.get("start")
+        if not y:
+            continue
+        y = int(y)
+        counts[y] = counts.get(y, 0) + 1
+        if show.get("trailer_key"):
+            trailers[y] = trailers.get(y, 0) + 1
+    return [
+        {
+            "year": y,
+            "planned": counts[y],
+            "resolved": counts[y],
+            "with_trailer": trailers.get(y, 0),
+        }
+        for y in sorted(counts.keys(), reverse=True)
+    ]
+
+
+def series_shelf(selected_year: int | None = None) -> dict[str, Any]:
+    years = series_year_index()
+    if not years:
+        return {"years": [], "selected_year": None, "shows": []}
+    valid = {y["year"] for y in years}
+    if selected_year not in valid:
+        selected_year = years[0]["year"]
+    shows = [
+        s
+        for s in all_series_entries()
+        if s.get("start") and int(s["start"]) == selected_year
+    ]
+    return {
+        "years": years,
+        "selected_year": selected_year,
+        "shows": shows,
+    }

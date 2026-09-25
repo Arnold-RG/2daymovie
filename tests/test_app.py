@@ -34,11 +34,27 @@ def test_search():
     assert b"The Matrix" in response.data
 
 
-def test_library_ok():
+def test_movies_ok():
+    client = app.test_client()
+    response = client.get("/movies")
+    assert response.status_code == 200
+    assert b"Movies" in response.data
+    assert b"2000" in response.data or b"2024" in response.data
+
+
+def test_categories_ok():
+    client = app.test_client()
+    response = client.get("/categories")
+    assert response.status_code == 200
+    assert b"Categories" in response.data
+    assert b"Action" in response.data or b"Drama" in response.data
+
+
+def test_library_redirects():
     client = app.test_client()
     response = client.get("/library")
-    assert response.status_code == 200
-    assert b"2000" in response.data
+    assert response.status_code in (301, 302)
+    assert "/movies" in response.headers.get("Location", "")
 
 
 def test_year_page_ok():
@@ -74,7 +90,9 @@ def test_series_ok():
     response = client.get("/series")
     assert response.status_code == 200
     assert b"Series" in response.data
-    assert b"The Wire" in response.data or b"Breaking Bad" in response.data
+    response_2002 = client.get("/series?year=2002")
+    assert response_2002.status_code == 200
+    assert b"The Wire" in response_2002.data or b"The Shield" in response_2002.data
 
 
 def test_security_headers():

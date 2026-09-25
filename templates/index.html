@@ -6,38 +6,102 @@
   <div class="hero-veil" aria-hidden="true"></div>
   <div class="hero-copy">
     <p class="hero-brand" aria-label="2daymovie"><span class="gel">2DAY</span>MOVIE</p>
-    <h1>Cinema discovery. Legal HD.</h1>
-    <p class="hero-lede">Official full trailers and licensed streaming guides for a curated 2000–2026 library — free to browse, no piracy.</p>
+    <h1>Movies &amp; series. Legal HD.</h1>
+    <p class="hero-lede">Browse by category, year, or title — official trailers and licensed streaming guides only.</p>
     <div class="hero-actions">
-      <a class="btn btn-primary" href="{{ url_for('library_home') }}">Enter the library</a>
-      <a class="btn btn-ghost" href="{{ url_for('series_home') }}">Browse series</a>
-      {% if featured and featured.id %}
-      <a class="btn btn-ghost" href="{{ url_for('watch_page', movie_id=featured.id) }}">Open watch room</a>
-      {% endif %}
+      <a class="btn btn-primary" href="{{ url_for('categories_home') }}">Categories</a>
+      <a class="btn btn-ghost" href="{{ url_for('movies_home') }}">Movies</a>
+      <a class="btn btn-ghost" href="{{ url_for('series_home') }}">Series</a>
     </div>
   </div>
 </section>
 
-<section class="catalog" id="catalog">
-  <div class="catalog-intro">
-    <h2 class="catalog-label">Jump to a year</h2>
-    <a class="text-link" href="{{ url_for('library_home') }}">Full library →</a>
-  </div>
-  <div class="year-jump" aria-label="Browse by year">
-    {% for y in year_cards %}
-    <a class="year-jump-link" href="{{ url_for('year_page', year=y.year) }}">{{ y.year }}</a>
-    {% endfor %}
-  </div>
-
-  {% for title, movies in rows %}
-  {% if movies %}
-  <section class="row">
+<section class="catalog home-catalog" id="catalog">
+  <section class="home-block">
     <div class="row-head">
-      <h2>{{ title }}</h2>
+      <h2>Categories</h2>
+      <a class="text-link" href="{{ url_for('categories_home') }}">All genres →</a>
+    </div>
+    <div class="category-chip-grid" aria-label="Movie categories">
+      {% for g in genres[:12] %}
+      <a class="category-chip" href="{{ url_for('genre', genre_id=g.id) }}">{{ g.name }}</a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="home-block">
+    <div class="row-head">
+      <h2>Movies · {{ spotlight_year }}</h2>
+      <a class="text-link" href="{{ url_for('movies_home', year=spotlight_year) }}">All years →</a>
     </div>
     <div class="poster-grid home-poster-grid">
-      {% for movie in movies if movie.id %}
-      <a class="poster-card" href="{% if movie.media_type == 'tv' %}{{ url_for('series_watch', tv_id=movie.id) }}{% else %}{{ url_for('watch_page', movie_id=movie.id) }}{% endif %}">
+      {% for movie in spotlight if movie.id %}
+      <a class="poster-card" href="{{ url_for('watch_page', movie_id=movie.id) }}">
+        <span class="poster-frame">
+          <img
+            class="poster-img"
+            src="{{ movie.poster or fallback }}"
+            alt="Poster for {{ movie.title }}"
+            loading="lazy"
+            decoding="async"
+            width="200"
+            height="300"
+            onerror="this.onerror=null;this.src='{{ fallback }}';"
+          />
+          <span class="poster-play" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+          </span>
+        </span>
+        <div class="poster-meta">
+          <h3>{{ movie.title }}</h3>
+          <p>{{ movie.year }}{% if movie.vote_average %} · ★ {{ movie.vote_average }}{% endif %}</p>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="home-block">
+    <div class="row-head">
+      <h2>Series</h2>
+      <a class="text-link" href="{{ url_for('series_home') }}">All series →</a>
+    </div>
+    <div class="poster-grid home-poster-grid">
+      {% for show in series_spotlight if show.id %}
+      <a class="poster-card" href="{{ url_for('series_watch', tv_id=show.id) }}">
+        <span class="poster-frame">
+          <img
+            class="poster-img"
+            src="{{ show.poster or fallback }}"
+            alt="Poster for {{ show.title }}"
+            loading="lazy"
+            decoding="async"
+            width="200"
+            height="300"
+            onerror="this.onerror=null;this.src='{{ fallback }}';"
+          />
+          <span class="poster-play" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+          </span>
+        </span>
+        <div class="poster-meta">
+          <h3>{{ show.title }}</h3>
+          <p>{{ show.years }}</p>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+
+  {% if trending %}
+  <section class="home-block">
+    <div class="row-head">
+      <h2>Trending</h2>
+      <a class="text-link" href="{{ url_for('browse') }}">Catalog →</a>
+    </div>
+    <div class="poster-grid home-poster-grid">
+      {% for movie in trending if movie.id %}
+      <a class="poster-card" href="{{ url_for('watch_page', movie_id=movie.id) }}">
         <span class="poster-frame">
           <img
             class="poster-img"
@@ -62,6 +126,5 @@
     </div>
   </section>
   {% endif %}
-  {% endfor %}
 </section>
 {% endblock %}

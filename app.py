@@ -6,7 +6,7 @@ import os
 import time
 
 from dotenv import load_dotenv
-from flask import Flask, Response, abort, g, jsonify, render_template, request
+from flask import Flask, Response, abort, g, jsonify, redirect, render_template, request, url_for
 from prometheus_client import CONTENT_TYPE_LATEST, Counter, Histogram, generate_latest
 
 from data.year_movies import all_years
@@ -100,35 +100,62 @@ def create_app() -> Flask:
         featured = next((m for m in spotlight if m.get("backdrop")), None) or (
             trending["results"][0] if trending["results"] else None
         )
-        rows = [
-            (f"Library spotlight · {spotlight_year}", spotlight),
-            ("Standout series", series_spotlight),
-            ("Trending this week", trending["results"]),
-        ]
         return render_template(
             "index.html",
             featured=featured,
             stats=stats,
-            year_cards=years,
             spotlight_year=spotlight_year,
             spotlight=spotlight,
-            rows=rows,
+            series_spotlight=series_spotlight,
+            trending=trending["results"][:12],
+        )
+
+    @app.route("/categories")
+    def categories_home():
+        return render_template("categories.html", genres=tmdb.get_genres())
+
+    @app.route("/movies")
+    def movies_home():
+        year_arg = request.args.get("year")
+        selected = None
+        if year_arg:
+            try:
+                selected = int(year_arg)
+            except (TypeError, ValueError):
+                selected = None
+        shelf = library.movies_shelf(selected)
+        return render_template(
+            "movies.html",
+            stats=library.library_stats(),
+            years=shelf["years"],
+            selected_year=shelf["selected_year"],
+            movies=shelf["movies"],
         )
 
     @app.route("/library")
     def library_home():
-        return render_template(
-            "library.html",
-            stats=library.library_stats(),
-            years=library.year_index(),
-        )
+        # Legacy URL — library became Movies (year shelves)
+        year = request.args.get("year")
+        if year:
+            return redirect(url_for("movies_home", year=year))
+        return redirect(url_for("movies_home"))
 
     @app.route("/series")
     def series_home():
+        year_arg = request.args.get("year")
+        selected = None
+        if year_arg:
+            try:
+                selected = int(year_arg)
+            except (TypeError, ValueError):
+                selected = None
+        shelf = series.series_shelf(selected)
         return render_template(
             "series.html",
             stats=series.series_stats(),
-            decades=series.series_by_decade(),
+            years=shelf["years"],
+            selected_year=shelf["selected_year"],
+            shows=shelf["shows"],
         )
 
     @app.route("/series/watch/<int:tv_id>")
@@ -214,9 +241,11 @@ def create_app() -> Flask:
 
     @app.route("/genre/<int:genre_id>")
     def genre(genre_id: int):
+        name = tmdb.genre_name(genre_id)
+        if name.lower() in {"adult", "nc-17"}:
+            abort(404)
         page = _page()
         payload = tmdb.discover_by_genre(genre_id, page=page)
-        name = tmdb.genre_name(genre_id)
         return render_template(
             "genre.html",
             genre_name=name,

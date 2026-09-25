@@ -143,9 +143,15 @@ def _demo_normalize(item: dict[str, Any]) -> dict[str, Any]:
 
 def get_genres() -> list[dict[str, Any]]:
     if not using_live_api():
-        return DEMO_GENRES
-    data = _get("/genre/movie/list")
-    return data.get("genres") or []
+        genres = DEMO_GENRES
+    else:
+        data = _get("/genre/movie/list")
+        genres = data.get("genres") or []
+    return [
+        g
+        for g in genres
+        if str(g.get("name") or "").strip().lower() not in {"adult", "nc-17"}
+    ]
 
 
 def get_trending(page: int = 1) -> dict[str, Any]:

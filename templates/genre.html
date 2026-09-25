@@ -5,28 +5,34 @@
 
 {% block content %}
 {% set fallback = url_for('static', filename='img/poster-fallback.svg') %}
-<section class="page-band">
-  <p class="detail-kicker">Genre</p>
-  <h1>{{ genre_name }}</h1>
-  <p>
-    {{ "{:,}".format(total_results) }} titles — trailers and legal watch links on each page.
-  </p>
+<section class="page-band shelf-page">
+  <header class="section-head">
+    <p class="detail-kicker">Category</p>
+    <h1>{{ genre_name }}</h1>
+    <p>{{ "{:,}".format(total_results) }} titles — trailers and legal watch links on each page.</p>
+    <p><a class="text-link" href="{{ url_for('categories_home') }}">← All categories</a></p>
+  </header>
 
   {% if movies %}
-  <div class="poster-grid">
+  <div class="poster-grid shelf-grid">
     {% for movie in movies %}
-    <a class="poster-card" href="{{ url_for('movie_details', movie_id=movie.id) }}">
-      <img
-        class="poster-img"
-        src="{{ movie.poster or fallback }}"
-        {% if movie.poster_srcset %}srcset="{{ movie.poster_srcset }}" sizes="(max-width: 600px) 45vw, 160px"{% endif %}
-        alt="Poster for {{ movie.title }}"
-        loading="lazy"
-        decoding="async"
-        width="200"
-        height="300"
-        onerror="this.onerror=null;this.removeAttribute('srcset');this.src='{{ fallback }}';"
-      />
+    <a class="poster-card is-visible" href="{{ url_for('watch_page', movie_id=movie.id) }}">
+      <span class="poster-frame">
+        <img
+          class="poster-img"
+          src="{{ movie.poster or fallback }}"
+          {% if movie.poster_srcset %}srcset="{{ movie.poster_srcset }}" sizes="(max-width: 600px) 44vw, 160px"{% endif %}
+          alt="Poster for {{ movie.title }}"
+          loading="lazy"
+          decoding="async"
+          width="200"
+          height="300"
+          onerror="this.onerror=null;this.removeAttribute('srcset');this.src='{{ fallback }}';"
+        />
+        <span class="poster-play" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+        </span>
+      </span>
       <div class="poster-meta">
         <h3>{{ movie.title }}</h3>
         <p>{{ movie.year }} · ★ {{ movie.vote_average }}</p>
@@ -41,7 +47,7 @@
        next_url=url_for('genre', genre_id=genre_id, page=page+1) if page < total_pages else None
      ) }}
   {% else %}
-  <p class="empty-state">No titles in this genre right now.</p>
+  <p class="empty-state">No titles in this category right now.</p>
   {% endif %}
 </section>
 {% endblock %}

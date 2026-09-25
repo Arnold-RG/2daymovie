@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 
-{% block title %}Series · {{ site_name }}{% endblock %}
+{% block title %}Movies · {{ site_name }}{% endblock %}
 
 {% block content %}
 {% set fallback = url_for('static', filename='img/poster-fallback.svg') %}
 <section class="page-band shelf-page">
   <header class="section-head">
-    <p class="detail-kicker">Prestige &amp; standout TV</p>
-    <h1>Series</h1>
-    <p>{{ stats.planned }} shows · tap a premiere year to reveal its shelf</p>
+    <p class="detail-kicker">Curated film archive</p>
+    <h1>Movies</h1>
+    <p>{{ stats.planned }} titles · tap a year to reveal its shelf</p>
   </header>
 
   <div class="year-accordion" data-year-accordion>
@@ -16,43 +16,43 @@
     <details class="year-panel" {% if y.year == selected_year %}open{% endif %}>
       <summary class="year-panel-summary">
         <span class="year-panel-year">{{ y.year }}</span>
-        <span class="year-panel-meta">{{ y.planned }} series · {{ y.with_trailer }} trailers</span>
+        <span class="year-panel-meta">{{ y.planned }} films · {{ y.with_trailer }} trailers</span>
         <span class="year-panel-chevron" aria-hidden="true"></span>
       </summary>
       <div class="year-panel-body">
         {% if y.year == selected_year %}
         <div class="poster-grid shelf-grid">
-          {% for show in shows %}
-          <a class="poster-card is-visible" href="{% if show.id %}{{ url_for('series_watch', tv_id=show.id) }}{% else %}#{% endif %}">
+          {% for movie in movies %}
+          <a class="poster-card is-visible" href="{% if movie.id %}{{ url_for('watch_page', movie_id=movie.id) }}{% else %}#{% endif %}">
             <span class="poster-frame">
               <img
                 class="poster-img"
-                src="{{ show.poster or fallback }}"
-                alt="Poster for {{ show.title }}"
+                src="{{ movie.poster or fallback }}"
+                alt="Poster for {{ movie.title }}"
                 loading="lazy"
                 decoding="async"
                 width="200"
                 height="300"
                 onerror="this.onerror=null;this.src='{{ fallback }}';"
               />
-              {% if show.id %}
+              {% if movie.id %}
               <span class="poster-play" aria-hidden="true">
                 <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
               </span>
               {% endif %}
             </span>
             <div class="poster-meta">
-              <h3>{{ show.title }}</h3>
-              <p>{{ show.years }}</p>
+              <h3>{{ movie.title }}</h3>
+              <p>{{ movie.year }}{% if movie.vote_average %} · ★ {{ movie.vote_average }}{% endif %}</p>
             </div>
           </a>
           {% else %}
-          <p class="empty-state">No series for this year yet.</p>
+          <p class="empty-state">No titles for this year yet.</p>
           {% endfor %}
         </div>
         {% else %}
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="{{ url_for('series_home', year=y.year) }}">Show {{ y.year }} series</a>
+          <a class="btn btn-primary" href="{{ url_for('movies_home', year=y.year) }}">Show {{ y.year }} movies</a>
         </p>
         {% endif %}
       </div>

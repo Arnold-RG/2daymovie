@@ -2,6 +2,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const prefersReduced =
     window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  const navToggle = document.querySelector("[data-nav-toggle]");
+  const siteNav = document.querySelector("[data-site-nav]");
+  if (navToggle && siteNav) {
+    navToggle.addEventListener("click", () => {
+      const open = siteNav.classList.toggle("is-open");
+      navToggle.setAttribute("aria-expanded", open ? "true" : "false");
+      document.body.classList.toggle("nav-open", open);
+    });
+  }
+
   const yearSelect = document.querySelector("[data-year-select]");
   if (yearSelect) {
     yearSelect.addEventListener("change", () => {
@@ -10,8 +20,25 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Year accordion: only one panel open; navigate to load that year's shelf
+  const accordion = document.querySelector("[data-year-accordion]");
+  if (accordion) {
+    accordion.querySelectorAll("details.year-panel").forEach((panel) => {
+      panel.addEventListener("toggle", () => {
+        if (!panel.open) return;
+        accordion.querySelectorAll("details.year-panel").forEach((other) => {
+          if (other !== panel) other.open = false;
+        });
+        const link = panel.querySelector(".year-panel-hint a");
+        if (link && !panel.querySelector(".shelf-grid")) {
+          window.location.assign(link.href);
+        }
+      });
+    });
+  }
+
   const revealables = document.querySelectorAll(
-    ".row, .poster-card, .detail-layout, .library-card, .year-row"
+    ".row, .home-block, .poster-card, .detail-layout, .library-card, .year-row, .category-tile"
   );
 
   if (prefersReduced) {
@@ -34,15 +61,15 @@ document.addEventListener("DOMContentLoaded", () => {
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return;
           const el = entry.target;
-          if (el.matches(".poster-card, .library-card, .year-row")) {
+          if (el.matches(".poster-card, .library-card, .year-row, .category-tile")) {
             const i = nextStaggerIndex(el);
-            el.style.transitionDelay = `${Math.min(i, 12) * 40}ms`;
+            el.style.transitionDelay = `${Math.min(i, 12) * 35}ms`;
           }
           el.classList.add("is-visible");
           observer.unobserve(el);
         });
       },
-      { threshold: 0.08, rootMargin: "0px 0px -3% 0px" }
+      { threshold: 0.06, rootMargin: "0px 0px -2% 0px" }
     );
     revealables.forEach((el) => observer.observe(el));
   } else {
