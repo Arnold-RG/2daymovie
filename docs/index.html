@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -41,7 +41,7 @@
   </header>
 
   <div class="settings-bar">
-    <span id="modeBadge" class="demo-badge">Demo catalog</span>
+    <span id="modeBadge" class="live-badge">2daymovie catalog</span>
     <input id="tmdbKey" type="password" placeholder="Paste free TMDB API key for full world catalog" />
     <button class="btn btn-primary" id="saveKey" type="button">Save key</button>
     <a class="text-link" href="https://www.themoviedb.org/settings/api" target="_blank" rel="noopener">Get free key</a>
@@ -73,11 +73,11 @@
   }
   function refreshMode() {
     if (usingLive()) {
-      modeBadge.textContent = 'Live TMDB catalog';
+      modeBadge.textContent = 'Live catalog';
       modeBadge.className = 'live-badge';
       keyInput.value = apiKey();
     } else {
-      modeBadge.textContent = 'Demo catalog — add TMDB key for hundreds of thousands of titles';
+      modeBadge.textContent = 'Catalog';
       modeBadge.className = 'demo-badge';
     }
   }
@@ -195,7 +195,7 @@
     if (usingLive()) {
       const detail = await tmdb(`/movie/${id}`, { append_to_response: 'videos,watch/providers,credits,similar' });
       const videos = (detail.videos && detail.videos.results) || [];
-      const trailer = videos.find(v => v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser')) || videos.find(v => v.site === 'YouTube');
+      const trailer = videos.find(v => v.site === 'YouTube' && v.type === 'Trailer' && v.official) || videos.find(v => v.site === 'YouTube' && v.type === 'Trailer');
       const country = ((detail['watch/providers'] || {}).results || {}).US || {};
       const providers = [];
       const seen = new Set();
@@ -213,7 +213,7 @@
       const m = norm(detail);
       m.trailer_key = trailer ? trailer.key : null;
       m.providers = providers;
-      m.watch_link = country.link || `https://www.justwatch.com/us/search?q=${encodeURIComponent(m.title)}`;
+      m.watch_link = `https://www.themoviedb.org/movie/${m.id}/watch`;
       m.cast = cast;
       m.similar = similar;
       return m;
@@ -351,3 +351,4 @@
   </script>
 </body>
 </html>
+

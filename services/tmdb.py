@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import os
 from typing import Any
-from urllib.parse import quote_plus
 
 import requests
 
@@ -264,21 +263,36 @@ def search_movies(query: str, page: int = 1) -> dict[str, Any]:
 
 
 def _pick_trailer(videos: list[dict[str, Any]]) -> str | None:
+    """Prefer a full official YouTube Trailer (not teaser/clip)."""
     trailers = [
         v
         for v in videos
-        if v.get("site") == "YouTube" and v.get("type") in {"Trailer", "Teaser"} and v.get("key")
+        if v.get("site") == "YouTube" and v.get("type") == "Trailer" and v.get("key")
     ]
     if not trailers:
-        yt = [v for v in videos if v.get("site") == "YouTube" and v.get("key")]
-        return yt[0]["key"] if yt else None
-    official = [v for v in trailers if v.get("official")]
-    return (official or trailers)[0]["key"]
+        return None
+
+    def score(v: dict[str, Any]) -> tuple[int, int, int]:
+        name = (v.get("name") or "").lower()
+        return (
+            1 if v.get("official") else 0,
+            1 if "official" in name else 0,
+            1 if "trailer" in name else 0,
+        )
+
+    trailers.sort(key=score, reverse=True)
+    return trailers[0]["key"]
+
+
+def legal_watch_url(movie_id: int, title: str | None = None) -> str:
+    """Legal where-to-watch page (TMDB). Never pirate indexes."""
+    return f"https://www.themoviedb.org/movie/{movie_id}/watch"
 
 
 def _providers_from_payload(payload: dict[str, Any]) -> tuple[list[dict[str, Any]], str | None]:
     country = payload.get(region()) or {}
-    link = country.get("link")
+    # TMDB often returns a JustWatch aggregator URL; we use TMDB watch page instead.
+    link = None
     collected: list[dict[str, Any]] = []
     seen: set[str] = set()
     for bucket in ("flatrate", "rent", "buy", "free", "ads"):
@@ -308,6 +322,7 @@ def get_movie(movie_id: int) -> dict[str, Any] | None:
         movie["similar"] = [
             _demo_normalize(m) for m in DEMO_MOVIES if m["id"] != movie_id
         ][:6]
+        movie["watch_link"] = legal_watch_url(movie_id, movie.get("title"))
         return movie
 
     try:
@@ -322,7 +337,7 @@ def get_movie(movie_id: int) -> dict[str, Any] | None:
 
     videos = (detail.get("videos") or {}).get("results") or []
     providers_root = (detail.get("watch/providers") or {}).get("results") or {}
-    providers, watch_link = _providers_from_payload(providers_root)
+    providers, _ignored_jw = _providers_from_payload(providers_root)
 
     poster_path = detail.get("poster_path")
     backdrop_path = detail.get("backdrop_path") or poster_path
@@ -361,8 +376,7 @@ def get_movie(movie_id: int) -> dict[str, Any] | None:
         "fallback_poster": PLACEHOLDER_POSTER,
         "trailer_key": _pick_trailer(videos),
         "providers": providers,
-        "watch_link": watch_link
-        or f"https://www.justwatch.com/us/search?q={quote_plus(detail.get('title') or '')}",
+        "watch_link": legal_watch_url(detail["id"], detail.get("title")),
         "tagline": detail.get("tagline") or "",
         "cast": cast,
         "similar": similar,

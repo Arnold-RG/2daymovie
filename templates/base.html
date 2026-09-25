@@ -38,12 +38,6 @@
     </form>
   </header>
 
-  {% if not live_api %}
-  <div class="mode-banner" role="status">
-    Demo catalog mode — add a free <a href="https://www.themoviedb.org/settings/api" target="_blank" rel="noopener">TMDB API key</a> in <code>.env</code> for the full world catalog.
-  </div>
-  {% endif %}
-
   <main id="main">
     {% block content %}{% endblock %}
   </main>
@@ -51,11 +45,13 @@
   <footer class="site-footer">
     <div class="footer-brand">{{ site_name }}</div>
     <p>
-      Free to browse. No accounts. Official trailers and legal watch links only —
+      Free to browse. No accounts. Official full trailers and licensed streaming guides only —
       we never host copyrighted films.
     </p>
     <p class="footer-credit">
-      Movie data from
+      Official site:
+      <a href="https://twodaymovie.onrender.com/" rel="noopener">twodaymovie.onrender.com</a>
+      · Movie data from
       <a href="https://www.themoviedb.org/" target="_blank" rel="noopener">TMDB</a>.
       This product uses the TMDB API but is not endorsed or certified by TMDB.
     </p>

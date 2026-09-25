@@ -46,7 +46,7 @@
 
       <div class="detail-actions">
         {% if movie.trailer_key %}
-        <a class="btn btn-primary" href="#trailer">Watch trailer</a>
+        <a class="btn btn-primary" href="#trailer">Watch full trailer</a>
         {% endif %}
         {% if movie.watch_link %}
         <a class="btn btn-ghost" href="{{ movie.watch_link }}" target="_blank" rel="noopener">Where to watch</a>
@@ -56,8 +56,8 @@
 
       {% if movie.providers %}
       <section class="providers" aria-labelledby="providers-heading">
-        <h2 id="providers-heading">Legal streaming options</h2>
-        <p class="providers-note">Availability varies by region. Links go to licensed services (Netflix, Prime, Disney+, Max, etc.) — never pirate sites.</p>
+        <h2 id="providers-heading">Licensed streaming options</h2>
+        <p class="providers-note">Availability varies by region. Links open TMDB’s legal watch guide (Netflix, Prime, Disney+, Max, and more).</p>
         <ul class="provider-list">
           {% for p in movie.providers %}
           <li>
@@ -82,8 +82,8 @@
       </section>
       {% else %}
       <section class="providers">
-        <h2>Legal streaming options</h2>
-        <p class="providers-note">No regional providers returned. Use “Where to watch” to search licensed platforms.</p>
+        <h2>Licensed streaming options</h2>
+        <p class="providers-note">Use “Where to watch” for TMDB’s legal streaming guide for this title.</p>
       </section>
       {% endif %}
     </div>
@@ -136,7 +136,8 @@
 
   {% if movie.trailer_key %}
   <section id="trailer" class="trailer-block" aria-labelledby="trailer-heading">
-    <h2 id="trailer-heading">Official trailer</h2>
+    <h2 id="trailer-heading">Official full trailer</h2>
+    <p class="providers-note">YouTube official trailer only — teasers and clips are filtered out.</p>
     <div class="trailer-frame">
       <iframe
         src="https://www.youtube-nocookie.com/embed/{{ movie.trailer_key }}"
