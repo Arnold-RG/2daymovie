@@ -111,19 +111,21 @@
   {% if movie.similar %}
   <section class="similar-block" aria-labelledby="similar-heading">
     <h2 id="similar-heading">You may also like</h2>
-    <div class="poster-rail" data-rail>
+    <div class="poster-grid">
       {% for m in movie.similar %}
       <a class="poster-card" href="{{ url_for('movie_details', movie_id=m.id) }}">
-        <img
-          class="poster-img"
-          src="{{ m.poster or fallback }}"
-          alt="Poster for {{ m.title }}"
-          loading="lazy"
-          decoding="async"
-          width="200"
-          height="300"
-          onerror="this.onerror=null;this.src='{{ fallback }}';"
-        />
+        <span class="poster-frame">
+          <img
+            class="poster-img"
+            src="{{ m.poster or fallback }}"
+            alt="Poster for {{ m.title }}"
+            loading="lazy"
+            decoding="async"
+            width="200"
+            height="300"
+            onerror="this.onerror=null;this.src='{{ fallback }}';"
+          />
+        </span>
         <div class="poster-meta">
           <h3>{{ m.title }}</h3>
           <p>{{ m.year }} · ★ {{ m.vote_average }}</p>

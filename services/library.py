@@ -119,7 +119,7 @@ def year_index() -> list[dict[str, Any]]:
         {
             "year": y,
             "planned": len(YEAR_MOVIES[y]),
-            "resolved": counts.get(y, 0) or len(YEAR_MOVIES[y]),
+            "resolved": counts.get(y, 0),
             "with_trailer": trailers.get(y, 0),
         }
         for y in all_years()

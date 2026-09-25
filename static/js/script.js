@@ -2,34 +2,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const prefersReduced =
     window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  const rails = document.querySelectorAll("[data-rail]");
-  rails.forEach((rail) => {
-    rail.addEventListener(
-      "wheel",
-      (event) => {
-        if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
-        event.preventDefault();
-        rail.scrollLeft += event.deltaY;
-      },
-      { passive: false }
-    );
-  });
-
-  // Keep active year pill in view on the sticky switcher
-  const switcher = document.querySelector("[data-year-switcher]");
-  if (switcher) {
-    const active = switcher.querySelector(".year-pill.is-active");
-    if (active && typeof active.scrollIntoView === "function") {
-      active.scrollIntoView({
-        inline: "center",
-        block: "nearest",
-        behavior: prefersReduced ? "auto" : "smooth",
-      });
-    }
+  const yearSelect = document.querySelector("[data-year-select]");
+  if (yearSelect) {
+    yearSelect.addEventListener("change", () => {
+      const url = yearSelect.value;
+      if (url) window.location.assign(url);
+    });
   }
 
   const revealables = document.querySelectorAll(
-    ".row, .poster-card, .detail-layout, .library-card, .year-card"
+    ".row, .poster-card, .detail-layout, .library-card, .year-row"
   );
 
   if (prefersReduced) {
@@ -37,7 +19,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  // Stagger poster / year shelf reveals within a common parent
   const staggerGroups = new WeakMap();
   const nextStaggerIndex = (el) => {
     const parent = el.parentElement;
@@ -53,9 +34,9 @@ document.addEventListener("DOMContentLoaded", () => {
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return;
           const el = entry.target;
-          if (el.matches(".poster-card, .library-card, .year-card")) {
+          if (el.matches(".poster-card, .library-card, .year-row")) {
             const i = nextStaggerIndex(el);
-            el.style.transitionDelay = `${Math.min(i, 12) * 45}ms`;
+            el.style.transitionDelay = `${Math.min(i, 12) * 40}ms`;
           }
           el.classList.add("is-visible");
           observer.unobserve(el);

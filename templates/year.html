@@ -11,12 +11,20 @@
       <h1>{{ year }}</h1>
       <p>{{ count }} titles · {{ with_trailer }} official full trailers</p>
     </div>
-    <nav class="year-switcher" aria-label="Jump year" data-year-switcher>
-      {% for y in years %}
-      <a class="year-pill {% if y == year %}is-active{% endif %}" href="{{ url_for('year_page', year=y) }}" {% if y == year %}aria-current="page"{% endif %}>{{ y }}</a>
-      {% endfor %}
-    </nav>
+    <form class="year-jump-form" action="{{ url_for('year_page', year=year) }}" method="get" data-year-form>
+      <label for="year-select">Jump to year</label>
+      <select id="year-select" name="year" data-year-select>
+        {% for y in years %}
+        <option value="{{ url_for('year_page', year=y) }}" {% if y == year %}selected{% endif %}>{{ y }}</option>
+        {% endfor %}
+      </select>
+    </form>
   </div>
+  <nav class="year-chip-wrap" aria-label="Nearby years">
+    {% for y in years %}
+    <a class="year-chip {% if y == year %}is-active{% endif %}" href="{{ url_for('year_page', year=y) }}" {% if y == year %}aria-current="page"{% endif %}>{{ y }}</a>
+    {% endfor %}
+  </nav>
 </section>
 
 <section class="page-band year-wall">

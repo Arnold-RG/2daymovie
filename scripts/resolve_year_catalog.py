@@ -131,14 +131,24 @@ def main():
                 results.append({"year": year, "query": title, "id": None, "error": str(exc)})
                 print(f"[{done}/{total}] ERR {year} {title}: {exc}", flush=True)
                 time.sleep(0.5)
-            # checkpoint
+            # checkpoint: merge so a crash never drops previously resolved rows
             if done % 10 == 0:
-                OUT.write_text(json.dumps(results, ensure_ascii=False, indent=2), encoding="utf-8")
+                merged = dict(existing)
+                for row in results:
+                    merged[f"{row.get('year')}|{row.get('query')}"] = row
+                OUT.write_text(
+                    json.dumps(list(merged.values()), ensure_ascii=False, indent=2),
+                    encoding="utf-8",
+                )
 
-    OUT.write_text(json.dumps(results, ensure_ascii=False, indent=2), encoding="utf-8")
-    ok = sum(1 for r in results if r.get("id"))
-    trailers = sum(1 for r in results if r.get("trailer_key"))
-    print(f"DONE ok={ok}/{total} trailers={trailers}", flush=True)
+    merged = dict(existing)
+    for row in results:
+        merged[f"{row.get('year')}|{row.get('query')}"] = row
+    final = list(merged.values())
+    OUT.write_text(json.dumps(final, ensure_ascii=False, indent=2), encoding="utf-8")
+    ok = sum(1 for r in final if r.get("id"))
+    trailers = sum(1 for r in final if r.get("trailer_key"))
+    print(f"DONE ok={ok}/{len(final)} trailers={trailers} planned={total}", flush=True)
 
 
 if __name__ == "__main__":

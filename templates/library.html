@@ -6,11 +6,11 @@
 <section class="library-hero">
   <div class="library-hero-copy">
     <p class="library-brand" aria-label="2daymovie"><span class="gel">2DAY</span>MOVIE</p>
-    <h1>2000 → 2026</h1>
-    <p class="library-lede">The curated archive — official full trailers and licensed HD streaming guides. Pick a year and walk the shelves.</p>
+    <h1>Library</h1>
+    <p class="library-lede">{{ stats.planned }} curated titles · 2000–2026 · official trailers and licensed HD guides.</p>
     <div class="hero-actions">
-      <a class="btn btn-primary" href="{{ url_for('year_page', year=years[0].year if years else 2025) }}">Latest year</a>
-      <a class="btn btn-ghost" href="#year-archive">Jump to archive</a>
+      <a class="btn btn-primary" href="{{ url_for('year_page', year=years[0].year if years else 2025) }}">Open latest year</a>
+      <a class="btn btn-ghost" href="#year-archive">Browse by year</a>
     </div>
   </div>
 </section>
@@ -19,26 +19,75 @@
   <div class="library-stats">
     <div><strong>{{ stats.planned }}</strong><span>titles</span></div>
     <div><strong>{{ stats.resolved }}</strong><span>resolved</span></div>
-    <div><strong>{{ stats.with_trailer }}</strong><span>full trailers</span></div>
+    <div><strong>{{ stats.with_trailer }}</strong><span>trailers</span></div>
     <div><strong>{{ stats.years|length }}</strong><span>years</span></div>
   </div>
 </section>
 
-<section class="year-timeline page-band" id="year-archive">
-  <h2>Pick a year</h2>
-  <p class="year-timeline-lede">Archive shelves — each shelf is a year of curated cinema.</p>
-  <div class="year-grid">
-    {% for y in years %}
-    {% set trailer_pct = ((y.with_trailer / y.planned * 100)|round|int) if y.planned else 0 %}
-    <a class="year-card" href="{{ url_for('year_page', year=y.year) }}">
-      <span class="year-card-year">{{ y.year }}</span>
-      <span class="year-card-meta">{{ y.planned }} films</span>
-      <span class="year-card-trail">{{ y.with_trailer }} trailers</span>
-      <span class="year-card-progress" role="presentation" aria-hidden="true">
-        <span style="width: {{ trailer_pct }}%"></span>
-      </span>
-    </a>
-    {% endfor %}
+<section class="page-band year-directory" id="year-archive">
+  <header class="year-directory-head">
+    <h2>Years</h2>
+    <p>Choose a year to open its film shelf. Large tap targets work on phone, tablet, laptop, and TV.</p>
+  </header>
+
+  <div class="decade-block">
+    <h3 class="decade-label">2020s</h3>
+    <ul class="year-list">
+      {% for y in years if y.year >= 2020 %}
+      {% set trailer_pct = ((y.with_trailer / y.planned * 100)|round|int) if y.planned else 0 %}
+      <li>
+        <a class="year-row" href="{{ url_for('year_page', year=y.year) }}">
+          <span class="year-row-year">{{ y.year }}</span>
+          <span class="year-row-meta">
+            <span>{{ y.planned }} films</span>
+            <span>{{ y.with_trailer }} trailers</span>
+          </span>
+          <span class="year-row-bar" aria-hidden="true"><span style="width: {{ trailer_pct }}%"></span></span>
+          <span class="year-row-go" aria-hidden="true">Open</span>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="decade-block">
+    <h3 class="decade-label">2010s</h3>
+    <ul class="year-list">
+      {% for y in years if y.year >= 2010 and y.year <= 2019 %}
+      {% set trailer_pct = ((y.with_trailer / y.planned * 100)|round|int) if y.planned else 0 %}
+      <li>
+        <a class="year-row" href="{{ url_for('year_page', year=y.year) }}">
+          <span class="year-row-year">{{ y.year }}</span>
+          <span class="year-row-meta">
+            <span>{{ y.planned }} films</span>
+            <span>{{ y.with_trailer }} trailers</span>
+          </span>
+          <span class="year-row-bar" aria-hidden="true"><span style="width: {{ trailer_pct }}%"></span></span>
+          <span class="year-row-go" aria-hidden="true">Open</span>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="decade-block">
+    <h3 class="decade-label">2000s</h3>
+    <ul class="year-list">
+      {% for y in years if y.year <= 2009 %}
+      {% set trailer_pct = ((y.with_trailer / y.planned * 100)|round|int) if y.planned else 0 %}
+      <li>
+        <a class="year-row" href="{{ url_for('year_page', year=y.year) }}">
+          <span class="year-row-year">{{ y.year }}</span>
+          <span class="year-row-meta">
+            <span>{{ y.planned }} films</span>
+            <span>{{ y.with_trailer }} trailers</span>
+          </span>
+          <span class="year-row-bar" aria-hidden="true"><span style="width: {{ trailer_pct }}%"></span></span>
+          <span class="year-row-go" aria-hidden="true">Open</span>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
   </div>
 </section>
 {% endblock %}
