@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Watch · {{ show.title }} · {{ site_name }}{% endblock %}
+{% block title %}{{ meta_title|default(show.title ~ ' | 2daymovie') }}{% endblock %}
 
 {% block content %}
 {% set fallback = url_for('static', filename='img/poster-fallback.svg') %}

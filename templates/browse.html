@@ -1,48 +1,48 @@
 {% extends "base.html" %}
 {% from "_macros.html" import pager %}
 
-{% block title %}Browse · {{ site_name }}{% endblock %}
+{% block title %}{{ meta_title }}{% endblock %}
 
 {% block content %}
 {% set fallback = url_for('static', filename='img/poster-fallback.svg') %}
 <section class="page-band">
-  <p class="detail-kicker">World catalog</p>
+  <p class="detail-kicker">Trailer catalog</p>
   <h1>Browse the catalog</h1>
   <p>
-    {% if live_api %}
-      Exploring {{ "{:,}".format(total_results) }} titles. Page through results to keep discovering.
-    {% else %}
-      Browse the catalog — each title includes an official full trailer when available.
-    {% endif %}
+    {{ "{:,}".format(total_results) }} movies with on-site trailers.
+    Sort and page through the curated library.
   </p>
 
   <form class="sort-form" method="get" action="{{ url_for('browse') }}">
     <label for="sort">Sort by</label>
     <select id="sort" name="sort" onchange="this.form.submit()">
-      <option value="popularity.desc" {% if sort == 'popularity.desc' %}selected{% endif %}>Popularity</option>
-      <option value="vote_average.desc" {% if sort == 'vote_average.desc' %}selected{% endif %}>Top rated</option>
-      <option value="primary_release_date.desc" {% if sort == 'primary_release_date.desc' %}selected{% endif %}>Newest</option>
-      <option value="revenue.desc" {% if sort == 'revenue.desc' %}selected{% endif %}>Box office</option>
+      {% for value, label in sort_options %}
+      <option value="{{ value }}" {% if sort == value %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
     </select>
   </form>
 
   <div class="poster-grid">
     {% for movie in movies %}
-    <a class="poster-card" href="{{ url_for('movie_details', movie_id=movie.id) }}">
-      <img
-        class="poster-img"
-        src="{{ movie.poster or fallback }}"
-        {% if movie.poster_srcset %}srcset="{{ movie.poster_srcset }}" sizes="(max-width: 600px) 45vw, 160px"{% endif %}
-        alt="Poster for {{ movie.title }}"
-        loading="lazy"
-        decoding="async"
-        width="200"
-        height="300"
-        onerror="this.onerror=null;this.removeAttribute('srcset');this.src='{{ fallback }}';"
-      />
+    <a class="poster-card" href="{{ url_for('watch_page', movie_id=movie.id) }}">
+      <span class="poster-frame">
+        <img
+          class="poster-img"
+          src="{{ movie.poster or fallback }}"
+          alt="Poster for {{ movie.title }}"
+          loading="lazy"
+          decoding="async"
+          width="200"
+          height="300"
+          onerror="this.onerror=null;this.src='{{ fallback }}';"
+        />
+        <span class="poster-play" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+        </span>
+      </span>
       <div class="poster-meta">
         <h3>{{ movie.title }}</h3>
-        <p>{{ movie.year }} · ★ {{ movie.vote_average }}</p>
+        <p>{{ movie.year }}{% if movie.vote_average %} · ★ {{ '%.1f'|format(movie.vote_average|float) }}{% endif %}</p>
       </div>
     </a>
     {% else %}

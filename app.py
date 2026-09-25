@@ -1,4 +1,4 @@
-"""Production app factory with health, readiness, and Prometheus metrics."""
+"""Production app factory with health, readiness, Prometheus metrics, and SEO routes."""
 
 from __future__ import annotations
 
@@ -10,7 +10,8 @@ from flask import Flask, Response, abort, g, jsonify, redirect, render_template,
 from prometheus_client import CONTENT_TYPE_LATEST, Counter, Histogram, generate_latest
 
 from data.year_movies import all_years
-from services import library, series, tmdb
+from services import library, series, tmdb, upcoming
+from services.search import search_catalog as unified_search
 
 load_dotenv()
 
@@ -60,11 +61,16 @@ def create_app() -> Flask:
     @app.context_processor
     def inject_globals():
         return {
-            "site_name": "2daymovie.to",
+            "site_name": "2daymovie",
             "live_api": tmdb.using_live_api(),
             "genres": tmdb.get_genres(),
             "library_years": all_years(),
             "official_url": app.config["OFFICIAL_URL"],
+            "sort_options": library.SORT_OPTIONS,
+            "page_description": (
+                "Discover movies and TV shows on 2daymovie. Browse films by year, "
+                "genre and title, watch official trailers, and find legal streaming options."
+            ),
         }
 
     def _page() -> int:
@@ -73,6 +79,11 @@ def create_app() -> Flask:
         except (TypeError, ValueError):
             return 1
         return max(1, min(value, 500))
+
+    def _sort() -> str:
+        sort = request.args.get("sort", "rating")
+        allowed = {key for key, _ in library.SORT_OPTIONS}
+        return sort if sort in allowed else "rating"
 
     @app.get("/healthz")
     def healthz():
@@ -89,6 +100,50 @@ def create_app() -> Flask:
     def metrics():
         return Response(generate_latest(), mimetype=CONTENT_TYPE_LATEST)
 
+    @app.get("/robots.txt")
+    def robots():
+        base = app.config["OFFICIAL_URL"].rstrip("/")
+        content = f"""User-agent: *
+Allow: /
+
+Sitemap: {base}/sitemap.xml
+"""
+        return Response(content, mimetype="text/plain")
+
+    @app.get("/sitemap.xml")
+    def sitemap():
+        base = app.config["OFFICIAL_URL"].rstrip("/")
+        urls = [
+            "/",
+            "/movies",
+            "/series",
+            "/categories",
+            "/upcoming",
+            "/browse",
+            "/about",
+            "/search",
+        ]
+        urls.extend(f"/year/{year}" for year in all_years())
+        urls.extend(
+            f"/genre/{genre['id']}"
+            for genre in tmdb.get_genres()
+            if genre.get("id")
+        )
+        # High-value watch pages from the trailer catalog (capped for sitemap size)
+        for movie in library.all_trailer_movies()[:400]:
+            urls.append(f"/watch/{movie['id']}")
+        for show in series.all_series_entries()[:120]:
+            urls.append(f"/series/watch/{show['id']}")
+
+        xml = [
+            '<?xml version="1.0" encoding="UTF-8"?>',
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+        ]
+        for path in urls:
+            xml.append(f"<url><loc>{base}{path}</loc></url>")
+        xml.append("</urlset>")
+        return Response("\n".join(xml), mimetype="application/xml")
+
     @app.route("/")
     def home():
         stats = library.library_stats()
@@ -96,10 +151,8 @@ def create_app() -> Flask:
         spotlight_year = years[0]["year"] if years else 2024
         spotlight = library.movies_for_year(spotlight_year)[:12]
         series_spotlight = [s for s in series.all_series_entries() if s.get("id")][:12]
-        trending = tmdb.get_trending()
-        featured = next((m for m in spotlight if m.get("backdrop")), None) or (
-            trending["results"][0] if trending["results"] else None
-        )
+        up = upcoming.upcoming_payload()
+        featured = next((m for m in spotlight if m.get("backdrop")), None)
         return render_template(
             "index.html",
             featured=featured,
@@ -107,12 +160,51 @@ def create_app() -> Flask:
             spotlight_year=spotlight_year,
             spotlight=spotlight,
             series_spotlight=series_spotlight,
-            trending=trending["results"][:12],
+            upcoming_movies=up["movies"][:8],
+            upcoming_series=up["series"][:8],
+            meta_title="2daymovie — Movies & TV Shows, Trailers & Where to Watch",
+            meta_description=(
+                "Discover movies and TV shows on 2daymovie. Browse films by year, "
+                "genre and title, watch official trailers, and find legal streaming options."
+            ),
+        )
+
+    @app.route("/about")
+    def about():
+        return render_template(
+            "about.html",
+            meta_title="About 2daymovie — Created by Arnold Rurangwa",
+            meta_description=(
+                "2daymovie is a movie and TV discovery platform created and developed "
+                "by Arnold Rurangwa. Official trailers and legal streaming guides only."
+            ),
+        )
+
+    @app.route("/upcoming")
+    def upcoming_home():
+        payload = upcoming.upcoming_payload()
+        return render_template(
+            "upcoming.html",
+            movies=payload["movies"],
+            shows=payload["series"],
+            movie_count=payload["movie_count"],
+            series_count=payload["series_count"],
+            with_trailer=payload["with_trailer"],
+            meta_title="Upcoming Movies & Series 2026 | 2daymovie",
+            meta_description=(
+                "Browse upcoming October–December 2026 movies and Fall 2026 series "
+                "on 2daymovie. On-site trailers when available."
+            ),
         )
 
     @app.route("/categories")
     def categories_home():
-        return render_template("categories.html", genres=tmdb.get_genres())
+        return render_template(
+            "categories.html",
+            genres=tmdb.get_genres(),
+            meta_title="Categories · Genres | 2daymovie",
+            meta_description="Browse movies by genre on 2daymovie. Action, Drama, Animation, Sci-Fi, Horror, and more.",
+        )
 
     @app.route("/movies")
     def movies_home():
@@ -130,11 +222,12 @@ def create_app() -> Flask:
             years=shelf["years"],
             selected_year=shelf["selected_year"],
             movies=shelf["movies"],
+            meta_title="Movies by Year | 2daymovie",
+            meta_description="Browse curated movies from 2000–2026 with on-site official trailers on 2daymovie.",
         )
 
     @app.route("/library")
     def library_home():
-        # Legacy URL — library became Movies (year shelves)
         year = request.args.get("year")
         if year:
             return redirect(url_for("movies_home", year=year))
@@ -156,14 +249,24 @@ def create_app() -> Flask:
             years=shelf["years"],
             selected_year=shelf["selected_year"],
             shows=shelf["shows"],
+            meta_title="TV Series | 2daymovie",
+            meta_description="Browse curated TV series with on-site official trailers on 2daymovie.",
         )
 
     @app.route("/series/watch/<int:tv_id>")
     def series_watch(tv_id: int):
         show = series.get_series(tv_id)
-        if show is None:
+        if show is None or not show.get("trailer_key"):
             abort(404)
-        return render_template("series_watch.html", show=show)
+        return render_template(
+            "series_watch.html",
+            show=show,
+            meta_title=f"{show['title']} — Trailer & Where to Watch | 2daymovie",
+            meta_description=(
+                f"Watch the official trailer for {show['title']} on 2daymovie "
+                f"and find legal streaming options."
+            ),
+        )
 
     @app.route("/year/<int:year>")
     def year_page(year: int):
@@ -176,49 +279,55 @@ def create_app() -> Flask:
             movies=movies,
             years=all_years(),
             count=len(movies),
-            with_trailer=sum(1 for m in movies if m.get("trailer_key")),
+            with_trailer=len(movies),
+            meta_title=f"Movies of {year} | 2daymovie",
+            meta_description=(
+                f"Browse movies from {year} on 2daymovie. Discover titles, "
+                f"on-site trailers, ratings and legal streaming options."
+            ),
         )
 
     @app.route("/watch/<int:movie_id>")
     def watch_page(movie_id: int):
-        movie = tmdb.get_movie(movie_id)
-        catalog_hit = None
-        for row in library._load_resolved():
-            if row.get("id") == movie_id:
-                catalog_hit = library._normalize_entry(row)
-                break
-        if movie is None:
-            movie = catalog_hit
-        elif catalog_hit:
-            if not movie.get("trailer_key") and catalog_hit.get("trailer_key"):
-                movie["trailer_key"] = catalog_hit["trailer_key"]
-            if not movie.get("year") and catalog_hit.get("year"):
-                movie["year"] = catalog_hit["year"]
-        if movie is None:
+        movie = library.get_catalog_movie(movie_id)
+        if movie is None or not movie.get("trailer_key"):
             abort(404)
+        # Enrich details from TMDB when API key is present
+        detail = tmdb.get_movie(movie_id)
+        if detail:
+            for key in ("runtime", "tagline", "genres", "providers", "cast", "similar"):
+                if detail.get(key):
+                    movie[key] = detail[key]
+            if detail.get("overview") and len(detail["overview"]) > len(movie.get("overview") or ""):
+                movie["overview"] = detail["overview"]
         movie["watch_link"] = movie.get("watch_link") or tmdb.legal_watch_url(movie_id)
-        return render_template("watch.html", movie=movie)
+        year = movie.get("year") or ""
+        title = movie.get("title") or "Movie"
+        return render_template(
+            "watch.html",
+            movie=movie,
+            meta_title=f"{title} ({year}) — Trailer, Details & Where to Watch | 2daymovie",
+            meta_description=(
+                f"Discover {title} ({year}) on 2daymovie. View the overview, rating, "
+                f"on-site trailer and legal streaming options."
+            ),
+        )
 
     @app.route("/browse")
     def browse():
-        page = _page()
-        sort = request.args.get("sort", "popularity.desc")
-        allowed = {
-            "popularity.desc",
-            "vote_average.desc",
-            "primary_release_date.desc",
-            "revenue.desc",
-        }
-        if sort not in allowed:
-            sort = "popularity.desc"
-        payload = tmdb.discover_movies(page=page, sort_by=sort)
+        sort = _sort()
+        payload = library.browse_catalog(page=_page(), sort=sort)
         return render_template(
             "browse.html",
             movies=payload["results"],
             page=payload["page"],
             total_pages=payload["total_pages"],
             total_results=payload["total_results"],
-            sort=sort,
+            sort=payload["sort"],
+            meta_title="Catalog · All Trailers | 2daymovie",
+            meta_description=(
+                f"Browse {payload['total_results']} movies with on-site trailers on 2daymovie."
+            ),
         )
 
     @app.route("/search")
@@ -226,17 +335,30 @@ def create_app() -> Flask:
         query = request.args.get("q", "").strip()
         page = _page()
         payload = (
-            tmdb.search_movies(query, page=page)
+            unified_search(query, page=page)
             if query
             else {"results": [], "page": 1, "total_pages": 1, "total_results": 0}
         )
+        results = []
+        for item in payload["results"]:
+            row = dict(item)
+            if row.get("media_type") == "tv":
+                row["result_type"] = "series"
+                row["year"] = row.get("years") or row.get("start")
+                row["href"] = url_for("series_watch", tv_id=row["id"])
+            else:
+                row["result_type"] = "movie"
+                row["href"] = url_for("watch_page", movie_id=row["id"])
+            results.append(row)
         return render_template(
             "search.html",
             query=query,
-            results=payload["results"],
+            results=results,
             page=payload["page"],
             total_pages=payload["total_pages"],
             total_results=payload["total_results"],
+            meta_title=(f"“{query}” · Search | 2daymovie" if query else "Search | 2daymovie"),
+            meta_description="Search movies and TV series with on-site trailers on 2daymovie.",
         )
 
     @app.route("/genre/<int:genre_id>")
@@ -244,8 +366,8 @@ def create_app() -> Flask:
         name = tmdb.genre_name(genre_id)
         if name.lower() in {"adult", "nc-17"}:
             abort(404)
-        page = _page()
-        payload = tmdb.discover_by_genre(genre_id, page=page)
+        sort = _sort()
+        payload = library.movies_by_genre(genre_id, page=_page(), sort=sort)
         return render_template(
             "genre.html",
             genre_name=name,
@@ -254,14 +376,38 @@ def create_app() -> Flask:
             page=payload["page"],
             total_pages=payload["total_pages"],
             total_results=payload["total_results"],
+            sort=payload["sort"],
+            meta_title=f"{name} Movies | 2daymovie",
+            meta_description=(
+                f"Browse {name} movies with on-site trailers on 2daymovie. "
+                f"{payload['total_results']} titles in this category."
+            ),
         )
 
     @app.route("/movie/<int:movie_id>")
     def movie_details(movie_id: int):
-        movie = tmdb.get_movie(movie_id)
+        # Prefer catalog trailer titles; fall back to TMDB detail only if in catalog
+        movie = library.get_catalog_movie(movie_id)
         if movie is None:
             abort(404)
-        return render_template("movie.html", movie=movie)
+        detail = tmdb.get_movie(movie_id)
+        if detail:
+            movie = {**detail, **movie}
+            if not movie.get("trailer_key") and detail.get("trailer_key"):
+                movie["trailer_key"] = detail["trailer_key"]
+        if not movie.get("trailer_key"):
+            abort(404)
+        year = movie.get("year") or ""
+        title = movie.get("title") or "Movie"
+        return render_template(
+            "movie.html",
+            movie=movie,
+            meta_title=f"{title} ({year}) — Trailer, Details & Where to Watch | 2daymovie",
+            meta_description=(
+                f"Discover {title} ({year}) on 2daymovie. View the movie overview, "
+                f"rating, trailer and legal streaming options."
+            ),
+        )
 
     @app.errorhandler(404)
     def not_found(_error):

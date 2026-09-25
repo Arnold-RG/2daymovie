@@ -1,51 +1,51 @@
 {% extends "base.html" %}
-{% from "_macros.html" import pager %}
 
-{% block title %}{% if query %}“{{ query }}” · {% endif %}Search · {{ site_name }}{% endblock %}
+{% block title %}{{ meta_title }}{% endblock %}
 
 {% block content %}
 {% set fallback = url_for('static', filename='img/poster-fallback.svg') %}
 <section class="page-band">
   <p class="detail-kicker">Search</p>
-  <h1>{% if query %}Results for “{{ query }}”{% else %}Search movies{% endif %}</h1>
+  <h1>{% if query %}Results for “{{ query }}”{% else %}Search movies &amp; series{% endif %}</h1>
   <p>
     {% if query %}
-      {{ "{:,}".format(total_results) }} title{{ '' if total_results == 1 else 's' }} found.
+      {{ total_results }} trailer-ready result{{ '' if total_results == 1 else 's' }} in the 2daymovie catalog.
     {% else %}
-      Type a title above to search the catalog.
+      Type a title in the search bar to find movies and series with on-site trailers.
     {% endif %}
   </p>
 
   {% if results %}
   <div class="poster-grid">
-    {% for movie in results %}
-    <a class="poster-card" href="{{ url_for('movie_details', movie_id=movie.id) }}">
-      <img
-        class="poster-img"
-        src="{{ movie.poster or fallback }}"
-        {% if movie.poster_srcset %}srcset="{{ movie.poster_srcset }}" sizes="(max-width: 600px) 45vw, 160px"{% endif %}
-        alt="Poster for {{ movie.title }}"
-        loading="lazy"
-        decoding="async"
-        width="200"
-        height="300"
-        onerror="this.onerror=null;this.removeAttribute('srcset');this.src='{{ fallback }}';"
-      />
+    {% for item in results %}
+    <a class="poster-card" href="{{ item.href }}">
+      <span class="poster-frame">
+        <img
+          class="poster-img"
+          src="{{ item.poster or fallback }}"
+          alt="Poster for {{ item.title }}"
+          loading="lazy"
+          decoding="async"
+          width="200"
+          height="300"
+          onerror="this.onerror=null;this.src='{{ fallback }}';"
+        />
+        <span class="poster-play" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+        </span>
+      </span>
       <div class="poster-meta">
-        <h3>{{ movie.title }}</h3>
-        <p>{{ movie.year }} · ★ {{ movie.vote_average }}</p>
+        <h3>{{ item.title }}</h3>
+        <p>
+          {% if item.result_type == 'series' %}Series · {% endif %}
+          {{ item.year }}{% if item.vote_average %} · ★ {{ '%.1f'|format(item.vote_average|float) }}{% endif %}
+        </p>
       </div>
     </a>
     {% endfor %}
   </div>
-  {{ pager(
-       page,
-       total_pages,
-       prev_url=url_for('search', page=page-1, q=query) if page > 1 else None,
-       next_url=url_for('search', page=page+1, q=query) if page < total_pages else None
-     ) }}
   {% elif query %}
-  <p class="empty-state">No matches. Try another title.</p>
+  <p class="empty-state">No matches with on-site trailers. Try another title.</p>
   {% endif %}
 </section>
 {% endblock %}

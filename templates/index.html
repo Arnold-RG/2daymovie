@@ -1,22 +1,58 @@
 {% extends "base.html" %}
 
+{% block title %}{{ meta_title }}{% endblock %}
+
 {% block content %}
 {% set fallback = url_for('static', filename='img/poster-fallback.svg') %}
 <section class="hero {% if featured and featured.backdrop %}has-backdrop{% endif %}" {% if featured and featured.backdrop %}style="--hero-image: url('{{ featured.backdrop }}')"{% endif %}>
   <div class="hero-veil" aria-hidden="true"></div>
   <div class="hero-copy">
     <p class="hero-brand" aria-label="2daymovie"><span class="gel">2DAY</span>MOVIE</p>
-    <h1>Movies &amp; series. Legal HD.</h1>
-    <p class="hero-lede">Browse by category, year, or title — official trailers and licensed streaming guides only.</p>
+    <h1>2daymovie</h1>
+    <p class="hero-lede">Discover movies and TV shows. Watch official trailers on this site and find legal streaming options.</p>
     <div class="hero-actions">
       <a class="btn btn-primary" href="{{ url_for('categories_home') }}">Categories</a>
+      <a class="btn btn-ghost" href="{{ url_for('upcoming_home') }}">Upcoming 2026</a>
       <a class="btn btn-ghost" href="{{ url_for('movies_home') }}">Movies</a>
-      <a class="btn btn-ghost" href="{{ url_for('series_home') }}">Series</a>
     </div>
   </div>
 </section>
 
 <section class="catalog home-catalog" id="catalog">
+  <section class="home-block">
+    <div class="row-head">
+      <h2>Upcoming · 2026</h2>
+      <a class="text-link" href="{{ url_for('upcoming_home') }}">All upcoming →</a>
+    </div>
+    <div class="poster-grid home-poster-grid">
+      {% for movie in upcoming_movies %}
+        {% if movie.status == 'trailer' and movie.id %}
+        <a class="poster-card" href="{{ url_for('watch_page', movie_id=movie.id) }}">
+          <span class="poster-frame">
+            <img class="poster-img" src="{{ movie.poster or fallback }}" alt="Poster for {{ movie.title }}" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='{{ fallback }}';" />
+            <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
+          </span>
+          <div class="poster-meta">
+            <h3>{{ movie.title }}</h3>
+            <p>2026 · Trailer</p>
+          </div>
+        </a>
+        {% else %}
+        <div class="poster-card upcoming-card">
+          <span class="poster-frame upcoming-frame">
+            <span class="upcoming-badge">Soon</span>
+            <span class="upcoming-title-mark">{{ movie.title[:1] }}</span>
+          </span>
+          <div class="poster-meta">
+            <h3>{{ movie.title }}</h3>
+            <p>Oct–Dec 2026</p>
+          </div>
+        </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </section>
+
   <section class="home-block">
     <div class="row-head">
       <h2>Categories</h2>
@@ -54,7 +90,7 @@
         </span>
         <div class="poster-meta">
           <h3>{{ movie.title }}</h3>
-          <p>{{ movie.year }}{% if movie.vote_average %} · ★ {{ movie.vote_average }}{% endif %}</p>
+          <p>{{ movie.year }}{% if movie.vote_average %} · ★ {{ '%.1f'|format(movie.vote_average|float) }}{% endif %}</p>
         </div>
       </a>
       {% endfor %}
@@ -93,35 +129,37 @@
     </div>
   </section>
 
-  {% if trending %}
+  {% if upcoming_series %}
   <section class="home-block">
     <div class="row-head">
-      <h2>Trending</h2>
-      <a class="text-link" href="{{ url_for('browse') }}">Catalog →</a>
+      <h2>Upcoming series · Fall 2026</h2>
+      <a class="text-link" href="{{ url_for('upcoming_home') }}">All upcoming →</a>
     </div>
     <div class="poster-grid home-poster-grid">
-      {% for movie in trending if movie.id %}
-      <a class="poster-card" href="{{ url_for('watch_page', movie_id=movie.id) }}">
-        <span class="poster-frame">
-          <img
-            class="poster-img"
-            src="{{ movie.poster or fallback }}"
-            alt="Poster for {{ movie.title }}"
-            loading="lazy"
-            decoding="async"
-            width="200"
-            height="300"
-            onerror="this.onerror=null;this.src='{{ fallback }}';"
-          />
-          <span class="poster-play" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+      {% for show in upcoming_series %}
+        {% if show.status == 'trailer' and show.id %}
+        <a class="poster-card" href="{{ url_for('series_watch', tv_id=show.id) }}">
+          <span class="poster-frame">
+            <img class="poster-img" src="{{ show.poster or fallback }}" alt="Poster for {{ show.title }}" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='{{ fallback }}';" />
+            <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
-        </span>
-        <div class="poster-meta">
-          <h3>{{ movie.title }}</h3>
-          <p>{{ movie.year }}{% if movie.vote_average %} · ★ {{ movie.vote_average }}{% endif %}</p>
+          <div class="poster-meta">
+            <h3>{{ show.title }}</h3>
+            <p>Fall 2026 · Trailer</p>
+          </div>
+        </a>
+        {% else %}
+        <div class="poster-card upcoming-card">
+          <span class="poster-frame upcoming-frame">
+            <span class="upcoming-badge">Soon</span>
+            <span class="upcoming-title-mark">{{ show.title[:1] }}</span>
+          </span>
+          <div class="poster-meta">
+            <h3>{{ show.title }}</h3>
+            <p>Fall 2026</p>
+          </div>
         </div>
-      </a>
+        {% endif %}
       {% endfor %}
     </div>
   </section>

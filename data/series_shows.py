@@ -1,8 +1,7 @@
-"""Curated prestige / influential TV series spanning 2000–2026."""
+"""Curated TV series with on-site official trailer embeds."""
 
 from __future__ import annotations
 
-# title, start_year, end_year (None = ongoing / present)
 SERIES_SHOWS: list[dict] = [
     {"title": 'The Sopranos', "start": 1999, "end": 2007},
     {"title": 'Curb Your Enthusiasm', "start": 2000, "end": 2024},
@@ -24,7 +23,6 @@ SERIES_SHOWS: list[dict] = [
     {"title": 'Dexter', "start": 2006, "end": 2013},
     {"title": 'Friday Night Lights', "start": 2006, "end": 2011},
     {"title": 'Mad Men', "start": 2007, "end": 2015},
-    {"title": 'Breaking Bad', "start": 2008, "end": 2013},
     {"title": 'True Blood', "start": 2008, "end": 2014},
     {"title": 'Community', "start": 2009, "end": 2015},
     {"title": 'Modern Family', "start": 2009, "end": 2020},
@@ -38,9 +36,7 @@ SERIES_SHOWS: list[dict] = [
     {"title": 'Black Mirror', "start": 2011, "end": None},
     {"title": 'Game of Thrones', "start": 2011, "end": 2019},
     {"title": 'Homeland', "start": 2011, "end": 2020},
-    {"title": 'Line of Duty', "start": 2012, "end": 2021},
     {"title": 'Veep', "start": 2012, "end": 2019},
-    {"title": 'Broadchurch', "start": 2013, "end": 2017},
     {"title": 'Hannibal', "start": 2013, "end": 2015},
     {"title": 'House of Cards', "start": 2013, "end": 2018},
     {"title": 'Orange Is the New Black', "start": 2013, "end": 2019},
@@ -71,7 +67,6 @@ SERIES_SHOWS: list[dict] = [
     {"title": 'Twin Peaks: The Return', "start": 2017, "end": 2017},
     {"title": 'A Very English Scandal', "start": 2018, "end": 2018},
     {"title": 'Barry', "start": 2018, "end": 2023},
-    {"title": 'Bodyguard', "start": 2018, "end": 2018},
     {"title": 'Derry Girls', "start": 2018, "end": 2022},
     {"title": 'Killing Eve', "start": 2018, "end": 2022},
     {"title": 'Patrick Melrose', "start": 2018, "end": 2018},
@@ -125,7 +120,6 @@ SERIES_SHOWS: list[dict] = [
     {"title": 'Crystal Lake', "start": 2026, "end": None},
     {"title": 'Lanterns', "start": 2026, "end": None},
     {"title": 'Pride & Prejudice', "start": 2026, "end": None},
-    {"title": 'Tip Toe', "start": 2026, "end": None},
     {"title": 'VisionQuest', "start": 2026, "end": None},
     {"title": "Widow's Bay", "start": 2026, "end": None},
     {"title": 'Wonder Man', "start": 2026, "end": None},

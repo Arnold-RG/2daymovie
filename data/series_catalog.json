@@ -260,19 +260,6 @@
     "vote_average": 0
   },
   {
-    "query": "Breaking Bad",
-    "start": 2008,
-    "end": 2013,
-    "id": 1396,
-    "title": "Breaking Bad",
-    "overview": "Walter White, a New Mexico chemistry teacher, is diagnosed with Stage III cancer and given a prognosis of only two years left to live. He becomes filled with a sense of fearlessness and an unrelenting desire to secure his family's financial future at any cost as he enters the dangerous world of drugs and crime.",
-    "poster_path": "/anFx9aTOOYqgS3v7x3R84Kz67ly.jpg",
-    "backdrop_path": "/tsRy63Mu5cu8etL1X7ZLyf7UP1M.jpg",
-    "trailer_key": null,
-    "watch_link": "https://www.themoviedb.org/tv/1396/watch",
-    "vote_average": 0
-  },
-  {
     "query": "True Blood",
     "start": 2008,
     "end": 2014,
@@ -442,19 +429,6 @@
     "vote_average": 0
   },
   {
-    "query": "Line of Duty",
-    "start": 2012,
-    "end": 2021,
-    "id": 43982,
-    "title": "Line of Duty",
-    "overview": "A drama about the investigations of AC-12, a controversial police anticorruption unit.",
-    "poster_path": "/pBAp7VfKVQKQIiLRJHZSMGtyXAB.jpg",
-    "backdrop_path": "/5ZLEFPayOJr3KhXPoAnLWdVQJem.jpg",
-    "trailer_key": null,
-    "watch_link": "https://www.themoviedb.org/tv/43982/watch",
-    "vote_average": 0
-  },
-  {
     "query": "Veep",
     "start": 2012,
     "end": 2019,
@@ -465,19 +439,6 @@
     "backdrop_path": "/vKaDMLbdLrThldFj9Vavo6suTS2.jpg",
     "trailer_key": "--Mo61W9e-8",
     "watch_link": "https://www.themoviedb.org/tv/2947/watch",
-    "vote_average": 0
-  },
-  {
-    "query": "Broadchurch",
-    "start": 2013,
-    "end": 2017,
-    "id": 1427,
-    "title": "Broadchurch",
-    "overview": "The murder of a young boy in a small coastal town brings a media frenzy, which threatens to tear the community apart.",
-    "poster_path": "/2NhBFUTg5KVBmGwafxtLwVdsqrr.jpg",
-    "backdrop_path": "/9CkwC4rou9468XMLTXaB6bZ0frx.jpg",
-    "trailer_key": null,
-    "watch_link": "https://www.themoviedb.org/tv/1427/watch",
     "vote_average": 0
   },
   {
@@ -868,19 +829,6 @@
     "backdrop_path": "/nfjqhuGFUWqJD14B4fxlSiZWfeR.jpg",
     "trailer_key": "BKaL8jiAGuI",
     "watch_link": "https://www.themoviedb.org/tv/73107/watch",
-    "vote_average": 0
-  },
-  {
-    "query": "Bodyguard",
-    "start": 2018,
-    "end": 2018,
-    "id": 77271,
-    "title": "BG: Personal Bodyguard",
-    "overview": "Akira Shimazaki lives with his middle school student son. He used to work as a bodyguard, but, due to an incident, he now works as a security guard at a construction site. The private security company where he works establishes a new bodyguard division. Hiding his past as a bodyguard, Akira Shimazaki begins work as a novice bodyguard.",
-    "poster_path": "/lXvxtCN9coXdbb10FqLnlxLkWIW.jpg",
-    "backdrop_path": "/lKnPDTXT5ufgHJnVLbKUUdgeIsd.jpg",
-    "trailer_key": null,
-    "watch_link": "https://www.themoviedb.org/tv/77271/watch",
     "vote_average": 0
   },
   {
@@ -1575,20 +1523,6 @@
     "watch_link": "https://www.themoviedb.org/tv/1457/watch",
     "vote_average": 0,
     "trailer_key": "NZKmzkdXPoo"
-  },
-  {
-    "query": "Tip Toe",
-    "start": 2026,
-    "end": null,
-    "id": 286617,
-    "error": "not_found",
-    "title": "Tip Toe",
-    "overview": "An ordinary Manchester suburb becomes a minefield of lies and violence when Leo gives neighbour Clive his spare key.",
-    "poster_path": "/nhOm2TM9iarJmsSMBkX0hHqA58j.jpg",
-    "backdrop_path": "/mX5njTGmCl8QGgdoBWiSKmHEy23.jpg",
-    "watch_link": "https://www.themoviedb.org/tv/286617/watch",
-    "vote_average": 0,
-    "trailer_key": null
   },
   {
     "query": "VisionQuest",

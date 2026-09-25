@@ -1,21 +1,26 @@
 from app import app
+from services import library
 
 
 def test_home_ok():
     client = app.test_client()
     response = client.get("/")
     assert response.status_code == 200
-    assert b"2daymovie.to" in response.data
+    assert b"2daymovie" in response.data
+    assert b"Upcoming" in response.data
 
 
 def test_browse_ok():
     client = app.test_client()
     response = client.get("/browse")
     assert response.status_code == 200
+    assert b"Sort by" in response.data
 
 
 def test_movie_details_ok():
     client = app.test_client()
+    movie = library.get_catalog_movie(27205)
+    assert movie is not None
     response = client.get("/movie/27205")
     assert response.status_code == 200
     assert b"Inception" in response.data
@@ -29,9 +34,9 @@ def test_movie_not_found():
 
 def test_search():
     client = app.test_client()
-    response = client.get("/search?q=matrix")
+    response = client.get("/search?q=inception")
     assert response.status_code == 200
-    assert b"The Matrix" in response.data
+    assert b"Inception" in response.data
 
 
 def test_movies_ok():
@@ -50,6 +55,14 @@ def test_categories_ok():
     assert b"Action" in response.data or b"Drama" in response.data
 
 
+def test_genre_sort():
+    client = app.test_client()
+    response = client.get("/genre/28?sort=newest")
+    assert response.status_code == 200
+    assert b"Sort by" in response.data
+    assert b"selected" in response.data
+
+
 def test_library_redirects():
     client = app.test_client()
     response = client.get("/library")
@@ -62,6 +75,31 @@ def test_year_page_ok():
     response = client.get("/year/2010")
     assert response.status_code == 200
     assert b"Inception" in response.data
+
+
+def test_upcoming_ok():
+    client = app.test_client()
+    response = client.get("/upcoming")
+    assert response.status_code == 200
+    assert b"Upcoming" in response.data
+
+
+def test_about_ok():
+    client = app.test_client()
+    response = client.get("/about")
+    assert response.status_code == 200
+    assert b"Arnold Rurangwa" in response.data
+
+
+def test_robots_and_sitemap():
+    client = app.test_client()
+    robots = client.get("/robots.txt")
+    assert robots.status_code == 200
+    assert b"Sitemap:" in robots.data
+    sitemap = client.get("/sitemap.xml")
+    assert sitemap.status_code == 200
+    assert b"<urlset" in sitemap.data
+    assert b"/about" in sitemap.data
 
 
 def test_healthz():

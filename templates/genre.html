@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% from "_macros.html" import pager %}
 
-{% block title %}{{ genre_name }} · {{ site_name }}{% endblock %}
+{% block title %}{{ meta_title }}{% endblock %}
 
 {% block content %}
 {% set fallback = url_for('static', filename='img/poster-fallback.svg') %}
@@ -9,9 +9,21 @@
   <header class="section-head">
     <p class="detail-kicker">Category</p>
     <h1>{{ genre_name }}</h1>
-    <p>{{ "{:,}".format(total_results) }} titles — trailers and legal watch links on each page.</p>
+    <p>
+      {{ total_results }} title{{ '' if total_results == 1 else 's' }} with on-site trailers
+      in {{ genre_name }}. Sorted by your choice below.
+    </p>
     <p><a class="text-link" href="{{ url_for('categories_home') }}">← All categories</a></p>
   </header>
+
+  <form class="sort-form" method="get" action="{{ url_for('genre', genre_id=genre_id) }}">
+    <label for="sort">Sort by</label>
+    <select id="sort" name="sort" onchange="this.form.submit()">
+      {% for value, label in sort_options %}
+      <option value="{{ value }}" {% if sort == value %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </form>
 
   {% if movies %}
   <div class="poster-grid shelf-grid">
@@ -21,13 +33,12 @@
         <img
           class="poster-img"
           src="{{ movie.poster or fallback }}"
-          {% if movie.poster_srcset %}srcset="{{ movie.poster_srcset }}" sizes="(max-width: 600px) 44vw, 160px"{% endif %}
           alt="Poster for {{ movie.title }}"
           loading="lazy"
           decoding="async"
           width="200"
           height="300"
-          onerror="this.onerror=null;this.removeAttribute('srcset');this.src='{{ fallback }}';"
+          onerror="this.onerror=null;this.src='{{ fallback }}';"
         />
         <span class="poster-play" aria-hidden="true">
           <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
@@ -35,7 +46,7 @@
       </span>
       <div class="poster-meta">
         <h3>{{ movie.title }}</h3>
-        <p>{{ movie.year }} · ★ {{ movie.vote_average }}</p>
+        <p>{{ movie.year }}{% if movie.vote_average %} · ★ {{ '%.1f'|format(movie.vote_average|float) }}{% endif %}</p>
       </div>
     </a>
     {% endfor %}
@@ -43,11 +54,11 @@
   {{ pager(
        page,
        total_pages,
-       prev_url=url_for('genre', genre_id=genre_id, page=page-1) if page > 1 else None,
-       next_url=url_for('genre', genre_id=genre_id, page=page+1) if page < total_pages else None
+       prev_url=url_for('genre', genre_id=genre_id, page=page-1, sort=sort) if page > 1 else None,
+       next_url=url_for('genre', genre_id=genre_id, page=page+1, sort=sort) if page < total_pages else None
      ) }}
   {% else %}
-  <p class="empty-state">No titles in this category right now.</p>
+  <p class="empty-state">No trailer-ready titles in this category yet.</p>
   {% endif %}
 </section>
 {% endblock %}
