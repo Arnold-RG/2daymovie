@@ -78,6 +78,7 @@ Buying `2daymovie.com` (or `.net`) and pointing it at Render is recommended for 
 ## Deploy
 
 - **Render** auto-deploys from `main`: https://twodaymovie.onrender.com/
+- **Reviews persistence:** set `DATABASE_URL` (Postgres from Neon or Supabase — not Render’s 30-day free DB) so visitor reviews survive redeploys. Without it, local/dev uses SQLite at `data/reviews.db`.
 - **Kubernetes**: `kubectl apply -f deploy/k8s/`
 - **CI**: `.github/workflows/ci.yml` — tests, Docker build, Compose validate
 

@@ -16,3 +16,5 @@ services:
         sync: false
       - key: TMDB_WATCH_REGION
         value: US
+      - key: DATABASE_URL
+        sync: false

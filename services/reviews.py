@@ -1,4 +1,24 @@
-"""Visitor feedback / live reviews storage."""
+"""Visitor feedback / live reviews storage.
+
+Persists to Postgres in production (set DATABASE_URL). Falls back to a local
+SQLite file for local development only.
+
+Why this replaced the old JSON-file version:
+1. Render's free web service plan has NO persistent disk. Every redeploy
+   (every git push) rebuilds the container from scratch, so a local
+   data/reviews.json file resets to whatever was last committed — any
+   reviews submitted since the last deploy are gone.
+2. render.yaml runs gunicorn with 2 worker PROCESSES. The old code used
+   threading.Lock(), which only protects against concurrent threads in the
+   SAME process — it does nothing across separate worker processes. Two
+   visitors submitting at the same moment, routed to different workers,
+   could each read-modify-write the file and one submission would silently
+   overwrite the other.
+
+Using a real database (Postgres) fixes both: the data lives outside the
+container entirely, and the database itself handles concurrent writes
+safely.
+"""
 
 from __future__ import annotations
 
@@ -6,7 +26,6 @@ import html
 import json
 import os
 import re
-import threading
 import time
 import uuid
 from datetime import datetime, timezone
@@ -14,50 +33,163 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_PATH = ROOT / "data" / "reviews.json"
-_LOCK = threading.Lock()
-_RATE: dict[str, float] = {}
+LEGACY_JSON = ROOT / "data" / "reviews.json"
 
 NAME_RE = re.compile(r"^[\w\s.'-]{2,40}$", re.UNICODE)
 MAX_REVIEWS = 500
 RATE_SECONDS = 45
+_RATE: dict[str, float] = {}
+_INITIALIZED = False
 
 
-def _path() -> Path:
-    override = os.getenv("REVIEWS_PATH", "").strip()
-    return Path(override) if override else DEFAULT_PATH
+def _database_url() -> str:
+    return os.getenv("DATABASE_URL", "").strip()
+
+
+def _is_postgres() -> bool:
+    url = _database_url()
+    return url.startswith(("postgres://", "postgresql://"))
+
+
+def _sqlite_path() -> Path:
+    override = os.getenv("REVIEWS_SQLITE_PATH", "").strip()
+    if override:
+        return Path(override)
+    # Back-compat: older tests/docs used REVIEWS_PATH for a JSON file.
+    legacy = os.getenv("REVIEWS_PATH", "").strip()
+    if legacy and legacy.lower().endswith(".db"):
+        return Path(legacy)
+    if legacy:
+        # Point SQLite next to the old JSON path during migration/tests.
+        return Path(legacy).with_suffix(".db")
+    return ROOT / "data" / "reviews.db"
+
+
+def _placeholder() -> str:
+    return "%s" if _is_postgres() else "?"
+
+
+def _connect():
+    if _is_postgres():
+        import psycopg2
+
+        return psycopg2.connect(_database_url())
+
+    import sqlite3
+
+    path = _sqlite_path()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    conn = sqlite3.connect(path, timeout=10)
+    conn.execute("PRAGMA journal_mode=WAL")
+    return conn
+
+
+def _init_db() -> None:
+    global _INITIALIZED
+    with _connect() as conn:
+        cur = conn.cursor()
+        cur.execute(
+            """
+            CREATE TABLE IF NOT EXISTS reviews (
+                id TEXT PRIMARY KEY,
+                name TEXT NOT NULL,
+                rating INTEGER NOT NULL,
+                message TEXT NOT NULL,
+                created_at TEXT NOT NULL
+            )
+            """
+        )
+        conn.commit()
+    _INITIALIZED = True
+    _import_legacy_json_once()
+
+
+def _ensure_db() -> None:
+    if not _INITIALIZED:
+        _init_db()
+
+
+def _import_legacy_json_once() -> None:
+    """Best-effort restore from a leftover data/reviews.json (or REVIEWS_PATH)."""
+    candidates: list[Path] = []
+    legacy_env = os.getenv("REVIEWS_PATH", "").strip()
+    if legacy_env and legacy_env.lower().endswith(".json"):
+        candidates.append(Path(legacy_env))
+    candidates.append(LEGACY_JSON)
+
+    rows: list[dict[str, Any]] = []
+    source: Path | None = None
+    for path in candidates:
+        if not path.exists():
+            continue
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        if isinstance(data, list) and data:
+            rows = [r for r in data if isinstance(r, dict)]
+            source = path
+            break
+    if not rows or source is None:
+        return
+
+    p = _placeholder()
+    imported = 0
+    with _connect() as conn:
+        cur = conn.cursor()
+        for row in rows:
+            rid = str(row.get("id") or uuid.uuid4())
+            name = str(row.get("name") or "").strip()
+            message = str(row.get("message") or "").strip()
+            try:
+                rating = int(row.get("rating") or 0)
+            except (TypeError, ValueError):
+                continue
+            created = str(row.get("created_at") or _now_iso())
+            if not name or not message or rating < 1 or rating > 5:
+                continue
+            try:
+                cur.execute(
+                    f"INSERT INTO reviews (id, name, rating, message, created_at) "
+                    f"VALUES ({p}, {p}, {p}, {p}, {p})",
+                    (rid, name, rating, message, created),
+                )
+                imported += 1
+            except Exception:
+                # Duplicate primary key / already migrated.
+                continue
+        conn.commit()
+
+    if imported:
+        # Keep the JSON as a backup, but stop re-importing by renaming.
+        bak = source.with_suffix(source.suffix + ".migrated")
+        try:
+            if not bak.exists():
+                source.replace(bak)
+        except Exception:
+            pass
 
 
 def _now_iso() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
 
 
-def _load() -> list[dict[str, Any]]:
-    path = _path()
-    if not path.exists():
-        return []
-    try:
-        data = json.loads(path.read_text(encoding="utf-8"))
-        if isinstance(data, list):
-            return data
-    except Exception:
-        pass
-    return []
-
-
-def _save(rows: list[dict[str, Any]]) -> None:
-    path = _path()
-    path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = path.with_suffix(".tmp")
-    tmp.write_text(json.dumps(rows, ensure_ascii=False, indent=2), encoding="utf-8")
-    tmp.replace(path)
-
-
 def list_reviews(limit: int = 50) -> list[dict[str, Any]]:
-    with _LOCK:
-        rows = _load()
-    rows = sorted(rows, key=lambda r: r.get("created_at") or "", reverse=True)
-    return rows[: max(1, min(limit, 100))]
+    _ensure_db()
+    limit = max(1, min(limit, 100))
+    p = _placeholder()
+    with _connect() as conn:
+        cur = conn.cursor()
+        cur.execute(
+            f"SELECT id, name, rating, message, created_at FROM reviews "
+            f"ORDER BY created_at DESC LIMIT {p}",
+            (limit,),
+        )
+        rows = cur.fetchall()
+    return [
+        {"id": r[0], "name": r[1], "rating": r[2], "message": r[3], "created_at": r[4]}
+        for r in rows
+    ]
 
 
 def stats() -> dict[str, Any]:
@@ -75,7 +207,6 @@ def _allowed_ip(ip: str) -> bool:
     if now - last < RATE_SECONDS:
         return False
     _RATE[ip] = now
-    # prune old entries
     if len(_RATE) > 2000:
         cutoff = now - 3600
         for key in list(_RATE):
@@ -93,17 +224,14 @@ def add_review(
     honeypot: str = "",
 ) -> tuple[dict[str, Any] | None, str | None]:
     """Returns (review, error)."""
+    _ensure_db()
     if honeypot.strip():
         return None, "Could not submit review."
     if not _allowed_ip(ip or "unknown"):
         return None, "Please wait a moment before posting again."
 
-    name = html.escape((name or "").strip())
-    message = html.escape((message or "").strip())
-    # unescape for storage of plain text then re-escape on display is safer as plain
-    name = html.unescape(name)
-    message = html.unescape(message)
-
+    name = html.unescape(html.escape((name or "").strip()))
+    message = html.unescape(html.escape((message or "").strip()))
     name = re.sub(r"\s+", " ", name).strip()
     message = re.sub(r"\s+", " ", message).strip()
 
@@ -126,9 +254,29 @@ def add_review(
         "created_at": _now_iso(),
     }
 
-    with _LOCK:
-        rows = _load()
-        rows.append(review)
-        rows = sorted(rows, key=lambda r: r.get("created_at") or "", reverse=True)[:MAX_REVIEWS]
-        _save(rows)
+    p = _placeholder()
+    with _connect() as conn:
+        cur = conn.cursor()
+        cur.execute(
+            f"INSERT INTO reviews (id, name, rating, message, created_at) "
+            f"VALUES ({p}, {p}, {p}, {p}, {p})",
+            (
+                review["id"],
+                review["name"],
+                review["rating"],
+                review["message"],
+                review["created_at"],
+            ),
+        )
+        conn.commit()
+
+        # Prune beyond MAX_REVIEWS, oldest first.
+        cur.execute("SELECT id FROM reviews ORDER BY created_at DESC")
+        all_ids = [r[0] for r in cur.fetchall()]
+        if len(all_ids) > MAX_REVIEWS:
+            stale = all_ids[MAX_REVIEWS:]
+            qmarks = ",".join([p] * len(stale))
+            cur.execute(f"DELETE FROM reviews WHERE id IN ({qmarks})", stale)
+            conn.commit()
+
     return review, None

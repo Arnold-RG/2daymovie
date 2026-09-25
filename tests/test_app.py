@@ -143,12 +143,15 @@ def test_security_headers():
 
 
 def test_reviews_live(tmp_path, monkeypatch):
-    reviews_file = tmp_path / "reviews.json"
-    monkeypatch.setenv("REVIEWS_PATH", str(reviews_file))
-    # reload path resolution by clearing rate map and using fresh path
+    reviews_db = tmp_path / "reviews.db"
+    monkeypatch.setenv("REVIEWS_SQLITE_PATH", str(reviews_db))
+    monkeypatch.delenv("DATABASE_URL", raising=False)
+
     from services import reviews as reviews_mod
 
     reviews_mod._RATE.clear()
+    reviews_mod._INITIALIZED = False
+    reviews_mod._init_db()
 
     client = app.test_client()
     page = client.get("/reviews")
@@ -177,3 +180,23 @@ def test_reviews_live(tmp_path, monkeypatch):
     assert home.status_code == 200
     assert b"Live reviews" in home.data
     assert b"Alex" in home.data
+
+
+def test_reviews_migrate_legacy_json(tmp_path, monkeypatch):
+    legacy = tmp_path / "reviews.json"
+    legacy.write_text(
+        '[{"id":"legacy-1","name":"Sam","rating":4,"message":"Restored review text here","created_at":"2026-09-20T12:00:00+00:00"}]',
+        encoding="utf-8",
+    )
+    db = tmp_path / "reviews.db"
+    monkeypatch.setenv("REVIEWS_PATH", str(legacy))
+    monkeypatch.setenv("REVIEWS_SQLITE_PATH", str(db))
+    monkeypatch.delenv("DATABASE_URL", raising=False)
+
+    from services import reviews as reviews_mod
+
+    reviews_mod._RATE.clear()
+    reviews_mod._INITIALIZED = False
+    reviews_mod._init_db()
+    rows = reviews_mod.list_reviews()
+    assert any(r["name"] == "Sam" and r["id"] == "legacy-1" for r in rows)
