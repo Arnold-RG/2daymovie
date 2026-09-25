@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0c0f12" />
+  <title>2daymovie.to — Find every film. Watch legally.</title>
+  <meta name="description" content="2daymovie.to — free movie discovery. Official trailers and legal streaming links. No account required." />
+  <link rel="icon" href="assets/poster-fallback.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/style.css" />
+  <style>
+    .settings-bar { display:flex; gap:.6rem; flex-wrap:wrap; align-items:center; padding:.75rem clamp(1rem,3vw,2.5rem); border-bottom:1px solid var(--line); background:rgba(255,255,255,.02); }
+    .settings-bar input { flex:1; min-width:180px; border:1px solid var(--line); background:rgba(255,255,255,.04); color:var(--ink); border-radius:999px; padding:.55rem 1rem; font:inherit; }
+    .live-badge { color:#9be7a2; font-size:.85rem; font-weight:700; }
+    .demo-badge { color:#f6df9a; font-size:.85rem; font-weight:700; }
+    #app { min-height: 60vh; }
+    .hidden { display:none !important; }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="#/" aria-label="2daymovie.to home">
+      <span class="brand-mark">2DAY</span><span class="brand-dot">.</span><span class="brand-rest">MOVIE</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="#/">Home</a>
+      <a href="#/browse">Catalog</a>
+      <a href="#/genre/28">Action</a>
+      <a href="#/genre/18">Drama</a>
+      <a href="#/genre/878">Sci-Fi</a>
+    </nav>
+    <form class="search-form" id="searchForm" role="search">
+      <label class="sr-only" for="q">Search movies</label>
+      <input id="q" name="q" type="search" placeholder="Search any movie…" autocomplete="off" />
+      <button type="submit">Search</button>
+    </form>
+  </header>
+
+  <div class="settings-bar">
+    <span id="modeBadge" class="demo-badge">Demo catalog</span>
+    <input id="tmdbKey" type="password" placeholder="Paste free TMDB API key for full world catalog" />
+    <button class="btn btn-primary" id="saveKey" type="button">Save key</button>
+    <a class="text-link" href="https://www.themoviedb.org/settings/api" target="_blank" rel="noopener">Get free key</a>
+  </div>
+
+  <main id="main"><div id="app"></div></main>
+
+  <footer class="site-footer">
+    <div class="footer-brand">2daymovie.to</div>
+    <p>Free to browse. No accounts. Official trailers and legal watch links only — we never host copyrighted films.</p>
+    <p class="footer-credit">Movie data from <a href="https://www.themoviedb.org/" target="_blank" rel="noopener">TMDB</a>. This product uses the TMDB API but is not endorsed or certified by TMDB.</p>
+  </footer>
+
+  <script>
+  const FALLBACK = 'assets/poster-fallback.svg';
+  const IMAGE = 'https://image.tmdb.org/t/p';
+  const API = 'https://api.themoviedb.org/3';
+  const app = document.getElementById('app');
+  const modeBadge = document.getElementById('modeBadge');
+  const keyInput = document.getElementById('tmdbKey');
+  let catalog = { genres: [], movies: [] };
+
+  function apiKey() {
+    return (localStorage.getItem('TMDB_API_KEY') || '').trim();
+  }
+  function usingLive() {
+    const k = apiKey();
+    return k && !k.startsWith('your_');
+  }
+  function refreshMode() {
+    if (usingLive()) {
+      modeBadge.textContent = 'Live TMDB catalog';
+      modeBadge.className = 'live-badge';
+      keyInput.value = apiKey();
+    } else {
+      modeBadge.textContent = 'Demo catalog — add TMDB key for hundreds of thousands of titles';
+      modeBadge.className = 'demo-badge';
+    }
+  }
+  async function tmdb(path, params = {}) {
+    const q = new URLSearchParams({ api_key: apiKey(), include_adult: 'false', ...params });
+    const res = await fetch(`${API}${path}?${q}`);
+    if (!res.ok) throw new Error('TMDB ' + res.status);
+    return res.json();
+  }
+  function poster(path, size = 'w500') {
+    return path ? `${IMAGE}/${size}${path}` : FALLBACK;
+  }
+  function backdrop(path) {
+    return path ? `${IMAGE}/w1280${path}` : null;
+  }
+  function year(d) { return d ? d.slice(0, 4) : '—'; }
+  function norm(m) {
+    return {
+      id: m.id,
+      title: m.title || m.name || 'Untitled',
+      overview: m.overview || '',
+      release_date: m.release_date || '',
+      year: year(m.release_date),
+      vote_average: Math.round((m.vote_average || 0) * 10) / 10,
+      genre_ids: m.genre_ids || [],
+      genres: m.genres || [],
+      runtime: m.runtime,
+      poster: poster(m.poster_path),
+      backdrop: backdrop(m.backdrop_path) || poster(m.poster_path),
+      trailer_key: m.trailer_key || null,
+      providers: m.providers || [],
+      watch_link: m.watch_link || null,
+      cast: m.cast || [],
+      similar: m.similar || [],
+      tagline: m.tagline || '',
+      vote_count: m.vote_count || 0,
+      original_language: m.original_language || '',
+      status: m.status || '',
+    };
+  }
+  function esc(s) {
+    return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  function card(m) {
+    return `<a class="poster-card" href="#/movie/${m.id}">
+      <img class="poster-img" src="${esc(m.poster || FALLBACK)}" alt="Poster for ${esc(m.title)}" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='${FALLBACK}'" />
+      <div class="poster-meta"><h3>${esc(m.title)}</h3><p>${esc(m.year)} · ★ ${esc(m.vote_average)}</p></div>
+    </a>`;
+  }
+  function pager(page, total, base) {
+    if (!total || total <= 1) return '';
+    const prev = page > 1 ? `<a class="btn btn-ghost" href="${base}${page-1}">Previous</a>` : '';
+    const next = page < total ? `<a class="btn btn-ghost" href="${base}${page+1}">Next</a>` : '';
+    return `<nav class="pager" aria-label="Pagination">${prev}<span class="pager-status">Page ${page} of ${total}</span>${next}</nav>`;
+  }
+
+  async function listHome() {
+    if (usingLive()) {
+      const [tr, pop, now, top] = await Promise.all([
+        tmdb('/trending/movie/week'),
+        tmdb('/movie/popular'),
+        tmdb('/movie/now_playing'),
+        tmdb('/movie/top_rated'),
+      ]);
+      return {
+        featured: norm(tr.results[0]),
+        rows: [
+          ['Trending this week', tr.results.map(norm)],
+          ['Popular', pop.results.map(norm)],
+          ['Now playing', now.results.map(norm)],
+          ['Top rated', top.results.map(norm)],
+        ],
+      };
+    }
+    const movies = catalog.movies;
+    return {
+      featured: movies[0],
+      rows: [
+        ['Trending this week', movies],
+        ['Popular', [...movies].sort((a,b)=>b.vote_average-a.vote_average)],
+        ['Now playing', [...movies].sort((a,b)=>b.release_date.localeCompare(a.release_date))],
+        ['Top rated', [...movies].sort((a,b)=>b.vote_average-a.vote_average)],
+      ],
+    };
+  }
+
+  async function listBrowse(page = 1, sort = 'popularity.desc') {
+    if (usingLive()) {
+      const data = await tmdb('/discover/movie', { page, sort_by: sort, 'vote_count.gte': 1 });
+      return { results: data.results.map(norm), page: data.page, total_pages: Math.min(data.total_pages || 1, 500), total_results: data.total_results || 0 };
+    }
+    return { results: catalog.movies, page: 1, total_pages: 1, total_results: catalog.movies.length };
+  }
+
+  async function listSearch(q, page = 1) {
+    if (!q) return { results: [], page: 1, total_pages: 1, total_results: 0 };
+    if (usingLive()) {
+      const data = await tmdb('/search/movie', { query: q, page });
+      return { results: data.results.map(norm), page: data.page, total_pages: Math.min(data.total_pages || 1, 500), total_results: data.total_results || 0 };
+    }
+    const results = catalog.movies.filter(m => m.title.toLowerCase().includes(q.toLowerCase()));
+    return { results, page: 1, total_pages: 1, total_results: results.length };
+  }
+
+  async function listGenre(id, page = 1) {
+    if (usingLive()) {
+      const data = await tmdb('/discover/movie', { with_genres: id, page, sort_by: 'popularity.desc' });
+      return { results: data.results.map(norm), page: data.page, total_pages: Math.min(data.total_pages || 1, 500), total_results: data.total_results || 0 };
+    }
+    const results = catalog.movies.filter(m => (m.genre_ids || []).includes(Number(id)));
+    return { results, page: 1, total_pages: 1, total_results: results.length };
+  }
+
+  async function getMovie(id) {
+    if (usingLive()) {
+      const detail = await tmdb(`/movie/${id}`, { append_to_response: 'videos,watch/providers,credits,similar' });
+      const videos = (detail.videos && detail.videos.results) || [];
+      const trailer = videos.find(v => v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser')) || videos.find(v => v.site === 'YouTube');
+      const country = ((detail['watch/providers'] || {}).results || {}).US || {};
+      const providers = [];
+      const seen = new Set();
+      for (const bucket of ['flatrate', 'rent', 'buy', 'free', 'ads']) {
+        for (const p of country[bucket] || []) {
+          if (seen.has(p.provider_name)) continue;
+          seen.add(p.provider_name);
+          providers.push({ provider_name: p.provider_name, type: bucket, logo: poster(p.logo_path, 'w92') });
+        }
+      }
+      const cast = ((detail.credits || {}).cast || []).slice(0, 12).map(p => ({
+        name: p.name, character: p.character || '', profile: poster(p.profile_path, 'w185'),
+      }));
+      const similar = ((detail.similar || {}).results || []).slice(0, 12).map(norm);
+      const m = norm(detail);
+      m.trailer_key = trailer ? trailer.key : null;
+      m.providers = providers;
+      m.watch_link = country.link || `https://www.justwatch.com/us/search?q=${encodeURIComponent(m.title)}`;
+      m.cast = cast;
+      m.similar = similar;
+      return m;
+    }
+    return catalog.movies.find(m => String(m.id) === String(id)) || null;
+  }
+
+  function genreName(id) {
+    const g = catalog.genres.find(x => String(x.id) === String(id));
+    return g ? g.name : 'Movies';
+  }
+
+  async function render() {
+    refreshMode();
+    const hash = location.hash.replace(/^#\/?/, '') || '';
+    const parts = hash.split('/').filter(Boolean);
+    try {
+      if (!parts.length) {
+        const { featured, rows } = await listHome();
+        const genres = usingLive() ? ((await tmdb('/genre/movie/list')).genres || catalog.genres) : catalog.genres;
+        app.innerHTML = `
+          <section class="hero ${featured && featured.backdrop ? 'has-backdrop' : ''}" ${featured && featured.backdrop ? `style="--hero-image:url('${featured.backdrop}')"` : ''}>
+            <div class="hero-veil"></div>
+            <div class="hero-copy">
+              <p class="hero-brand">2daymovie.to</p>
+              <h1>Every film. Find where it streams.</h1>
+              <p class="hero-lede">Browse the catalog, watch official trailers, and jump to legal platforms — no signup.</p>
+              <div class="hero-actions">
+                ${featured ? `<a class="btn btn-primary" href="#/movie/${featured.id}">Open ${esc(featured.title)}</a>` : ''}
+                <a class="btn btn-ghost" href="#/browse">Browse catalog</a>
+              </div>
+            </div>
+          </section>
+          <section class="catalog" id="catalog">
+            <div class="genre-rail">${genres.slice(0,10).map(g => `<a class="genre-chip" href="#/genre/${g.id}">${esc(g.name)}</a>`).join('')}</div>
+            ${rows.map(([title, movies]) => `
+              <section class="row">
+                <div class="row-head"><h2>${esc(title)}</h2></div>
+                <div class="poster-rail" data-rail>${movies.map(card).join('')}</div>
+              </section>`).join('')}
+          </section>`;
+      } else if (parts[0] === 'browse') {
+        const page = Number(parts[1] || 1);
+        const data = await listBrowse(page);
+        app.innerHTML = `<section class="page-band">
+          <h1>Browse the catalog</h1>
+          <p>${data.total_results.toLocaleString()} titles available${usingLive() ? ' via TMDB' : ' in demo mode'}.</p>
+          <div class="poster-grid">${data.results.map(card).join('')}</div>
+          ${pager(data.page, data.total_pages, '#/browse/')}
+        </section>`;
+      } else if (parts[0] === 'search') {
+        const q = decodeURIComponent(parts[1] || '');
+        const page = Number(parts[2] || 1);
+        const data = await listSearch(q, page);
+        app.innerHTML = `<section class="page-band">
+          <h1>Results for “${esc(q)}”</h1>
+          <p>${data.total_results.toLocaleString()} title(s) found.</p>
+          <div class="poster-grid">${data.results.map(card).join('') || '<p class="empty-state">No matches.</p>'}</div>
+          ${pager(data.page, data.total_pages, `#/search/${encodeURIComponent(q)}/`)}
+        </section>`;
+      } else if (parts[0] === 'genre') {
+        const id = parts[1];
+        const page = Number(parts[2] || 1);
+        const data = await listGenre(id, page);
+        const name = usingLive() ? ((await tmdb('/genre/movie/list')).genres.find(g => String(g.id) === String(id)) || {}).name || 'Movies' : genreName(id);
+        app.innerHTML = `<section class="page-band">
+          <h1>${esc(name)}</h1>
+          <p>${data.total_results.toLocaleString()} titles.</p>
+          <div class="poster-grid">${data.results.map(card).join('')}</div>
+          ${pager(data.page, data.total_pages, `#/genre/${id}/`)}
+        </section>`;
+      } else if (parts[0] === 'movie') {
+        const movie = await getMovie(parts[1]);
+        if (!movie) { app.innerHTML = `<section class="page-band narrow"><h1>Title not found</h1><a class="btn btn-primary" href="#/">Back</a></section>`; return; }
+        app.innerHTML = `
+          <article class="detail ${movie.backdrop ? 'has-backdrop' : ''}" ${movie.backdrop ? `style="--detail-image:url('${movie.backdrop}')"` : ''}>
+            <div class="detail-veil"></div>
+            <div class="detail-layout">
+              <div class="detail-poster"><img class="poster-img" src="${esc(movie.poster || FALLBACK)}" alt="Poster for ${esc(movie.title)}" onerror="this.src='${FALLBACK}'" /></div>
+              <div class="detail-copy">
+                <p class="detail-kicker">2daymovie.to</p>
+                <h1>${esc(movie.title)}</h1>
+                ${movie.tagline ? `<p class="tagline">${esc(movie.tagline)}</p>` : ''}
+                <p class="detail-meta"><span>${esc(movie.year)}</span>${movie.runtime ? `<span>${movie.runtime} min</span>` : ''}<span>★ ${esc(movie.vote_average)}</span></p>
+                <p class="overview">${esc(movie.overview)}</p>
+                <div class="detail-actions">
+                  ${movie.trailer_key ? `<a class="btn btn-primary" href="#trailer">Watch trailer</a>` : ''}
+                  ${movie.watch_link ? `<a class="btn btn-ghost" href="${esc(movie.watch_link)}" target="_blank" rel="noopener">Where to watch</a>` : ''}
+                  <a class="text-link" href="#/">← Back</a>
+                </div>
+                <section class="providers">
+                  <h2>Legal streaming options</h2>
+                  <p class="providers-note">Licensed services only — never pirate sites.</p>
+                  <ul class="provider-list">${(movie.providers || []).map(p => `<li>${p.logo ? `<img src="${esc(p.logo)}" alt="" width="40" height="40" />` : ''}<div><strong>${esc(p.provider_name)}</strong><span>${esc(p.type)}</span></div></li>`).join('') || '<li><div><strong>Use Where to watch</strong><span>search licensed platforms</span></div></li>'}</ul>
+                </section>
+              </div>
+            </div>
+            ${movie.cast && movie.cast.length ? `<section class="cast-block"><h2>Cast</h2><div class="cast-rail">${movie.cast.map(p => `<div class="cast-card">${p.profile ? `<img src="${esc(p.profile)}" alt="" loading="lazy" />` : `<div class="cast-fallback">${esc((p.name||'?')[0])}</div>`}<strong>${esc(p.name)}</strong><span>${esc(p.character)}</span></div>`).join('')}</div></section>` : ''}
+            ${movie.similar && movie.similar.length ? `<section class="similar-block"><h2>You may also like</h2><div class="poster-rail" data-rail>${movie.similar.map(card).join('')}</div></section>` : ''}
+            ${movie.trailer_key ? `<section id="trailer" class="trailer-block"><h2>Official trailer</h2><div class="trailer-frame"><iframe src="https://www.youtube-nocookie.com/embed/${esc(movie.trailer_key)}" title="Trailer" allowfullscreen loading="lazy"></iframe></div></section>` : ''}
+          </article>`;
+      } else {
+        app.innerHTML = `<section class="page-band"><h1>Not found</h1><a class="btn btn-primary" href="#/">Home</a></section>`;
+      }
+    } catch (err) {
+      app.innerHTML = `<section class="page-band"><h1>Something went wrong</h1><p class="empty-state">${esc(err.message)}. Check your TMDB API key.</p></section>`;
+    }
+    document.querySelectorAll('[data-rail]').forEach(rail => {
+      rail.addEventListener('wheel', (e) => {
+        if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+        e.preventDefault();
+        rail.scrollLeft += e.deltaY;
+      }, { passive: false });
+    });
+  }
+
+  document.getElementById('searchForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const q = document.getElementById('q').value.trim();
+    location.hash = q ? `#/search/${encodeURIComponent(q)}` : '#/';
+  });
+  document.getElementById('saveKey').addEventListener('click', () => {
+    const v = keyInput.value.trim();
+    if (v) localStorage.setItem('TMDB_API_KEY', v);
+    else localStorage.removeItem('TMDB_API_KEY');
+    render();
+  });
+  window.addEventListener('hashchange', render);
+
+  fetch('data.json').then(r => r.json()).then(data => {
+    catalog = data;
+    refreshMode();
+    render();
+  });
+  </script>
+</body>
+</html>
