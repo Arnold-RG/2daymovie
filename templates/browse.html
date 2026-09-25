@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% from "_macros.html" import pager %}
+
+{% block title %}Browse · {{ site_name }}{% endblock %}
+
+{% block content %}
+{% set fallback = url_for('static', filename='img/poster-fallback.svg') %}
+<section class="page-band">
+  <h1>Browse the catalog</h1>
+  <p>
+    {% if live_api %}
+      Exploring {{ "{:,}".format(total_results) }} titles via TMDB (legal metadata). Page through results to keep discovering.
+    {% else %}
+      Demo catalog mode — add a free TMDB API key in <code>.env</code> to unlock hundreds of thousands of titles with pagination.
+    {% endif %}
+  </p>
+
+  <form class="sort-form" method="get" action="{{ url_for('browse') }}">
+    <label for="sort">Sort by</label>
+    <select id="sort" name="sort" onchange="this.form.submit()">
+      <option value="popularity.desc" {% if sort == 'popularity.desc' %}selected{% endif %}>Popularity</option>
+      <option value="vote_average.desc" {% if sort == 'vote_average.desc' %}selected{% endif %}>Top rated</option>
+      <option value="primary_release_date.desc" {% if sort == 'primary_release_date.desc' %}selected{% endif %}>Newest</option>
+      <option value="revenue.desc" {% if sort == 'revenue.desc' %}selected{% endif %}>Box office</option>
+    </select>
+  </form>
+
+  <div class="poster-grid">
+    {% for movie in movies %}
+    <a class="poster-card" href="{{ url_for('movie_details', movie_id=movie.id) }}">
+      <img
+        class="poster-img"
+        src="{{ movie.poster or fallback }}"
+        {% if movie.poster_srcset %}srcset="{{ movie.poster_srcset }}" sizes="(max-width: 600px) 45vw, 160px"{% endif %}
+        alt="Poster for {{ movie.title }}"
+        loading="lazy"
+        decoding="async"
+        width="200"
+        height="300"
+        onerror="this.onerror=null;this.removeAttribute('srcset');this.src='{{ fallback }}';"
+      />
+      <div class="poster-meta">
+        <h3>{{ movie.title }}</h3>
+        <p>{{ movie.year }} · ★ {{ movie.vote_average }}</p>
+      </div>
+    </a>
+    {% else %}
+    <p class="empty-state">No titles on this page.</p>
+    {% endfor %}
+  </div>
+
+  {{ pager(
+       page,
+       total_pages,
+       prev_url=url_for('browse', page=page-1, sort=sort) if page > 1 else None,
+       next_url=url_for('browse', page=page+1, sort=sort) if page < total_pages else None
+     ) }}
+</section>
+{% endblock %}

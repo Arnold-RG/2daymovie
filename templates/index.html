@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% set fallback = url_for('static', filename='img/poster-fallback.svg') %}
+{% set backdrop_fallback = url_for('static', filename='img/backdrop-fallback.svg') %}
+<section class="hero {% if featured and featured.backdrop %}has-backdrop{% endif %}" {% if featured and featured.backdrop %}style="--hero-image: url('{{ featured.backdrop }}')"{% endif %}>
+  <div class="hero-veil"></div>
+  <div class="hero-copy">
+    <p class="hero-brand">2daymovie.to</p>
+    <h1>Every film. Find where it streams.</h1>
+    <p class="hero-lede">Browse the catalog, watch official trailers, and jump to legal platforms — no signup, no paywall for discovery.</p>
+    <div class="hero-actions">
+      {% if featured %}
+      <a class="btn btn-primary" href="{{ url_for('movie_details', movie_id=featured.id) }}">Open {{ featured.title }}</a>
+      {% endif %}
+      <a class="btn btn-ghost" href="#catalog">Browse catalog</a>
+    </div>
+  </div>
+</section>
+
+<section id="catalog" class="catalog">
+  <div class="genre-rail" aria-label="Genres">
+    {% for g in genres[:10] %}
+    <a class="genre-chip" href="{{ url_for('genre', genre_id=g.id) }}">{{ g.name }}</a>
+    {% endfor %}
+  </div>
+
+  {% for title, movies in rows %}
+  {% if movies %}
+  <section class="row">
+    <div class="row-head">
+      <h2>{{ title }}</h2>
+    </div>
+    <div class="poster-rail" data-rail>
+      {% for movie in movies %}
+      <a class="poster-card" href="{{ url_for('movie_details', movie_id=movie.id) }}">
+        <img
+          class="poster-img"
+          src="{{ movie.poster or fallback }}"
+          {% if movie.poster_srcset %}srcset="{{ movie.poster_srcset }}" sizes="(max-width: 600px) 42vw, 180px"{% endif %}
+          alt="Poster for {{ movie.title }}"
+          loading="lazy"
+          decoding="async"
+          width="200"
+          height="300"
+          onerror="this.onerror=null;this.removeAttribute('srcset');this.src='{{ fallback }}';"
+        />
+        <div class="poster-meta">
+          <h3>{{ movie.title }}</h3>
+          <p>{{ movie.year }} · ★ {{ movie.vote_average }}</p>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+  {% endfor %}
+</section>
+{% endblock %}

@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}{{ movie.title }} · {{ site_name }}{% endblock %}
+
+{% block content %}
+{% set fallback = url_for('static', filename='img/poster-fallback.svg') %}
+<article class="detail {% if movie.backdrop %}has-backdrop{% endif %}" {% if movie.backdrop %}style="--detail-image: url('{{ movie.backdrop }}')"{% endif %}>
+  <div class="detail-veil"></div>
+
+  <div class="detail-layout">
+    <div class="detail-poster">
+      <img
+        class="poster-img"
+        src="{{ movie.poster or fallback }}"
+        {% if movie.poster_srcset %}srcset="{{ movie.poster_srcset }}" sizes="(max-width: 900px) 60vw, 280px"{% endif %}
+        alt="Poster for {{ movie.title }}"
+        width="400"
+        height="600"
+        decoding="async"
+        onerror="this.onerror=null;this.removeAttribute('srcset');this.src='{{ fallback }}';"
+      />
+    </div>
+
+    <div class="detail-copy">
+      <p class="detail-kicker">{{ site_name }}</p>
+      <h1>{{ movie.title }}</h1>
+      {% if movie.tagline %}<p class="tagline">{{ movie.tagline }}</p>{% endif %}
+
+      <p class="detail-meta">
+        <span>{{ movie.year }}</span>
+        {% if movie.runtime %}<span>{{ movie.runtime }} min</span>{% endif %}
+        <span>★ {{ movie.vote_average }}{% if movie.vote_count %} ({{ "{:,}".format(movie.vote_count) }}){% endif %}</span>
+        {% if movie.original_language %}<span>{{ movie.original_language|upper }}</span>{% endif %}
+        {% if movie.status %}<span>{{ movie.status }}</span>{% endif %}
+      </p>
+
+      {% if movie.genres %}
+      <div class="genre-rail compact">
+        {% for g in movie.genres %}
+        <a class="genre-chip" href="{{ url_for('genre', genre_id=g.id) }}">{{ g.name }}</a>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <p class="overview">{{ movie.overview }}</p>
+
+      <div class="detail-actions">
+        {% if movie.trailer_key %}
+        <a class="btn btn-primary" href="#trailer">Watch trailer</a>
+        {% endif %}
+        {% if movie.watch_link %}
+        <a class="btn btn-ghost" href="{{ movie.watch_link }}" target="_blank" rel="noopener">Where to watch</a>
+        {% endif %}
+        <a class="text-link" href="{{ url_for('home') }}">← Back to browse</a>
+      </div>
+
+      {% if movie.providers %}
+      <section class="providers" aria-labelledby="providers-heading">
+        <h2 id="providers-heading">Legal streaming options</h2>
+        <p class="providers-note">Availability varies by region. Links go to licensed services (Netflix, Prime, Disney+, Max, etc.) — never pirate sites.</p>
+        <ul class="provider-list">
+          {% for p in movie.providers %}
+          <li>
+            {% if p.logo %}
+            <img
+              src="{{ p.logo }}"
+              alt=""
+              width="40"
+              height="40"
+              loading="lazy"
+              decoding="async"
+              onerror="this.style.display='none'"
+            />
+            {% endif %}
+            <div>
+              <strong>{{ p.provider_name }}</strong>
+              <span>{{ p.type }}</span>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </section>
+      {% else %}
+      <section class="providers">
+        <h2>Legal streaming options</h2>
+        <p class="providers-note">No regional providers returned. Use “Where to watch” to search licensed platforms.</p>
+      </section>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if movie.cast %}
+  <section class="cast-block" aria-labelledby="cast-heading">
+    <h2 id="cast-heading">Cast</h2>
+    <div class="cast-rail">
+      {% for person in movie.cast %}
+      <div class="cast-card">
+        {% if person.profile %}
+        <img src="{{ person.profile }}" alt="" loading="lazy" decoding="async" width="120" height="180" onerror="this.style.visibility='hidden'" />
+        {% else %}
+        <div class="poster-fallback cast-fallback">{{ person.name[:1] }}</div>
+        {% endif %}
+        <strong>{{ person.name }}</strong>
+        {% if person.character %}<span>{{ person.character }}</span>{% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  {% if movie.similar %}
+  <section class="similar-block" aria-labelledby="similar-heading">
+    <h2 id="similar-heading">You may also like</h2>
+    <div class="poster-rail" data-rail>
+      {% for m in movie.similar %}
+      <a class="poster-card" href="{{ url_for('movie_details', movie_id=m.id) }}">
+        <img
+          class="poster-img"
+          src="{{ m.poster or fallback }}"
+          alt="Poster for {{ m.title }}"
+          loading="lazy"
+          decoding="async"
+          width="200"
+          height="300"
+          onerror="this.onerror=null;this.src='{{ fallback }}';"
+        />
+        <div class="poster-meta">
+          <h3>{{ m.title }}</h3>
+          <p>{{ m.year }} · ★ {{ m.vote_average }}</p>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  {% if movie.trailer_key %}
+  <section id="trailer" class="trailer-block" aria-labelledby="trailer-heading">
+    <h2 id="trailer-heading">Official trailer</h2>
+    <div class="trailer-frame">
+      <iframe
+        src="https://www.youtube-nocookie.com/embed/{{ movie.trailer_key }}"
+        title="Trailer for {{ movie.title }}"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen
+        loading="lazy"
+        referrerpolicy="strict-origin-when-cross-origin"
+      ></iframe>
+    </div>
+  </section>
+  {% endif %}
+</article>
+{% endblock %}

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="theme-color" content="#0c0f12" />
+  <meta name="color-scheme" content="dark" />
+  <title>{% block title %}{{ site_name }} — Find every film. Watch legally.{% endblock %}</title>
+  <meta name="description" content="2daymovie.to is a free movie discovery platform. Browse the world catalog, watch official trailers, and find legal streaming options — no account required." />
+  <link rel="icon" href="{{ url_for('static', filename='img/poster-fallback.svg') }}" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  {% block head %}{% endblock %}
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <a class="brand" href="{{ url_for('home') }}" aria-label="2daymovie.to home">
+      <span class="brand-mark">2DAY</span><span class="brand-dot">.</span><span class="brand-rest">MOVIE</span>
+    </a>
+
+    <nav class="site-nav" aria-label="Primary">
+      <a href="{{ url_for('home') }}">Home</a>
+      <a href="{{ url_for('browse') }}">Catalog</a>
+      <a href="{{ url_for('genre', genre_id=28) }}">Action</a>
+      <a href="{{ url_for('genre', genre_id=18) }}">Drama</a>
+      <a href="{{ url_for('genre', genre_id=878) }}">Sci-Fi</a>
+    </nav>
+
+    <form class="search-form" action="{{ url_for('search') }}" method="get" role="search">
+      <label class="sr-only" for="q">Search movies</label>
+      <input id="q" name="q" type="search" placeholder="Search any movie…" value="{{ request.args.get('q', '') }}" autocomplete="off" />
+      <button type="submit">Search</button>
+    </form>
+  </header>
+
+  {% if not live_api %}
+  <div class="mode-banner" role="status">
+    Demo catalog mode — add a free <a href="https://www.themoviedb.org/settings/api" target="_blank" rel="noopener">TMDB API key</a> in <code>.env</code> for the full world catalog.
+  </div>
+  {% endif %}
+
+  <main id="main">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-brand">{{ site_name }}</div>
+    <p>
+      Free to browse. No accounts. Official trailers and legal watch links only —
+      we never host copyrighted films.
+    </p>
+    <p class="footer-credit">
+      Movie data from
+      <a href="https://www.themoviedb.org/" target="_blank" rel="noopener">TMDB</a>.
+      This product uses the TMDB API but is not endorsed or certified by TMDB.
+    </p>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

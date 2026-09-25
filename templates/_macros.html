@@ -1,0 +1,13 @@
+{% macro pager(page, total_pages, prev_url=None, next_url=None) -%}
+{% if total_pages and total_pages > 1 %}
+<nav class="pager" aria-label="Pagination">
+  {% if prev_url %}
+  <a class="btn btn-ghost" href="{{ prev_url }}">Previous</a>
+  {% endif %}
+  <span class="pager-status">Page {{ page }} of {{ total_pages }}</span>
+  {% if next_url %}
+  <a class="btn btn-ghost" href="{{ next_url }}">Next</a>
+  {% endif %}
+</nav>
+{% endif %}
+{%- endmacro %}

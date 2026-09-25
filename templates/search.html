@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% from "_macros.html" import pager %}
+
+{% block title %}{% if query %}“{{ query }}” · {% endif %}Search · {{ site_name }}{% endblock %}
+
+{% block content %}
+{% set fallback = url_for('static', filename='img/poster-fallback.svg') %}
+<section class="page-band">
+  <h1>{% if query %}Results for “{{ query }}”{% else %}Search movies{% endif %}</h1>
+  <p>
+    {% if query %}
+      {{ "{:,}".format(total_results) }} title{{ '' if total_results == 1 else 's' }} found.
+    {% else %}
+      Type a title above to search the catalog.
+    {% endif %}
+  </p>
+
+  {% if results %}
+  <div class="poster-grid">
+    {% for movie in results %}
+    <a class="poster-card" href="{{ url_for('movie_details', movie_id=movie.id) }}">
+      <img
+        class="poster-img"
+        src="{{ movie.poster or fallback }}"
+        {% if movie.poster_srcset %}srcset="{{ movie.poster_srcset }}" sizes="(max-width: 600px) 45vw, 160px"{% endif %}
+        alt="Poster for {{ movie.title }}"
+        loading="lazy"
+        decoding="async"
+        width="200"
+        height="300"
+        onerror="this.onerror=null;this.removeAttribute('srcset');this.src='{{ fallback }}';"
+      />
+      <div class="poster-meta">
+        <h3>{{ movie.title }}</h3>
+        <p>{{ movie.year }} · ★ {{ movie.vote_average }}</p>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  {{ pager(
+       page,
+       total_pages,
+       prev_url=url_for('search', page=page-1, q=query) if page > 1 else None,
+       next_url=url_for('search', page=page+1, q=query) if page < total_pages else None
+     ) }}
+  {% elif query %}
+  <p class="empty-state">No matches. Try another title.</p>
+  {% endif %}
+</section>
+{% endblock %}
