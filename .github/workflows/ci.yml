@@ -43,7 +43,8 @@ jobs:
           assert c.get("/healthz").status_code == 200
           assert c.get("/readyz").status_code == 200
           assert c.get("/metrics").status_code == 200
-          assert c.get("/library").status_code == 200
+          assert c.get("/library").status_code in (301, 302)
+          assert c.get("/movies").status_code == 200
           assert c.get("/poems").status_code == 200
           print("ops smoke ok")
           PY
