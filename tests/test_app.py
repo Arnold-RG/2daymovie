@@ -93,6 +93,30 @@ def test_about_ok():
     assert b"GitHub" not in response.data
 
 
+def test_poems_home_ok():
+    client = app.test_client()
+    response = client.get("/poems")
+    assert response.status_code == 200
+    assert b"Amora" in response.data
+    assert b"Love, written slowly." in response.data
+    assert b"How Do I Love Thee?" in response.data
+    assert b"Read the poems" in response.data
+
+
+def test_poem_detail_ok():
+    client = app.test_client()
+    response = client.get("/poems/how-do-i-love-thee")
+    assert response.status_code == 200
+    assert b"Elizabeth Barrett Browning" in response.data
+    assert b"How do I love thee? Let me count the ways." in response.data
+
+
+def test_poem_not_found():
+    client = app.test_client()
+    response = client.get("/poems/does-not-exist")
+    assert response.status_code == 404
+
+
 def test_robots_and_sitemap():
     client = app.test_client()
     robots = client.get("/robots.txt")
@@ -102,6 +126,8 @@ def test_robots_and_sitemap():
     assert sitemap.status_code == 200
     assert b"<urlset" in sitemap.data
     assert b"/about" in sitemap.data
+    assert b"/poems" in sitemap.data
+    assert b"/poems/how-do-i-love-thee" in sitemap.data
 
 
 def test_healthz():

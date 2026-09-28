@@ -10,7 +10,7 @@ from flask import Flask, Response, abort, g, jsonify, redirect, render_template,
 from prometheus_client import CONTENT_TYPE_LATEST, Counter, Histogram, generate_latest
 
 from data.year_movies import all_years
-from services import library, series, tmdb, upcoming, reviews
+from services import library, poems, series, tmdb, upcoming, reviews
 from services.search import search_catalog as unified_search
 
 load_dotenv()
@@ -153,7 +153,9 @@ Sitemap: {base}/sitemap.xml
             "/about",
             "/search",
             "/reviews",
+            "/poems",
         ]
+        urls.extend(f"/poems/{poem['slug']}" for poem in poems.all_poems())
         urls.extend(f"/year/{year}" for year in all_years())
         urls.extend(
             f"/genre/{genre['id']}"
@@ -216,6 +218,37 @@ Sitemap: {base}/sitemap.xml
                 "2daymovie is a movie and TV trailer discovery platform created and developed "
                 "by Arnold Rurangwa. Official HD trailers only."
             ),
+        )
+
+    @app.route("/poems")
+    def poems_home():
+        catalog = poems.all_poems()
+        featured = poems.featured_poem()
+        return render_template(
+            "poems/index.html",
+            poems=catalog,
+            featured=featured,
+            meta_title="Amora — Love Poems",
+            meta_description=(
+                "Amora is a quiet collection of love poems — classic verses and tender "
+                "contemporary lyrics to read slowly."
+            ),
+        )
+
+    @app.route("/poems/<slug>")
+    def poem_detail(slug: str):
+        poem = poems.get_poem(slug)
+        if not poem:
+            abort(404)
+        prev_poem, next_poem = poems.neighboring(slug)
+        return render_template(
+            "poems/poem.html",
+            poem=poem,
+            prev_poem=prev_poem,
+            next_poem=next_poem,
+            meta_title=f"{poem['title']} — {poem['author']} | Amora",
+            meta_description=poem.get("excerpt")
+            or f"Read “{poem['title']}” by {poem['author']} in the Amora love poems collection.",
         )
 
     @app.route("/reviews", methods=["GET", "POST"])
