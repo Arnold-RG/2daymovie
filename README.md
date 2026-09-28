@@ -57,6 +57,8 @@ Full runbook: [DEVOPS.md](./DEVOPS.md)
 | `/movie/<id>` | Details |
 | `/search` | Catalog search |
 | `/reviews` | Live visitor reviews |
+| `/poems` | Amora love poems collection |
+| `/poems/<slug>` | Individual poem reading page |
 | `/about` | Creator / project identity |
 | `/robots.txt` | Crawler rules |
 | `/sitemap.xml` | URL sitemap |

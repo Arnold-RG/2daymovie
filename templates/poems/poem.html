@@ -1,0 +1,54 @@
+{% extends "poems/base.html" %}
+
+{% block title %}{{ meta_title }}{% endblock %}
+{% block body_class %}page-poem{% endblock %}
+
+{% block content %}
+<article class="poem-page">
+  <header class="poem-hero">
+    <p class="poem-crumb">
+      <a href="{{ url_for('poems_home') }}">Amora</a>
+      <span aria-hidden="true">/</span>
+      <span>{{ poem.mood }}</span>
+    </p>
+    <h1 class="poem-title" data-reveal>{{ poem.title }}</h1>
+    <p class="poem-byline" data-reveal>{{ poem.author }} · {{ poem.year }} · {{ poem.era }}</p>
+  </header>
+
+  <div class="poem-body" data-poem-body data-reveal data-reveal-delay="1">
+    {% for line in poem.lines %}
+      {% if line %}
+        <p class="poem-line">{{ line }}</p>
+      {% else %}
+        <p class="poem-break" aria-hidden="true">&nbsp;</p>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  {% if poem.note %}
+  <p class="poem-note" data-reveal>{{ poem.note }}</p>
+  {% endif %}
+
+  <nav class="poem-nav" aria-label="Adjacent poems">
+    {% if prev_poem %}
+    <a class="poem-nav-link prev" href="{{ url_for('poem_detail', slug=prev_poem.slug) }}">
+      <span class="poem-nav-label">Previous</span>
+      <span class="poem-nav-title">{{ prev_poem.title }}</span>
+    </a>
+    {% else %}
+    <span class="poem-nav-link prev is-empty"></span>
+    {% endif %}
+
+    <a class="poem-nav-all" href="{{ url_for('poems_home') }}#collection">All poems</a>
+
+    {% if next_poem %}
+    <a class="poem-nav-link next" href="{{ url_for('poem_detail', slug=next_poem.slug) }}">
+      <span class="poem-nav-label">Next</span>
+      <span class="poem-nav-title">{{ next_poem.title }}</span>
+    </a>
+    {% else %}
+    <span class="poem-nav-link next is-empty"></span>
+    {% endif %}
+  </nav>
+</article>
+{% endblock %}
