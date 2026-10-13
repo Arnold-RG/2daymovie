@@ -4,7 +4,8 @@ Official **HD movie and TV trailers** only — curated library, on-site embeds, 
 
 **2daymovie** is created and developed by **Arnold Rurangwa**.
 
-- **Website:** https://twodaymovie.onrender.com/
+- **Website:** https://arnold-rg.github.io/2daymovie/
+- **Full server (shared reviews):** https://twodaymovie.onrender.com/
 - **Creator:** Arnold Rurangwa
 
 ## Features
@@ -76,6 +77,21 @@ After deploy:
 Buying `2daymovie.com` (or `.net`) and pointing it at Render is recommended for a clean brand URL.
 
 ## Deploy
+
+- **GitHub Pages** (public catalog): https://arnold-rg.github.io/2daymovie/
+  The site is the `docs/` folder on `main`. Rebuild it with:
+
+  ```bash
+  BASE_PATH=/2daymovie \
+  OFFICIAL_URL=https://arnold-rg.github.io/2daymovie/ \
+  STATIC_EXPORT=1 \
+  REVIEWS_LOCAL_ONLY=1 \
+  python scripts/export_site.py --out docs
+  ```
+
+  Pages is already set to publish that folder. A workflow in `.github/workflows/pages.yml` can deploy the same build through GitHub Actions after **Settings → Pages → Build and deployment → Source** is switched to **GitHub Actions**. Until that switch, merging to `main` is what updates the live site.
+
+  The public copy does not include the reviews database. Reviews typed there stay in the browser.
 
 - **Render** auto-deploys from `main`: https://twodaymovie.onrender.com/
 - **Reviews persistence:** set `DATABASE_URL` on Render, or place the Neon/Supabase URL in gitignored `data/official_database.url` (see `data/official_database.url.example`). Reviews also mirror to `data/site_vault.json` for local backup.

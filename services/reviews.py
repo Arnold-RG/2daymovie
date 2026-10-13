@@ -36,6 +36,9 @@ _INITIALIZED = False
 
 def _read_official_database_url() -> str:
     """Official durable DB link: env first, then the project link file."""
+    # Public static builds must not open the private database.
+    if os.getenv("REVIEWS_LOCAL_ONLY", "").strip() == "1":
+        return ""
     env = os.getenv("DATABASE_URL", "").strip()
     if env:
         return env

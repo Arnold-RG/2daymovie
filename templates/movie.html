@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{ movie.title }} · {{ site_name }}{% endblock %}
+{% block title %}{{ meta_title }}{% endblock %}
 
 {% block content %}
 {% set fallback = url_for('static', filename='img/poster-fallback.svg') %}
@@ -29,7 +29,9 @@
       <p class="detail-meta">
         <span>{{ movie.year }}</span>
         {% if movie.runtime %}<span>{{ movie.runtime }} min</span>{% endif %}
+        {% if movie.vote_average %}
         <span>★ {{ movie.vote_average }}{% if movie.vote_count %} ({{ "{:,}".format(movie.vote_count) }}){% endif %}</span>
+        {% endif %}
         {% if movie.original_language %}<span>{{ movie.original_language|upper }}</span>{% endif %}
         {% if movie.status %}<span>{{ movie.status }}</span>{% endif %}
       </p>
@@ -92,7 +94,7 @@
         </span>
         <div class="poster-meta">
           <h3>{{ m.title }}</h3>
-          <p>{{ m.year }} · ★ {{ m.vote_average }}</p>
+          <p>{{ m.year }}{% if m.vote_average %} · ★ {{ m.vote_average }}{% endif %}</p>
         </div>
       </a>
       {% endfor %}

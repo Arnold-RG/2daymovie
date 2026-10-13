@@ -38,9 +38,14 @@
   <div class="hero-stage">
     <div class="hero-lead">
       <div class="hero-mark" aria-hidden="true"></div>
-      <p class="hero-kicker">Projection · Official HD</p>
-      <h1 class="hero-brand" aria-label="2daymovie"><span class="gel">2DAY</span>MOVIE</h1>
-      <p class="hero-lede">Curated movies and series — official HD trailers play right here on this site.</p>
+      <p class="hero-kicker">Official trailers</p>
+      <h1 class="hero-brand" aria-label="2daymovie"><span class="gel">2day</span>movie</h1>
+      <p class="hero-lede">A shelf of movies and series. The official trailer plays here. The film does not.</p>
+      <ul class="stat-strip">
+        <li><span class="stat-value">{{ "{:,}".format(stats.with_trailer) }}</span><span class="stat-label">Films</span></li>
+        <li><span class="stat-value">{{ "{:,}".format(series_stats.with_trailer) }}</span><span class="stat-label">Series</span></li>
+        <li><span class="stat-value">{{ stats.years|length }}</span><span class="stat-label">Years</span></li>
+      </ul>
       <div class="hero-actions">
         <a class="btn btn-primary" href="{{ url_for('categories_home') }}">Browse categories</a>
         <a class="btn btn-ghost" href="{{ url_for('movies_home') }}">Movies</a>

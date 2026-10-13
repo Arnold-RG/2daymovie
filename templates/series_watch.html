@@ -9,7 +9,7 @@
   <div class="watch-veil" aria-hidden="true"></div>
   <div class="watch-layout">
     <div class="watch-stage">
-      <p class="watch-stage-label">Series · Official HD trailer{% if trailers|length > 1 %}s ({{ trailers|length }}){% endif %}</p>
+      <p class="watch-stage-label">Official trailer{% if trailers|length > 1 %}s · {{ trailers|length }}{% endif %}</p>
       {% if trailers %}
       <div class="trailer-stack" data-embed-stack>
         {% for key in trailers %}

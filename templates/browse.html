@@ -13,13 +13,14 @@
     Sort and page through the curated library.
   </p>
 
-  <form class="sort-form" method="get" action="{{ url_for('browse') }}">
+  <form class="sort-form" method="get" action="{{ url_for('browse') }}" data-sort-form data-root="{{ url_for('browse') }}">
     <label for="sort">Sort by</label>
-    <select id="sort" name="sort" onchange="this.form.submit()">
+    <select id="sort" name="sort" data-sort-select>
       {% for value, label in sort_options %}
       <option value="{{ value }}" {% if sort == value %}selected{% endif %}>{{ label }}</option>
       {% endfor %}
     </select>
+    <button class="btn btn-ghost" type="submit">Apply</button>
   </form>
 
   <div class="poster-grid">
@@ -53,8 +54,8 @@
   {{ pager(
        page,
        total_pages,
-       prev_url=url_for('browse', page=page-1, sort=sort) if page > 1 else None,
-       next_url=url_for('browse', page=page+1, sort=sort) if page < total_pages else None
+       prev_url=catalog_url('browse', page-1, sort) if page > 1 else None,
+       next_url=catalog_url('browse', page+1, sort) if page < total_pages else None
      ) }}
 </section>
 {% endblock %}
