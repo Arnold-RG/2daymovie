@@ -15,6 +15,9 @@
         Be the first to leave feedback about 2daymovie.
       {% endif %}
     </p>
+    {% if static_export %}
+    <p>Reviews you leave on this public copy stay in this browser. They are not sent to a server.</p>
+    {% endif %}
   </header>
 
   {% if notice %}
@@ -35,7 +38,7 @@
       </label>
 
       <label for="review-name">Name</label>
-      <input id="review-name" name="name" type="text" maxlength="40" required placeholder="Your name" value="{{ form.name }}" />
+      <input id="review-name" name="name" type="text" maxlength="40" required placeholder="Your name" value="{{ form.name }}" autocomplete="name" />
 
       <label for="review-rating">Rating</label>
       <select id="review-rating" name="rating" required>
@@ -107,16 +110,67 @@
     `).join("");
   };
 
+  const staticSite = document.documentElement.dataset.static === "true";
+  const storageKey = "2daymovie-reviews";
+
+  const readLocal = () => {
+    try {
+      const parsed = JSON.parse(localStorage.getItem(storageKey) || "[]");
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (_) {
+      return [];
+    }
+  };
+
+  if (staticSite) {
+    const form = document.querySelector(".review-form");
+    const paint = () => render(readLocal());
+    paint();
+    if (form) {
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        if ((form.website && form.website.value || "").trim()) return;
+        const entry = {
+          id: String(Date.now()),
+          name: form.name.value.trim(),
+          rating: Number(form.rating.value) || 5,
+          message: form.message.value.trim(),
+          created_at: new Date().toISOString(),
+        };
+        if (entry.name.length < 2 || !entry.message) return;
+        const next = [entry, ...readLocal()].slice(0, 40);
+        localStorage.setItem(storageKey, JSON.stringify(next));
+        form.message.value = "";
+        paint();
+        const note = document.createElement("p");
+        note.className = "review-flash is-success";
+        note.setAttribute("role", "status");
+        note.textContent = "Saved in this browser.";
+        form.before(note);
+      });
+    }
+    return;
+  }
+
+  let signature = Array.from(list.querySelectorAll("[data-review-id]")).map((node) => node.getAttribute("data-review-id")).join(",");
+
   const refresh = async () => {
     try {
       const res = await fetch("{{ url_for('reviews_api') }}", { headers: { Accept: "application/json" } });
       if (!res.ok) return;
       const data = await res.json();
-      render(data.reviews || []);
+      const rows = data.reviews || [];
+      const next = rows.map((row) => row.id).join(",");
+      if (next === signature) return;
+      signature = next;
+      render(rows);
     } catch (_) {}
   };
 
   setInterval(refresh, 20000);
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) refresh();
+  });
 })();
 </script>
 {% endblock %}

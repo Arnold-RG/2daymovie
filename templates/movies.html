@@ -8,7 +8,7 @@
   <header class="section-head">
     <p class="detail-kicker">Curated film archive</p>
     <h1>Movies</h1>
-    <p>{{ stats.planned }} titles · tap a year to reveal its shelf</p>
+    <p>{{ stats.planned }} titles. Open a year to see its shelf.</p>
   </header>
 
   <div class="year-accordion" data-year-accordion>
@@ -52,7 +52,7 @@
         </div>
         {% else %}
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="{{ url_for('movies_home', year=y.year) }}">Show {{ y.year }} movies</a>
+          <a class="btn btn-primary" href="{{ url_for('movies_year', year=y.year) }}">Show {{ y.year }} movies</a>
         </p>
         {% endif %}
       </div>

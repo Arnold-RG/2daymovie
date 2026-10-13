@@ -140,6 +140,37 @@ def test_security_headers():
     response = client.get("/")
     assert response.headers.get("X-Content-Type-Options") == "nosniff"
     assert response.headers.get("X-Frame-Options") == "SAMEORIGIN"
+    policy = response.headers.get("Content-Security-Policy", "")
+    assert "object-src 'none'" in policy
+    assert "base-uri 'self'" in policy
+
+
+def test_pretty_catalog_paths():
+    client = app.test_client()
+    movies = client.get("/movies/year/2010")
+    assert movies.status_code == 200
+    assert b"Inception" in movies.data
+    browse = client.get("/browse/sort/newest")
+    assert browse.status_code == 200
+    assert b"Sort by" in browse.data
+    missing = client.get("/browse/sort/not-a-sort")
+    assert missing.status_code == 404
+
+
+def test_year_jump():
+    client = app.test_client()
+    response = client.get("/year?year=2010")
+    assert response.status_code in (301, 302, 308)
+    assert response.headers.get("Location", "").endswith("/year/2010")
+
+
+def test_reviews_local_only_ignores_database(monkeypatch):
+    monkeypatch.setenv("REVIEWS_LOCAL_ONLY", "1")
+    monkeypatch.setenv("DATABASE_URL", "postgresql://example:secret@db.example/app")
+    from services import reviews as reviews_mod
+
+    assert reviews_mod._database_url() == ""
+    assert reviews_mod._is_postgres() is False
 
 
 def test_reviews_live(tmp_path, monkeypatch):

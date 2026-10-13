@@ -1,13 +1,17 @@
 {% extends "base.html" %}
+{% from "_macros.html" import pager %}
 
 {% block title %}{{ meta_title }}{% endblock %}
 
 {% block content %}
 {% set fallback = url_for('static', filename='img/poster-fallback.svg') %}
-<section class="page-band">
+<section class="page-band" data-search-root data-fallback="{{ fallback }}">
+  {% if static_export %}
+  <script type="application/json" id="search-index">{{ search_index_json|safe }}</script>
+  {% endif %}
   <p class="detail-kicker">Search</p>
-  <h1>{% if query %}Results for “{{ query }}”{% else %}Search movies &amp; series{% endif %}</h1>
-  <p>
+  <h1 data-search-heading>{% if query %}Results for “{{ query }}”{% else %}Search movies and series{% endif %}</h1>
+  <p data-search-summary>
     {% if query %}
       {{ total_results }} trailer-ready result{{ '' if total_results == 1 else 's' }} in the 2daymovie catalog.
     {% else %}
@@ -15,8 +19,7 @@
     {% endif %}
   </p>
 
-  {% if results %}
-  <div class="poster-grid">
+  <div class="poster-grid" data-search-results {% if not results %}hidden{% endif %}>
     {% for item in results %}
     <a class="poster-card" href="{{ item.href }}">
       <span class="poster-frame">
@@ -44,8 +47,14 @@
     </a>
     {% endfor %}
   </div>
-  {% elif query %}
-  <p class="empty-state">No matches with on-site trailers. Try another title.</p>
+  <p class="empty-state" data-search-empty {% if results or not query %}hidden{% endif %}>No matches with on-site trailers. Try another title.</p>
+  {% if not static_export %}
+  {{ pager(
+       page,
+       total_pages,
+       prev_url=url_for('search', q=query, page=page-1) if query and page > 1 else None,
+       next_url=url_for('search', q=query, page=page+1) if query and page < total_pages else None
+     ) }}
   {% endif %}
 </section>
 {% endblock %}

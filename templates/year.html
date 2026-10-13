@@ -11,13 +11,14 @@
       <h1>{{ year }}</h1>
       <p>{{ count }} titles · {{ with_trailer }} official full trailers</p>
     </div>
-    <form class="year-jump-form" action="{{ url_for('year_page', year=year) }}" method="get" data-year-form>
+    <form class="year-jump-form" action="{{ url_for('year_jump') }}" method="get">
       <label for="year-select">Jump to year</label>
-      <select id="year-select" name="year" data-year-select>
+      <select id="year-select" name="year" data-year-select data-root="{{ url_for('year_page', year=year).rsplit('/', 1)[0] }}">
         {% for y in years %}
-        <option value="{{ url_for('year_page', year=y) }}" {% if y == year %}selected{% endif %}>{{ y }}</option>
+        <option value="{{ y }}" {% if y == year %}selected{% endif %}>{{ y }}</option>
         {% endfor %}
       </select>
+      <button class="btn btn-ghost" type="submit">Go</button>
     </form>
   </div>
   <nav class="year-chip-wrap" aria-label="Nearby years">

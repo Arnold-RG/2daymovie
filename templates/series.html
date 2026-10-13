@@ -8,7 +8,7 @@
   <header class="section-head">
     <p class="detail-kicker">Prestige &amp; standout TV</p>
     <h1>Series</h1>
-    <p>{{ stats.planned }} shows · tap a premiere year to reveal its shelf</p>
+    <p>{{ stats.planned }} shows. Open a premiere year to see its shelf.</p>
   </header>
 
   <div class="year-accordion" data-year-accordion>
@@ -52,7 +52,7 @@
         </div>
         {% else %}
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="{{ url_for('series_home', year=y.year) }}">Show {{ y.year }} series</a>
+          <a class="btn btn-primary" href="{{ url_for('series_year', year=y.year) }}">Show {{ y.year }} series</a>
         </p>
         {% endif %}
       </div>

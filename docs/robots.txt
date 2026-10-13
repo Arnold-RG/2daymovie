@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://arnold-rg.github.io/2daymovie/sitemap.xml
