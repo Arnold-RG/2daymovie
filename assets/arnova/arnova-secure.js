@@ -1,5 +1,5 @@
-﻿/**
- * Arnova shared client helpers â€” XSS-safe DOM + IndexedDB vault + reveal motion.
+/**
+ * Arnova shared client helpers — XSS-safe DOM + IndexedDB vault + reveal motion.
  * No secrets. Safe for public static sites.
  */
 (function (global) {
@@ -121,4 +121,3 @@
     sha256Hex: sha256Hex
   };
 })(typeof window !== "undefined" ? window : globalThis);
-

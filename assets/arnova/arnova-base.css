@@ -1,4 +1,4 @@
-﻿/* Arnova shared responsive + motion baseline (Jitter/Unsection/ScreensDesign inspired) */
+/* Arnova shared responsive + motion baseline (Jitter/Unsection/ScreensDesign inspired) */
 :root {
   --arn-space-1: clamp(0.25rem, 0.4vw, 0.4rem);
   --arn-space-2: clamp(0.5rem, 1vw, 0.75rem);
@@ -185,4 +185,3 @@ button, a, input, select, textarea {
 @media (min-width: 1600px) {
   .arn-wrap { --arn-max: 1320px; }
 }
-

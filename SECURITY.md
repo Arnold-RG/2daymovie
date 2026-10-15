@@ -1,4 +1,4 @@
-﻿# Security Policy
+# Security Policy
 
 ## Supported versions
 
@@ -22,4 +22,3 @@ We aim to acknowledge reports within 7 days and publish a fix or mitigation when
 - Prefer `textContent` over `innerHTML` for untrusted data
 - External links use `rel="noopener noreferrer"`
 - Dependabot / Actions least privilege where applicable
-

@@ -27,7 +27,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://image.tmdb.org" />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,650;1,9..144,500&family=Sora:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', v='20261015') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='arnova/arnova-base.css', v='20261015c') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', v='20261015c') }}" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -108,7 +109,8 @@
     </div>
   </footer>
 
-  <script src="{{ url_for('static', filename='js/script.js', v='20261015') }}"></script>
+  <script src="{{ url_for('static', filename='arnova/arnova-secure.js', v='20261015c') }}"></script>
+  <script src="{{ url_for('static', filename='js/script.js', v='20261015c') }}"></script>
   {% block scripts %}{% endblock %}
 </body>
 </html>
