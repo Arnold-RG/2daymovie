@@ -111,9 +111,23 @@ def create_app() -> Flask:
         response.headers.setdefault(
             "Permissions-Policy", "geolocation=(), microphone=(), camera=()"
         )
+        response.headers.setdefault("Cross-Origin-Opener-Policy", "same-origin")
         response.headers.setdefault(
             "Content-Security-Policy",
-            "base-uri 'self'; object-src 'none'; frame-ancestors 'self'",
+            (
+                "default-src 'self'; "
+                "base-uri 'self'; "
+                "object-src 'none'; "
+                "frame-ancestors 'self'; "
+                "img-src 'self' data: https://image.tmdb.org https://media.themoviedb.org https://i.ytimg.com; "
+                "media-src 'self' https://image.tmdb.org; "
+                "font-src 'self' https://fonts.gstatic.com data:; "
+                "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+                "script-src 'self' 'unsafe-inline' https://www.youtube.com https://www.youtube-nocookie.com; "
+                "frame-src https://www.youtube.com https://www.youtube-nocookie.com; "
+                "connect-src 'self' https://www.youtube.com https://www.youtube-nocookie.com; "
+                "form-action 'self'"
+            ),
         )
         return response
 
@@ -512,13 +526,22 @@ Sitemap: {base}/sitemap.xml
         # Enrich details from TMDB when API key is present
         detail = tmdb.get_movie(movie_id)
         if detail:
-            for key in ("runtime", "tagline", "genres", "providers", "cast", "similar"):
+            for key in (
+                "runtime",
+                "tagline",
+                "genres",
+                "providers",
+                "cast",
+                "similar",
+                "watch_link",
+            ):
                 if detail.get(key):
                     movie[key] = detail[key]
             movie["similar"] = _catalog_similar(movie.get("similar"))
-            if detail.get("overview") and len(detail["overview"]) > len(movie.get("overview") or ""):
+            if detail.get("overview") and len(detail["overview"]) > len(
+                movie.get("overview") or ""
+            ):
                 movie["overview"] = detail["overview"]
-        movie["watch_link"] = None
         year = movie.get("year") or ""
         title = movie.get("title") or "Movie"
         return render_template(

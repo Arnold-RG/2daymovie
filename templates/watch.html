@@ -1,11 +1,12 @@
 {% extends "base.html" %}
+{% from "_macros.html" import where_to_watch %}
 
 {% block title %}{{ meta_title|default(movie.title ~ ' | 2daymovie') }}{% endblock %}
 
 {% block content %}
 {% set fallback = url_for('static', filename='img/poster-fallback.svg') %}
 {% set trailers = movie.trailer_keys if movie.trailer_keys else ([movie.trailer_key] if movie.trailer_key else []) %}
-<section class="watch-room {% if movie.backdrop %}has-backdrop{% endif %}" {% if movie.backdrop %}style="--watch-image: url('{{ movie.backdrop }}')"{% endif %}>
+<section class="watch-room watch-mobile {% if movie.backdrop %}has-backdrop{% endif %}" {% if movie.backdrop %}style="--watch-image: url('{{ movie.backdrop }}')"{% endif %}>
   <div class="watch-veil" aria-hidden="true"></div>
   <div class="watch-layout">
     <div class="watch-stage">
@@ -51,5 +52,7 @@
       </div>
     </aside>
   </div>
+
+  {{ where_to_watch(movie.providers, movie.watch_link) }}
 </section>
 {% endblock %}

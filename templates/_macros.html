@@ -11,3 +11,77 @@
 </nav>
 {% endif %}
 {%- endmacro %}
+
+{% macro provider_label(kind) -%}
+{%- if kind == 'flatrate' -%}Stream
+{%- elif kind == 'rent' -%}Rent
+{%- elif kind == 'buy' -%}Buy
+{%- elif kind == 'free' -%}Free
+{%- elif kind == 'ads' -%}Free+ads
+{%- else -%}Watch
+{%- endif -%}
+{%- endmacro %}
+
+{% macro where_to_watch(providers=None, watch_link=None, region_note='US') -%}
+<section class="where-block" aria-labelledby="where-heading">
+  <div class="unsection-head">
+    <p class="detail-kicker">Legal availability</p>
+    <h2 id="where-heading">Where to watch</h2>
+    <p>Official streaming, rental, and purchase options when listed for your region. 2daymovie never hosts full films.</p>
+  </div>
+  {% if providers %}
+  <ul class="provider-grid">
+    {% for p in providers %}
+    <li class="provider-chip">
+      {% if p.logo %}
+      <img src="{{ p.logo }}" alt="" width="40" height="40" loading="lazy" decoding="async" />
+      {% endif %}
+      <span class="provider-meta">
+        <strong>{{ p.provider_name }}</strong>
+        <span>{{ provider_label(p.type) }}</span>
+      </span>
+    </li>
+    {% endfor %}
+  </ul>
+  {% if watch_link %}
+  <p class="providers-note">
+    <a class="btn btn-primary" href="{{ watch_link }}" target="_blank" rel="noopener noreferrer">Open legal watch options</a>
+  </p>
+  {% endif %}
+  {% else %}
+  <p class="providers-note">
+    Provider listings appear when TMDB data is available for region {{ region_note }}.
+    Use the official trailer above, then check your preferred streaming service.
+  </p>
+  {% if watch_link %}
+  <p class="providers-note">
+    <a class="text-link" href="{{ watch_link }}" target="_blank" rel="noopener noreferrer">View legal options →</a>
+  </p>
+  {% endif %}
+  {% endif %}
+</section>
+{%- endmacro %}
+
+{% macro poster_card(href, title, poster, fallback, meta='', stagger=0) -%}
+<a class="poster-card" href="{{ href }}" style="--stagger: {{ stagger }}">
+  <span class="poster-frame">
+    <img
+      class="poster-img"
+      src="{{ poster or fallback }}"
+      alt="Poster for {{ title }}"
+      loading="lazy"
+      decoding="async"
+      width="200"
+      height="300"
+      onerror="this.onerror=null;this.src='{{ fallback }}';"
+    />
+    <span class="poster-play" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+    </span>
+  </span>
+  <div class="poster-meta">
+    <h3>{{ title }}</h3>
+    {% if meta %}<p>{{ meta }}</p>{% endif %}
+  </div>
+</a>
+{%- endmacro %}

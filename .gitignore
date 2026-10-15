@@ -6,6 +6,10 @@ __pycache__/
 .pytest_cache/
 .DS_Store
 *.pem
+*.key
+credentials.json
+secrets.json
+site/
 
 data/reviews.json
 data/reviews.tmp

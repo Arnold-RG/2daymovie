@@ -302,7 +302,7 @@ def _all_trailer_keys(videos: list[dict[str, Any]]) -> list[str]:
 
 def _providers_from_payload(payload: dict[str, Any]) -> tuple[list[dict[str, Any]], str | None]:
     country = payload.get(region()) or {}
-    link = None
+    link = country.get("link") or None
     collected: list[dict[str, Any]] = []
     seen: set[str] = set()
     for bucket in ("flatrate", "rent", "buy", "free", "ads"):
@@ -348,7 +348,7 @@ def get_movie(movie_id: int) -> dict[str, Any] | None:
 
     videos = (detail.get("videos") or {}).get("results") or []
     providers_root = (detail.get("watch/providers") or {}).get("results") or {}
-    providers, _ignored_jw = _providers_from_payload(providers_root)
+    providers, watch_link = _providers_from_payload(providers_root)
 
     poster_path = detail.get("poster_path")
     backdrop_path = detail.get("backdrop_path") or poster_path
@@ -387,8 +387,8 @@ def get_movie(movie_id: int) -> dict[str, Any] | None:
         "fallback_poster": PLACEHOLDER_POSTER,
         "trailer_key": _pick_trailer(videos),
         "trailer_keys": _all_trailer_keys(videos),
-        "providers": [],
-        "watch_link": None,
+        "providers": providers,
+        "watch_link": watch_link,
         "tagline": detail.get("tagline") or "",
         "cast": cast,
         "similar": similar,

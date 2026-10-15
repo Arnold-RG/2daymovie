@@ -87,7 +87,45 @@ document.addEventListener("DOMContentLoaded", () => {
   initHeroSlider(prefersReduced, saveData);
   initEmbedStacks();
   initStaticSearch();
+  initReveal(prefersReduced);
+  hardenExternalLinks();
 });
+
+function hardenExternalLinks() {
+  document.querySelectorAll('a[href^="http"]').forEach((link) => {
+    try {
+      const url = new URL(link.href, window.location.origin);
+      if (url.origin === window.location.origin) return;
+      const rel = new Set((link.getAttribute("rel") || "").split(/\s+/).filter(Boolean));
+      rel.add("noopener");
+      rel.add("noreferrer");
+      link.setAttribute("rel", Array.from(rel).join(" "));
+      if (!link.hasAttribute("target")) link.setAttribute("target", "_blank");
+    } catch (_) {
+      /* ignore bad href */
+    }
+  });
+}
+
+function initReveal(prefersReduced) {
+  const nodes = Array.from(document.querySelectorAll("[data-reveal]"));
+  if (!nodes.length) return;
+  if (prefersReduced || !("IntersectionObserver" in window)) {
+    nodes.forEach((node) => node.classList.add("is-in"));
+    return;
+  }
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-in");
+        observer.unobserve(entry.target);
+      });
+    },
+    { rootMargin: "0px 0px -8% 0px", threshold: 0.12 }
+  );
+  nodes.forEach((node) => observer.observe(node));
+}
 
 function loadYouTubeApi(callback) {
   if (window.YT && window.YT.Player) {

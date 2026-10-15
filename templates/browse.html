@@ -1,17 +1,19 @@
 {% extends "base.html" %}
-{% from "_macros.html" import pager %}
+{% from "_macros.html" import pager, poster_card %}
 
 {% block title %}{{ meta_title }}{% endblock %}
 
 {% block content %}
 {% set fallback = url_for('static', filename='img/poster-fallback.svg') %}
-<section class="page-band">
-  <p class="detail-kicker">Trailer catalog</p>
-  <h1>Browse the catalog</h1>
-  <p>
-    {{ "{:,}".format(total_results) }} movies with on-site trailers.
-    Sort and page through the curated library.
-  </p>
+<section class="page-band browse-page">
+  <header class="unsection-head">
+    <p class="detail-kicker">Browse</p>
+    <h1>Trailer catalog</h1>
+    <p>
+      {{ "{:,}".format(total_results) }} movies with on-site trailers.
+      Sort, page, and open any title for the official trailer and where-to-watch options.
+    </p>
+  </header>
 
   <form class="sort-form" method="get" action="{{ url_for('browse') }}" data-sort-form data-root="{{ url_for('browse') }}">
     <label for="sort">Sort by</label>
@@ -23,29 +25,11 @@
     <button class="btn btn-ghost" type="submit">Apply</button>
   </form>
 
-  <div class="poster-grid">
+  <div class="poster-grid" data-stagger-grid>
     {% for movie in movies %}
-    <a class="poster-card" href="{{ url_for('watch_page', movie_id=movie.id) }}">
-      <span class="poster-frame">
-        <img
-          class="poster-img"
-          src="{{ movie.poster or fallback }}"
-          alt="Poster for {{ movie.title }}"
-          loading="lazy"
-          decoding="async"
-          width="200"
-          height="300"
-          onerror="this.onerror=null;this.src='{{ fallback }}';"
-        />
-        <span class="poster-play" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
-        </span>
-      </span>
-      <div class="poster-meta">
-        <h3>{{ movie.title }}</h3>
-        <p>{{ movie.year }}{% if movie.vote_average %} · ★ {{ '%.1f'|format(movie.vote_average|float) }}{% endif %}</p>
-      </div>
-    </a>
+    {% set meta = movie.year|string %}
+    {% if movie.vote_average %}{% set meta = meta ~ ' · ★ ' ~ '%.1f'|format(movie.vote_average|float) %}{% endif %}
+    {{ poster_card(url_for('watch_page', movie_id=movie.id), movie.title, movie.poster, fallback, meta, loop.index0) }}
     {% else %}
     <p class="empty-state">No titles on this page.</p>
     {% endfor %}
