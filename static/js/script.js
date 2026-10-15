@@ -88,8 +88,32 @@ document.addEventListener("DOMContentLoaded", () => {
   initEmbedStacks();
   initStaticSearch();
   initReveal(prefersReduced);
+  initCinemaMotion(prefersReduced);
   hardenExternalLinks();
 });
+
+function initCinemaMotion(prefersReduced) {
+  if (prefersReduced) return;
+  const hero = document.querySelector(".hero-cinema");
+  const veil = document.querySelector(".hero-veil");
+  if (hero && veil) {
+    hero.addEventListener(
+      "pointermove",
+      (event) => {
+        const rect = hero.getBoundingClientRect();
+        const x = ((event.clientX - rect.left) / rect.width - 0.5) * 12;
+        const y = ((event.clientY - rect.top) / rect.height - 0.5) * 8;
+        veil.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+      },
+      { passive: true },
+    );
+  }
+  document.querySelectorAll("[data-stagger-grid] .poster-card").forEach((card, i) => {
+    if (!card.style.getPropertyValue("--stagger")) {
+      card.style.setProperty("--stagger", String(i % 12));
+    }
+  });
+}
 
 function hardenExternalLinks() {
   document.querySelectorAll('a[href^="http"]').forEach((link) => {

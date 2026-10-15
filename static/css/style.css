@@ -1,26 +1,27 @@
-/* 2daymovie — cinematic night · scarlet / amber */
+/* 2daymovie — cinema black · screen red · platinum */
 
 :root {
-  --void: #070605;
-  --elevated: #12100e;
-  --ink: #f7f0e8;
-  --muted: #c9b9a8;
-  --faint: #9a8774;
-  --line: rgba(247, 240, 232, 0.1);
-  --line-strong: rgba(232, 168, 56, 0.35);
-  --scarlet: #c43c3c;
-  --scarlet-deep: #8e2424;
-  --amber: #e8a838;
-  --amber-soft: #f0c56a;
-  --metal: var(--amber);
-  --metal-deep: #b8791f;
-  --metal-ink: #1a1208;
+  --void: #0a0a0a;
+  --elevated: #141414;
+  --ink: #e5e5e5;
+  --muted: #b3b3b3;
+  --faint: #8a8a8a;
+  --line: rgba(229, 229, 229, 0.1);
+  --line-strong: rgba(229, 9, 20, 0.4);
+  --scarlet: #e50914;
+  --scarlet-deep: #b20710;
+  --amber: #e5e5e5;
+  --amber-soft: #f5f5f5;
+  --metal: #e5e5e5;
+  --metal-deep: #b3b3b3;
+  --metal-ink: #0a0a0a;
   --garnet: var(--scarlet);
-  --stage: rgba(10, 8, 7, 0.82);
-  --radius: 4px;
+  --platinum: #e5e5e5;
+  --stage: rgba(10, 10, 10, 0.86);
+  --radius: 2px;
   --font-display: "Fraunces", "Palatino Linotype", Palatino, serif;
   --font-body: "Sora", "Avenir Next", "Segoe UI", sans-serif;
-  --shadow: 0 28px 64px rgba(0, 0, 0, 0.48);
+  --shadow: 0 28px 64px rgba(0, 0, 0, 0.55);
   --header-h: 4.5rem;
   --page-max: 82rem;
   --page-x: clamp(1rem, 4vw, 3.25rem);
@@ -51,9 +52,9 @@ body {
   line-height: 1.65;
   background-color: var(--void);
   background-image:
-    radial-gradient(980px 560px at 6% -10%, rgba(196, 60, 60, 0.16), transparent 55%),
-    radial-gradient(760px 480px at 100% 0%, rgba(232, 168, 56, 0.1), transparent 50%),
-    radial-gradient(640px 420px at 50% 110%, rgba(196, 60, 60, 0.06), transparent 58%);
+    radial-gradient(980px 560px at 8% -12%, rgba(229, 9, 20, 0.22), transparent 55%),
+    radial-gradient(760px 480px at 100% 0%, rgba(229, 229, 229, 0.05), transparent 50%),
+    radial-gradient(640px 420px at 50% 110%, rgba(229, 9, 20, 0.08), transparent 58%);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   padding-bottom: var(--safe-b);
@@ -142,9 +143,9 @@ textarea {
   top: 0;
   z-index: 40;
   padding-top: var(--safe-t);
-  background: rgba(7, 6, 5, 0.92);
+  background: rgba(10, 10, 10, 0.94);
   border-bottom: 1px solid var(--line);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(14px);
 }
 
 .header-inner {
@@ -185,7 +186,7 @@ textarea {
 }
 
 .brand-rest {
-  color: var(--amber);
+  color: var(--platinum);
 }
 
 .site-nav {
@@ -221,7 +222,7 @@ textarea {
   right: 0;
   bottom: 0.2rem;
   height: 2px;
-  background: linear-gradient(90deg, var(--scarlet), var(--amber));
+  background: linear-gradient(90deg, var(--scarlet), transparent);
 }
 
 .nav-toggle {
@@ -286,15 +287,16 @@ textarea {
 
 .btn-primary,
 .search-form button {
-  background: linear-gradient(135deg, var(--scarlet), var(--scarlet-deep));
+  background: linear-gradient(135deg, #ff1a24, var(--scarlet) 40%, var(--scarlet-deep));
   color: #fff;
   border-color: transparent;
+  box-shadow: 0 10px 28px rgba(229, 9, 20, 0.28);
 }
 
 .btn-primary:hover,
 .search-form button:hover {
-  background: linear-gradient(135deg, #d64a4a, var(--scarlet));
-  transform: translateY(-1px);
+  background: linear-gradient(135deg, #ff3b44, var(--scarlet));
+  transform: translateY(-2px);
 }
 
 .btn-ghost {
@@ -370,8 +372,8 @@ textarea {
   inset: 0;
   z-index: -2;
   background:
-    linear-gradient(105deg, rgba(7, 6, 5, 0.94) 0%, rgba(7, 6, 5, 0.55) 48%, rgba(7, 6, 5, 0.2) 100%),
-    linear-gradient(180deg, rgba(7, 6, 5, 0.12) 0%, rgba(7, 6, 5, 0.18) 42%, rgba(7, 6, 5, 0.96) 100%);
+    linear-gradient(105deg, rgba(10, 10, 10, 0.96) 0%, rgba(10, 10, 10, 0.58) 48%, rgba(10, 10, 10, 0.18) 100%),
+    linear-gradient(180deg, rgba(229, 9, 20, 0.12) 0%, rgba(10, 10, 10, 0.2) 40%, rgba(10, 10, 10, 0.97) 100%);
   pointer-events: none;
 }
 
@@ -399,7 +401,7 @@ textarea {
 .detail-kicker,
 .watch-stage-label {
   margin: 0 0 0.75rem;
-  color: var(--amber);
+  color: var(--scarlet);
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.22em;
@@ -457,7 +459,7 @@ textarea {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  color: var(--amber);
+  color: var(--platinum);
   font-size: 0.7rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -469,7 +471,13 @@ textarea {
   height: 0.45rem;
   border-radius: 50%;
   background: var(--scarlet);
-  box-shadow: 0 0 0 3px rgba(196, 60, 60, 0.25);
+  box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.3);
+  animation: live-pulse 1.8s var(--ease) infinite;
+}
+
+@keyframes live-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.25); opacity: 0.7; }
 }
 
 .hero-sound-btn {
@@ -650,12 +658,12 @@ main {
 }
 
 .text-link {
-  color: var(--amber);
+  color: var(--platinum);
   font-size: 0.8rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   text-decoration: none;
-  border-bottom: 1px solid rgba(232, 168, 56, 0.4);
+  border-bottom: 1px solid rgba(229, 9, 20, 0.45);
 }
 
 /* Poster grid + lift */
@@ -708,16 +716,16 @@ main {
   display: block;
   aspect-ratio: 2 / 3;
   overflow: hidden;
-  background: #171310;
-  border: 1px solid rgba(232, 168, 56, 0.14);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
-  transition: box-shadow 0.45s var(--ease), border-color 0.45s var(--ease);
+  background: #141414;
+  border: 1px solid rgba(229, 229, 229, 0.12);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+  transition: box-shadow 0.45s var(--ease), border-color 0.45s var(--ease), transform 0.45s var(--ease);
 }
 
 .poster-card:hover .poster-frame,
 .poster-card:focus-visible .poster-frame {
-  border-color: rgba(196, 60, 60, 0.45);
-  box-shadow: 0 22px 40px rgba(0, 0, 0, 0.42), 0 0 0 1px rgba(232, 168, 56, 0.2);
+  border-color: rgba(229, 9, 20, 0.55);
+  box-shadow: 0 22px 44px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(229, 9, 20, 0.35);
 }
 
 .poster-img,
@@ -1504,8 +1512,8 @@ main {
 @media (prefers-reduced-motion: no-preference) {
   [data-reveal] {
     opacity: 0;
-    transform: translateY(22px);
-    transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+    transform: translateY(26px) scale(0.985);
+    transition: opacity 0.85s var(--ease), transform 0.85s var(--ease);
   }
 
   [data-reveal].is-in {
@@ -1516,11 +1524,35 @@ main {
   .hero-video-fallback {
     animation: drift 36s ease-in-out infinite alternate;
   }
+
+  .hero-brand {
+    animation: title-in 1.1s var(--ease) both;
+  }
+
+  .hero-lede,
+  .hero-actions,
+  .hero-now {
+    animation: rise-in 0.9s var(--ease) both;
+  }
+
+  .hero-lede { animation-delay: 0.12s; }
+  .hero-actions { animation-delay: 0.22s; }
+  .hero-now { animation-delay: 0.34s; }
 }
 
 @keyframes drift {
   from { transform: scale(1.04); }
-  to { transform: scale(1.1); }
+  to { transform: scale(1.12); }
+}
+
+@keyframes title-in {
+  from { opacity: 0; transform: translateY(28px) scale(0.96); letter-spacing: 0.04em; }
+  to { opacity: 1; transform: none; letter-spacing: -0.035em; }
+}
+
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
 }
 
 /* Breakpoints — phone-first excellence */
