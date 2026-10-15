@@ -46,7 +46,7 @@ jobs:
           build_type=$(gh api "repos/${{ github.repository }}/pages" --jq '.build_type' || echo unknown)
           echo "build_type=${build_type}" >> "$GITHUB_OUTPUT"
 
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         if: steps.pages.outputs.build_type == 'workflow'
         with:
           path: site
