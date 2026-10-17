@@ -49,7 +49,8 @@ def _hero_slides(limit: int = 8) -> list[dict]:
                     "trailer_key": key,
                     "backdrop": backdrop,
                     "poster": movie.get("poster"),
-                    "href": f"/watch/{mid}",
+                    # url_for picks up SCRIPT_NAME, so GitHub Pages keeps /2daymovie.
+                    "href": url_for("watch_page", movie_id=mid),
                 }
             )
             if len(slides) >= limit:
@@ -276,6 +277,7 @@ Sitemap: {base}/sitemap.xml
             "/about",
             "/search",
             "/reviews",
+            "/year",
         ]
         urls.extend(f"/year/{year}" for year in all_years())
         urls.extend(
@@ -490,9 +492,18 @@ Sitemap: {base}/sitemap.xml
 
     @app.get("/year")
     def year_jump():
-        raw = request.args.get("year", "")
+        raw = (request.args.get("year") or "").strip().rstrip("/")
+        if not raw:
+            # Static hosts have no redirect server. The exported page reads
+            # ?year= and sends the browser to /year/<year>.
+            return render_template(
+                "year_index.html",
+                years=all_years(),
+                meta_title="Movies by Year | 2daymovie",
+                meta_description="Choose a year to browse official HD trailers on 2daymovie.",
+            )
         try:
-            year = int(str(raw).strip().rstrip("/"))
+            year = int(raw)
         except (TypeError, ValueError):
             abort(404)
         if year not in all_years():

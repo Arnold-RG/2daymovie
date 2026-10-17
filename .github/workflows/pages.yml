@@ -38,6 +38,9 @@ jobs:
           REVIEWS_LOCAL_ONLY: "1"
         run: python scripts/export_site.py --out site
 
+      - name: Check internal links
+        run: python scripts/check_internal_links.py --root site --base /2daymovie
+
       - name: Check Pages source
         id: pages
         env:

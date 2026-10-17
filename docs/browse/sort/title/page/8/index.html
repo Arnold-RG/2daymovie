@@ -3,8 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#0b0a09" />
+  <meta name="theme-color" content="#0A0A0A" />
   <meta name="color-scheme" content="dark" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; img-src 'self' data: https://image.tmdb.org https://media.themoviedb.org https://i.ytimg.com; font-src 'self' https://fonts.gstatic.com data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' 'unsafe-inline' https://www.youtube.com https://www.youtube-nocookie.com; frame-src https://www.youtube.com https://www.youtube-nocookie.com; connect-src 'self' https://www.youtube.com https://www.youtube-nocookie.com; form-action 'self'" />
   <title>Catalog · All Trailers | 2daymovie</title>
   <meta name="description" content="Browse 527 movies with on-site trailers on 2daymovie." />
   <link rel="canonical" href="https://arnold-rg.github.io/2daymovie/browse/sort/title/page/8" />
@@ -24,7 +26,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://image.tmdb.org" />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,650;1,9..144,500&family=Sora:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/2daymovie/static/arnova/arnova-base.css?v=20261015d" />
   <link rel="stylesheet" href="/2daymovie/static/css/style.css?v=20261015d" />
   <script type="application/ld+json">
   {
@@ -65,19 +68,18 @@
       </button>
 
       <nav class="site-nav" id="site-nav" aria-label="Primary" data-site-nav>
-        <a href="/2daymovie/" >Home</a>
-        <a href="/2daymovie/categories" >Categories</a>
+        <a href="/2daymovie/browse" aria-current="page">Browse</a>
+        <a href="/2daymovie/#trailers" >Trailers</a>
+        <a href="/2daymovie/#where" >Where to watch</a>
         <a href="/2daymovie/movies" >Movies</a>
         <a href="/2daymovie/series" >Series</a>
-        <a href="/2daymovie/upcoming" >Upcoming</a>
         <a href="/2daymovie/reviews" >Reviews</a>
-        <a href="/2daymovie/browse" aria-current="page">Catalog</a>
         <a href="/2daymovie/about" >About</a>
       </nav>
 
       <form class="search-form" action="/2daymovie/search" method="get" role="search">
         <label class="sr-only" for="q">Search movies and series</label>
-        <input id="q" name="q" type="search" placeholder="Search the shelf" value="" autocomplete="off" enterkeyhint="search" />
+        <input id="q" name="q" type="search" placeholder="Search titles" value="" maxlength="120" autocomplete="off" enterkeyhint="search" />
         <button type="submit">Search</button>
       </form>
     </div>
@@ -86,13 +88,15 @@
   <main id="main">
     
 
-<section class="page-band">
-  <p class="detail-kicker">Trailer catalog</p>
-  <h1>Browse the catalog</h1>
-  <p>
-    527 movies with on-site trailers.
-    Sort and page through the curated library.
-  </p>
+<section class="page-band browse-page">
+  <header class="unsection-head">
+    <p class="detail-kicker">Browse</p>
+    <h1>Trailer catalog</h1>
+    <p>
+      527 movies with on-site trailers.
+      Sort, page, and open any title for the official trailer and where-to-watch options.
+    </p>
+  </header>
 
   <form class="sort-form" method="get" action="/2daymovie/browse" data-sort-form data-root="/2daymovie/browse">
     <label for="sort">Sort by</label>
@@ -110,535 +114,583 @@
     <button class="btn btn-ghost" type="submit">Apply</button>
   </form>
 
-  <div class="poster-grid">
+  <div class="poster-grid" data-stagger-grid>
     
-    <a class="poster-card" href="/2daymovie/watch/118340">
-      <span class="poster-frame">
-        <img
-          class="poster-img"
-          src="https://image.tmdb.org/t/p/w500/r7vmZjiyZw9rpJMQJdXpjgiCOk9.jpg"
-          alt="Poster for Guardians of the Galaxy"
-          loading="lazy"
-          decoding="async"
-          width="200"
-          height="300"
-          onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
-        />
-        <span class="poster-play" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
-        </span>
-      </span>
-      <div class="poster-meta">
-        <h3>Guardians of the Galaxy</h3>
-        <p>2014</p>
-      </div>
-    </a>
     
-    <a class="poster-card" href="/2daymovie/watch/209401">
-      <span class="poster-frame">
-        <img
-          class="poster-img"
-          src="https://image.tmdb.org/t/p/w500/dMNg70yFZt1w7lXoHqCu4U43MVZ.jpg"
-          alt="Poster for Half of a Yellow Sun"
-          loading="lazy"
-          decoding="async"
-          width="200"
-          height="300"
-          onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
-        />
-        <span class="poster-play" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
-        </span>
-      </span>
-      <div class="poster-meta">
-        <h3>Half of a Yellow Sun</h3>
-        <p>2013</p>
-      </div>
-    </a>
     
-    <a class="poster-card" href="/2daymovie/watch/1712179">
-      <span class="poster-frame">
-        <img
-          class="poster-img"
-          src="https://image.tmdb.org/t/p/w500/lBJZ73BbV5epXR3N4ErBcb1MD3O.jpg"
-          alt="Poster for Hamnet"
-          loading="lazy"
-          decoding="async"
-          width="200"
-          height="300"
-          onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
-        />
-        <span class="poster-play" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
-        </span>
-      </span>
-      <div class="poster-meta">
-        <h3>Hamnet</h3>
-        <p>2025</p>
-      </div>
-    </a>
+    <a class="poster-card" href="/2daymovie/watch/118340" style="--stagger: 0">
+  <span class="poster-frame">
+    <img
+      class="poster-img"
+      src="https://image.tmdb.org/t/p/w500/r7vmZjiyZw9rpJMQJdXpjgiCOk9.jpg"
+      alt="Poster for Guardians of the Galaxy"
+      loading="lazy"
+      decoding="async"
+      width="200"
+      height="300"
+      onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
+    />
+    <span class="poster-play" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+    </span>
+  </span>
+  <div class="poster-meta">
+    <h3>Guardians of the Galaxy</h3>
+    <p>2014</p>
+  </div>
+</a>
     
-    <a class="poster-card" href="/2daymovie/watch/869760">
-      <span class="poster-frame">
-        <img
-          class="poster-img"
-          src="https://image.tmdb.org/t/p/w500/m1zq48rWSXxplzoJR8YtbXWnnHM.jpg"
-          alt="Poster for Hanu-Man"
-          loading="lazy"
-          decoding="async"
-          width="200"
-          height="300"
-          onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
-        />
-        <span class="poster-play" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
-        </span>
-      </span>
-      <div class="poster-meta">
-        <h3>Hanu-Man</h3>
-        <p>2024</p>
-      </div>
-    </a>
     
-    <a class="poster-card" href="/2daymovie/watch/9836">
-      <span class="poster-frame">
-        <img
-          class="poster-img"
-          src="https://image.tmdb.org/t/p/w500/zP4CK9O70P8GDilfTkPm4lrmaks.jpg"
-          alt="Poster for Happy Feet"
-          loading="lazy"
-          decoding="async"
-          width="200"
-          height="300"
-          onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
-        />
-        <span class="poster-play" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
-        </span>
-      </span>
-      <div class="poster-meta">
-        <h3>Happy Feet</h3>
-        <p>2006</p>
-      </div>
-    </a>
     
-    <a class="poster-card" href="/2daymovie/watch/671">
-      <span class="poster-frame">
-        <img
-          class="poster-img"
-          src="https://image.tmdb.org/t/p/w500/wuMc08IPKEatf9rnMNXvIDxqP4W.jpg"
-          alt="Poster for Harry Potter and the Sorcerer&#39;s Stone"
-          loading="lazy"
-          decoding="async"
-          width="200"
-          height="300"
-          onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
-        />
-        <span class="poster-play" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
-        </span>
-      </span>
-      <div class="poster-meta">
-        <h3>Harry Potter and the Sorcerer&#39;s Stone</h3>
-        <p>2001</p>
-      </div>
-    </a>
+    <a class="poster-card" href="/2daymovie/watch/209401" style="--stagger: 1">
+  <span class="poster-frame">
+    <img
+      class="poster-img"
+      src="https://image.tmdb.org/t/p/w500/dMNg70yFZt1w7lXoHqCu4U43MVZ.jpg"
+      alt="Poster for Half of a Yellow Sun"
+      loading="lazy"
+      decoding="async"
+      width="200"
+      height="300"
+      onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
+    />
+    <span class="poster-play" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+    </span>
+  </span>
+  <div class="poster-meta">
+    <h3>Half of a Yellow Sun</h3>
+    <p>2013</p>
+  </div>
+</a>
     
-    <a class="poster-card" href="/2daymovie/watch/338766">
-      <span class="poster-frame">
-        <img
-          class="poster-img"
-          src="https://image.tmdb.org/t/p/w500/ljRRxqy2aXIkIBXLmOVifcOR021.jpg"
-          alt="Poster for Hell or High Water"
-          loading="lazy"
-          decoding="async"
-          width="200"
-          height="300"
-          onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
-        />
-        <span class="poster-play" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
-        </span>
-      </span>
-      <div class="poster-meta">
-        <h3>Hell or High Water</h3>
-        <p>2016</p>
-      </div>
-    </a>
     
-    <a class="poster-card" href="/2daymovie/watch/102207">
-      <span class="poster-frame">
-        <img
-          class="poster-img"
-          src="https://image.tmdb.org/t/p/w500/yn3ydorp7YigPcnEZgNMvdNHPaF.jpg"
-          alt="Poster for Her"
-          loading="lazy"
-          decoding="async"
-          width="200"
-          height="300"
-          onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
-        />
-        <span class="poster-play" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
-        </span>
-      </span>
-      <div class="poster-meta">
-        <h3>Her</h3>
-        <p>2013</p>
-      </div>
-    </a>
     
-    <a class="poster-card" href="/2daymovie/watch/79">
-      <span class="poster-frame">
-        <img
-          class="poster-img"
-          src="https://image.tmdb.org/t/p/w500/vxgZto2Cz7ILHAlmRXt50I2brB2.jpg"
-          alt="Poster for Hero"
-          loading="lazy"
-          decoding="async"
-          width="200"
-          height="300"
-          onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
-        />
-        <span class="poster-play" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
-        </span>
-      </span>
-      <div class="poster-meta">
-        <h3>Hero</h3>
-        <p>2002</p>
-      </div>
-    </a>
+    <a class="poster-card" href="/2daymovie/watch/1712179" style="--stagger: 2">
+  <span class="poster-frame">
+    <img
+      class="poster-img"
+      src="https://image.tmdb.org/t/p/w500/lBJZ73BbV5epXR3N4ErBcb1MD3O.jpg"
+      alt="Poster for Hamnet"
+      loading="lazy"
+      decoding="async"
+      width="200"
+      height="300"
+      onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
+    />
+    <span class="poster-play" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+    </span>
+  </span>
+  <div class="poster-meta">
+    <h3>Hamnet</h3>
+    <p>2025</p>
+  </div>
+</a>
     
-    <a class="poster-card" href="/2daymovie/watch/228161">
-      <span class="poster-frame">
-        <img
-          class="poster-img"
-          src="https://image.tmdb.org/t/p/w500/usFenYnk6mr8C62dB1MoAfSWMGR.jpg"
-          alt="Poster for Home"
-          loading="lazy"
-          decoding="async"
-          width="200"
-          height="300"
-          onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
-        />
-        <span class="poster-play" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
-        </span>
-      </span>
-      <div class="poster-meta">
-        <h3>Home</h3>
-        <p>2015</p>
-      </div>
-    </a>
     
-    <a class="poster-card" href="/2daymovie/watch/13700">
-      <span class="poster-frame">
-        <img
-          class="poster-img"
-          src="https://image.tmdb.org/t/p/w500/cgKnkbO3fNWwKc9qLyLYdeZQ9Vj.jpg"
-          alt="Poster for Home on the Range"
-          loading="lazy"
-          decoding="async"
-          width="200"
-          height="300"
-          onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
-        />
-        <span class="poster-play" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
-        </span>
-      </span>
-      <div class="poster-meta">
-        <h3>Home on the Range</h3>
-        <p>2004</p>
-      </div>
-    </a>
     
-    <a class="poster-card" href="/2daymovie/watch/12222">
-      <span class="poster-frame">
-        <img
-          class="poster-img"
-          src="https://image.tmdb.org/t/p/w500/6k47Z3A5zI2rxubTMwiLyIqQLLr.jpg"
-          alt="Poster for Horton Hears a Who!"
-          loading="lazy"
-          decoding="async"
-          width="200"
-          height="300"
-          onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
-        />
-        <span class="poster-play" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
-        </span>
-      </span>
-      <div class="poster-meta">
-        <h3>Horton Hears a Who!</h3>
-        <p>2008</p>
-      </div>
-    </a>
+    <a class="poster-card" href="/2daymovie/watch/869760" style="--stagger: 3">
+  <span class="poster-frame">
+    <img
+      class="poster-img"
+      src="https://image.tmdb.org/t/p/w500/m1zq48rWSXxplzoJR8YtbXWnnHM.jpg"
+      alt="Poster for Hanu-Man"
+      loading="lazy"
+      decoding="async"
+      width="200"
+      height="300"
+      onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
+    />
+    <span class="poster-play" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+    </span>
+  </span>
+  <div class="poster-meta">
+    <h3>Hanu-Man</h3>
+    <p>2024</p>
+  </div>
+</a>
     
-    <a class="poster-card" href="/2daymovie/watch/205">
-      <span class="poster-frame">
-        <img
-          class="poster-img"
-          src="https://image.tmdb.org/t/p/w500/p3pHw85UMZPegfMZBA6dZ06yarm.jpg"
-          alt="Poster for Hotel Rwanda"
-          loading="lazy"
-          decoding="async"
-          width="200"
-          height="300"
-          onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
-        />
-        <span class="poster-play" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
-        </span>
-      </span>
-      <div class="poster-meta">
-        <h3>Hotel Rwanda</h3>
-        <p>2004</p>
-      </div>
-    </a>
     
-    <a class="poster-card" href="/2daymovie/watch/76492">
-      <span class="poster-frame">
-        <img
-          class="poster-img"
-          src="https://image.tmdb.org/t/p/w500/eJGvzGrsfe2sqTUPv5IwLWXjVuR.jpg"
-          alt="Poster for Hotel Transylvania"
-          loading="lazy"
-          decoding="async"
-          width="200"
-          height="300"
-          onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
-        />
-        <span class="poster-play" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
-        </span>
-      </span>
-      <div class="poster-meta">
-        <h3>Hotel Transylvania</h3>
-        <p>2012</p>
-      </div>
-    </a>
     
-    <a class="poster-card" href="/2daymovie/watch/9550">
-      <span class="poster-frame">
-        <img
-          class="poster-img"
-          src="https://image.tmdb.org/t/p/w500/93feGsGiCtG5ymrRcErUgBsdo6v.jpg"
-          alt="Poster for House of Flying Daggers"
-          loading="lazy"
-          decoding="async"
-          width="200"
-          height="300"
-          onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
-        />
-        <span class="poster-play" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
-        </span>
-      </span>
-      <div class="poster-meta">
-        <h3>House of Flying Daggers</h3>
-        <p>2004</p>
-      </div>
-    </a>
+    <a class="poster-card" href="/2daymovie/watch/9836" style="--stagger: 4">
+  <span class="poster-frame">
+    <img
+      class="poster-img"
+      src="https://image.tmdb.org/t/p/w500/zP4CK9O70P8GDilfTkPm4lrmaks.jpg"
+      alt="Poster for Happy Feet"
+      loading="lazy"
+      decoding="async"
+      width="200"
+      height="300"
+      onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
+    />
+    <span class="poster-play" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+    </span>
+  </span>
+  <div class="poster-meta">
+    <h3>Happy Feet</h3>
+    <p>2006</p>
+  </div>
+</a>
     
-    <a class="poster-card" href="/2daymovie/watch/10191">
-      <span class="poster-frame">
-        <img
-          class="poster-img"
-          src="https://image.tmdb.org/t/p/w500/ygGmAO60t8GyqUo9xYeYxSZAR3b.jpg"
-          alt="Poster for How to Train Your Dragon"
-          loading="lazy"
-          decoding="async"
-          width="200"
-          height="300"
-          onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
-        />
-        <span class="poster-play" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
-        </span>
-      </span>
-      <div class="poster-meta">
-        <h3>How to Train Your Dragon</h3>
-        <p>2010</p>
-      </div>
-    </a>
     
-    <a class="poster-card" href="/2daymovie/watch/4935">
-      <span class="poster-frame">
-        <img
-          class="poster-img"
-          src="https://image.tmdb.org/t/p/w500/13kOl2v0nD2OLbVSHnHk8GUFEhO.jpg"
-          alt="Poster for Howl&#39;s Moving Castle"
-          loading="lazy"
-          decoding="async"
-          width="200"
-          height="300"
-          onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
-        />
-        <span class="poster-play" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
-        </span>
-      </span>
-      <div class="poster-meta">
-        <h3>Howl&#39;s Moving Castle</h3>
-        <p>2004</p>
-      </div>
-    </a>
     
-    <a class="poster-card" href="/2daymovie/watch/1001854">
-      <span class="poster-frame">
-        <img
-          class="poster-img"
-          src="https://image.tmdb.org/t/p/w500/3wGdAnugnFWH9cYTkBIZxu1GSTd.jpg"
-          alt="Poster for Hugo"
-          loading="lazy"
-          decoding="async"
-          width="200"
-          height="300"
-          onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
-        />
-        <span class="poster-play" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
-        </span>
-      </span>
-      <div class="poster-meta">
-        <h3>Hugo</h3>
-        <p>2011</p>
-      </div>
-    </a>
+    <a class="poster-card" href="/2daymovie/watch/671" style="--stagger: 5">
+  <span class="poster-frame">
+    <img
+      class="poster-img"
+      src="https://image.tmdb.org/t/p/w500/wuMc08IPKEatf9rnMNXvIDxqP4W.jpg"
+      alt="Poster for Harry Potter and the Sorcerer&#39;s Stone"
+      loading="lazy"
+      decoding="async"
+      width="200"
+      height="300"
+      onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
+    />
+    <span class="poster-play" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+    </span>
+  </span>
+  <div class="poster-meta">
+    <h3>Harry Potter and the Sorcerer&#39;s Stone</h3>
+    <p>2001</p>
+  </div>
+</a>
     
-    <a class="poster-card" href="/2daymovie/watch/425">
-      <span class="poster-frame">
-        <img
-          class="poster-img"
-          src="https://image.tmdb.org/t/p/w500/gLhHHZUzeseRXShoDyC4VqLgsNv.jpg"
-          alt="Poster for Ice Age"
-          loading="lazy"
-          decoding="async"
-          width="200"
-          height="300"
-          onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
-        />
-        <span class="poster-play" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
-        </span>
-      </span>
-      <div class="poster-meta">
-        <h3>Ice Age</h3>
-        <p>2002</p>
-      </div>
-    </a>
     
-    <a class="poster-card" href="/2daymovie/watch/1384758">
-      <span class="poster-frame">
-        <img
-          class="poster-img"
-          src="https://image.tmdb.org/t/p/w500/mPhAreyZLLcZ9pl4KRyEaqSu1Zv.jpg"
-          alt="Poster for Ice Age: Boiling Point"
-          loading="lazy"
-          decoding="async"
-          width="200"
-          height="300"
-          onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
-        />
-        <span class="poster-play" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
-        </span>
-      </span>
-      <div class="poster-meta">
-        <h3>Ice Age: Boiling Point</h3>
-        <p>2026</p>
-      </div>
-    </a>
     
-    <a class="poster-card" href="/2daymovie/watch/209274">
-      <span class="poster-frame">
-        <img
-          class="poster-img"
-          src="https://image.tmdb.org/t/p/w500/oFrwnliM6TtAyWo6nIP8YpJbIvi.jpg"
-          alt="Poster for Ida"
-          loading="lazy"
-          decoding="async"
-          width="200"
-          height="300"
-          onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
-        />
-        <span class="poster-play" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
-        </span>
-      </span>
-      <div class="poster-meta">
-        <h3>Ida</h3>
-        <p>2013</p>
-      </div>
-    </a>
+    <a class="poster-card" href="/2daymovie/watch/338766" style="--stagger: 6">
+  <span class="poster-frame">
+    <img
+      class="poster-img"
+      src="https://image.tmdb.org/t/p/w500/ljRRxqy2aXIkIBXLmOVifcOR021.jpg"
+      alt="Poster for Hell or High Water"
+      loading="lazy"
+      decoding="async"
+      width="200"
+      height="300"
+      onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
+    />
+    <span class="poster-play" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+    </span>
+  </span>
+  <div class="poster-meta">
+    <h3>Hell or High Water</h3>
+    <p>2016</p>
+  </div>
+</a>
     
-    <a class="poster-card" href="/2daymovie/watch/8321">
-      <span class="poster-frame">
-        <img
-          class="poster-img"
-          src="https://image.tmdb.org/t/p/w500/vz3Vd6nfq9YZrVvyYx5RHFaYKV3.jpg"
-          alt="Poster for In Bruges"
-          loading="lazy"
-          decoding="async"
-          width="200"
-          height="300"
-          onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
-        />
-        <span class="poster-play" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
-        </span>
-      </span>
-      <div class="poster-meta">
-        <h3>In Bruges</h3>
-        <p>2008</p>
-      </div>
-    </a>
     
-    <a class="poster-card" href="/2daymovie/watch/1999">
-      <span class="poster-frame">
-        <img
-          class="poster-img"
-          src="https://image.tmdb.org/t/p/w500/IQj11YbraLDyPYaz79jtDoAscc.jpg"
-          alt="Poster for In the Bedroom"
-          loading="lazy"
-          decoding="async"
-          width="200"
-          height="300"
-          onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
-        />
-        <span class="poster-play" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
-        </span>
-      </span>
-      <div class="poster-meta">
-        <h3>In the Bedroom</h3>
-        <p>2001</p>
-      </div>
-    </a>
     
-    <a class="poster-card" href="/2daymovie/watch/843">
-      <span class="poster-frame">
-        <img
-          class="poster-img"
-          src="https://image.tmdb.org/t/p/w500/8BgGbbWiLNhPtkMkN0gGTnbtvBv.jpg"
-          alt="Poster for In the Mood for Love"
-          loading="lazy"
-          decoding="async"
-          width="200"
-          height="300"
-          onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
-        />
-        <span class="poster-play" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
-        </span>
-      </span>
-      <div class="poster-meta">
-        <h3>In the Mood for Love</h3>
-        <p>2000</p>
-      </div>
-    </a>
+    <a class="poster-card" href="/2daymovie/watch/102207" style="--stagger: 7">
+  <span class="poster-frame">
+    <img
+      class="poster-img"
+      src="https://image.tmdb.org/t/p/w500/yn3ydorp7YigPcnEZgNMvdNHPaF.jpg"
+      alt="Poster for Her"
+      loading="lazy"
+      decoding="async"
+      width="200"
+      height="300"
+      onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
+    />
+    <span class="poster-play" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+    </span>
+  </span>
+  <div class="poster-meta">
+    <h3>Her</h3>
+    <p>2013</p>
+  </div>
+</a>
+    
+    
+    
+    <a class="poster-card" href="/2daymovie/watch/79" style="--stagger: 8">
+  <span class="poster-frame">
+    <img
+      class="poster-img"
+      src="https://image.tmdb.org/t/p/w500/vxgZto2Cz7ILHAlmRXt50I2brB2.jpg"
+      alt="Poster for Hero"
+      loading="lazy"
+      decoding="async"
+      width="200"
+      height="300"
+      onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
+    />
+    <span class="poster-play" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+    </span>
+  </span>
+  <div class="poster-meta">
+    <h3>Hero</h3>
+    <p>2002</p>
+  </div>
+</a>
+    
+    
+    
+    <a class="poster-card" href="/2daymovie/watch/228161" style="--stagger: 9">
+  <span class="poster-frame">
+    <img
+      class="poster-img"
+      src="https://image.tmdb.org/t/p/w500/usFenYnk6mr8C62dB1MoAfSWMGR.jpg"
+      alt="Poster for Home"
+      loading="lazy"
+      decoding="async"
+      width="200"
+      height="300"
+      onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
+    />
+    <span class="poster-play" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+    </span>
+  </span>
+  <div class="poster-meta">
+    <h3>Home</h3>
+    <p>2015</p>
+  </div>
+</a>
+    
+    
+    
+    <a class="poster-card" href="/2daymovie/watch/13700" style="--stagger: 10">
+  <span class="poster-frame">
+    <img
+      class="poster-img"
+      src="https://image.tmdb.org/t/p/w500/cgKnkbO3fNWwKc9qLyLYdeZQ9Vj.jpg"
+      alt="Poster for Home on the Range"
+      loading="lazy"
+      decoding="async"
+      width="200"
+      height="300"
+      onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
+    />
+    <span class="poster-play" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+    </span>
+  </span>
+  <div class="poster-meta">
+    <h3>Home on the Range</h3>
+    <p>2004</p>
+  </div>
+</a>
+    
+    
+    
+    <a class="poster-card" href="/2daymovie/watch/12222" style="--stagger: 11">
+  <span class="poster-frame">
+    <img
+      class="poster-img"
+      src="https://image.tmdb.org/t/p/w500/6k47Z3A5zI2rxubTMwiLyIqQLLr.jpg"
+      alt="Poster for Horton Hears a Who!"
+      loading="lazy"
+      decoding="async"
+      width="200"
+      height="300"
+      onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
+    />
+    <span class="poster-play" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+    </span>
+  </span>
+  <div class="poster-meta">
+    <h3>Horton Hears a Who!</h3>
+    <p>2008</p>
+  </div>
+</a>
+    
+    
+    
+    <a class="poster-card" href="/2daymovie/watch/205" style="--stagger: 12">
+  <span class="poster-frame">
+    <img
+      class="poster-img"
+      src="https://image.tmdb.org/t/p/w500/p3pHw85UMZPegfMZBA6dZ06yarm.jpg"
+      alt="Poster for Hotel Rwanda"
+      loading="lazy"
+      decoding="async"
+      width="200"
+      height="300"
+      onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
+    />
+    <span class="poster-play" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+    </span>
+  </span>
+  <div class="poster-meta">
+    <h3>Hotel Rwanda</h3>
+    <p>2004</p>
+  </div>
+</a>
+    
+    
+    
+    <a class="poster-card" href="/2daymovie/watch/76492" style="--stagger: 13">
+  <span class="poster-frame">
+    <img
+      class="poster-img"
+      src="https://image.tmdb.org/t/p/w500/eJGvzGrsfe2sqTUPv5IwLWXjVuR.jpg"
+      alt="Poster for Hotel Transylvania"
+      loading="lazy"
+      decoding="async"
+      width="200"
+      height="300"
+      onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
+    />
+    <span class="poster-play" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+    </span>
+  </span>
+  <div class="poster-meta">
+    <h3>Hotel Transylvania</h3>
+    <p>2012</p>
+  </div>
+</a>
+    
+    
+    
+    <a class="poster-card" href="/2daymovie/watch/9550" style="--stagger: 14">
+  <span class="poster-frame">
+    <img
+      class="poster-img"
+      src="https://image.tmdb.org/t/p/w500/93feGsGiCtG5ymrRcErUgBsdo6v.jpg"
+      alt="Poster for House of Flying Daggers"
+      loading="lazy"
+      decoding="async"
+      width="200"
+      height="300"
+      onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
+    />
+    <span class="poster-play" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+    </span>
+  </span>
+  <div class="poster-meta">
+    <h3>House of Flying Daggers</h3>
+    <p>2004</p>
+  </div>
+</a>
+    
+    
+    
+    <a class="poster-card" href="/2daymovie/watch/10191" style="--stagger: 15">
+  <span class="poster-frame">
+    <img
+      class="poster-img"
+      src="https://image.tmdb.org/t/p/w500/ygGmAO60t8GyqUo9xYeYxSZAR3b.jpg"
+      alt="Poster for How to Train Your Dragon"
+      loading="lazy"
+      decoding="async"
+      width="200"
+      height="300"
+      onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
+    />
+    <span class="poster-play" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+    </span>
+  </span>
+  <div class="poster-meta">
+    <h3>How to Train Your Dragon</h3>
+    <p>2010</p>
+  </div>
+</a>
+    
+    
+    
+    <a class="poster-card" href="/2daymovie/watch/4935" style="--stagger: 16">
+  <span class="poster-frame">
+    <img
+      class="poster-img"
+      src="https://image.tmdb.org/t/p/w500/13kOl2v0nD2OLbVSHnHk8GUFEhO.jpg"
+      alt="Poster for Howl&#39;s Moving Castle"
+      loading="lazy"
+      decoding="async"
+      width="200"
+      height="300"
+      onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
+    />
+    <span class="poster-play" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+    </span>
+  </span>
+  <div class="poster-meta">
+    <h3>Howl&#39;s Moving Castle</h3>
+    <p>2004</p>
+  </div>
+</a>
+    
+    
+    
+    <a class="poster-card" href="/2daymovie/watch/1001854" style="--stagger: 17">
+  <span class="poster-frame">
+    <img
+      class="poster-img"
+      src="https://image.tmdb.org/t/p/w500/3wGdAnugnFWH9cYTkBIZxu1GSTd.jpg"
+      alt="Poster for Hugo"
+      loading="lazy"
+      decoding="async"
+      width="200"
+      height="300"
+      onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
+    />
+    <span class="poster-play" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+    </span>
+  </span>
+  <div class="poster-meta">
+    <h3>Hugo</h3>
+    <p>2011</p>
+  </div>
+</a>
+    
+    
+    
+    <a class="poster-card" href="/2daymovie/watch/425" style="--stagger: 18">
+  <span class="poster-frame">
+    <img
+      class="poster-img"
+      src="https://image.tmdb.org/t/p/w500/gLhHHZUzeseRXShoDyC4VqLgsNv.jpg"
+      alt="Poster for Ice Age"
+      loading="lazy"
+      decoding="async"
+      width="200"
+      height="300"
+      onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
+    />
+    <span class="poster-play" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+    </span>
+  </span>
+  <div class="poster-meta">
+    <h3>Ice Age</h3>
+    <p>2002</p>
+  </div>
+</a>
+    
+    
+    
+    <a class="poster-card" href="/2daymovie/watch/1384758" style="--stagger: 19">
+  <span class="poster-frame">
+    <img
+      class="poster-img"
+      src="https://image.tmdb.org/t/p/w500/mPhAreyZLLcZ9pl4KRyEaqSu1Zv.jpg"
+      alt="Poster for Ice Age: Boiling Point"
+      loading="lazy"
+      decoding="async"
+      width="200"
+      height="300"
+      onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
+    />
+    <span class="poster-play" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+    </span>
+  </span>
+  <div class="poster-meta">
+    <h3>Ice Age: Boiling Point</h3>
+    <p>2026</p>
+  </div>
+</a>
+    
+    
+    
+    <a class="poster-card" href="/2daymovie/watch/209274" style="--stagger: 20">
+  <span class="poster-frame">
+    <img
+      class="poster-img"
+      src="https://image.tmdb.org/t/p/w500/oFrwnliM6TtAyWo6nIP8YpJbIvi.jpg"
+      alt="Poster for Ida"
+      loading="lazy"
+      decoding="async"
+      width="200"
+      height="300"
+      onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
+    />
+    <span class="poster-play" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+    </span>
+  </span>
+  <div class="poster-meta">
+    <h3>Ida</h3>
+    <p>2013</p>
+  </div>
+</a>
+    
+    
+    
+    <a class="poster-card" href="/2daymovie/watch/8321" style="--stagger: 21">
+  <span class="poster-frame">
+    <img
+      class="poster-img"
+      src="https://image.tmdb.org/t/p/w500/vz3Vd6nfq9YZrVvyYx5RHFaYKV3.jpg"
+      alt="Poster for In Bruges"
+      loading="lazy"
+      decoding="async"
+      width="200"
+      height="300"
+      onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
+    />
+    <span class="poster-play" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+    </span>
+  </span>
+  <div class="poster-meta">
+    <h3>In Bruges</h3>
+    <p>2008</p>
+  </div>
+</a>
+    
+    
+    
+    <a class="poster-card" href="/2daymovie/watch/1999" style="--stagger: 22">
+  <span class="poster-frame">
+    <img
+      class="poster-img"
+      src="https://image.tmdb.org/t/p/w500/IQj11YbraLDyPYaz79jtDoAscc.jpg"
+      alt="Poster for In the Bedroom"
+      loading="lazy"
+      decoding="async"
+      width="200"
+      height="300"
+      onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
+    />
+    <span class="poster-play" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+    </span>
+  </span>
+  <div class="poster-meta">
+    <h3>In the Bedroom</h3>
+    <p>2001</p>
+  </div>
+</a>
+    
+    
+    
+    <a class="poster-card" href="/2daymovie/watch/843" style="--stagger: 23">
+  <span class="poster-frame">
+    <img
+      class="poster-img"
+      src="https://image.tmdb.org/t/p/w500/8BgGbbWiLNhPtkMkN0gGTnbtvBv.jpg"
+      alt="Poster for In the Mood for Love"
+      loading="lazy"
+      decoding="async"
+      width="200"
+      height="300"
+      onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
+    />
+    <span class="poster-play" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+    </span>
+  </span>
+  <div class="poster-meta">
+    <h3>In the Mood for Love</h3>
+    <p>2000</p>
+  </div>
+</a>
     
   </div>
 
@@ -661,14 +713,14 @@
     <div class="footer-inner">
       <div>
         <div class="footer-brand">2daymovie</div>
-        <p>Official HD trailers for movies and series. Nothing on this site is a full film.</p>
+        <p>Legal HD trailers and where-to-watch discovery. Nothing on this site is a full film.</p>
       </div>
       <nav class="footer-nav" aria-label="Footer">
+        <a href="/2daymovie/browse">Browse</a>
+        <a href="/2daymovie/#trailers">Trailers</a>
+        <a href="/2daymovie/#where">Where to watch</a>
         <a href="/2daymovie/movies">Movies</a>
         <a href="/2daymovie/series">Series</a>
-        <a href="/2daymovie/categories">Categories</a>
-        <a href="/2daymovie/upcoming">Upcoming</a>
-        <a href="/2daymovie/reviews">Reviews</a>
         <a href="/2daymovie/about">About</a>
       </nav>
       <p class="footer-credit">
@@ -677,7 +729,8 @@
     </div>
   </footer>
 
-  <script src="/2daymovie/static/js/script.js?v=20261015d"></script>
+  <script src="/2daymovie/static/arnova/arnova-secure.js?v=20261015c"></script>
+  <script src="/2daymovie/static/js/script.js?v=20261015c"></script>
   
 </body>
 </html>

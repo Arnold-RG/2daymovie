@@ -3,8 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#0b0a09" />
+  <meta name="theme-color" content="#0A0A0A" />
   <meta name="color-scheme" content="dark" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; img-src 'self' data: https://image.tmdb.org https://media.themoviedb.org https://i.ytimg.com; font-src 'self' https://fonts.gstatic.com data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' 'unsafe-inline' https://www.youtube.com https://www.youtube-nocookie.com; frame-src https://www.youtube.com https://www.youtube-nocookie.com; connect-src 'self' https://www.youtube.com https://www.youtube-nocookie.com; form-action 'self'" />
   <title>About Schmidt (2002) — Official HD Trailer | 2daymovie</title>
   <meta name="description" content="Watch the official HD trailer for About Schmidt (2002) on 2daymovie." />
   <link rel="canonical" href="https://arnold-rg.github.io/2daymovie/watch/2755" />
@@ -24,7 +26,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://image.tmdb.org" />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,650;1,9..144,500&family=Sora:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/2daymovie/static/arnova/arnova-base.css?v=20261015d" />
   <link rel="stylesheet" href="/2daymovie/static/css/style.css?v=20261015d" />
   <script type="application/ld+json">
   {
@@ -65,19 +68,18 @@
       </button>
 
       <nav class="site-nav" id="site-nav" aria-label="Primary" data-site-nav>
-        <a href="/2daymovie/" >Home</a>
-        <a href="/2daymovie/categories" >Categories</a>
-        <a href="/2daymovie/movies" aria-current="page">Movies</a>
+        <a href="/2daymovie/browse" >Browse</a>
+        <a href="/2daymovie/#trailers" aria-current="page">Trailers</a>
+        <a href="/2daymovie/#where" >Where to watch</a>
+        <a href="/2daymovie/movies" >Movies</a>
         <a href="/2daymovie/series" >Series</a>
-        <a href="/2daymovie/upcoming" >Upcoming</a>
         <a href="/2daymovie/reviews" >Reviews</a>
-        <a href="/2daymovie/browse" >Catalog</a>
         <a href="/2daymovie/about" >About</a>
       </nav>
 
       <form class="search-form" action="/2daymovie/search" method="get" role="search">
         <label class="sr-only" for="q">Search movies and series</label>
-        <input id="q" name="q" type="search" placeholder="Search the shelf" value="" autocomplete="off" enterkeyhint="search" />
+        <input id="q" name="q" type="search" placeholder="Search titles" value="" maxlength="120" autocomplete="off" enterkeyhint="search" />
         <button type="submit">Search</button>
       </form>
     </div>
@@ -87,7 +89,7 @@
     
 
 
-<section class="watch-room has-backdrop" style="--watch-image: url('https://image.tmdb.org/t/p/w1280/gz4ZIoruJ5e5n3SByTJeDS7qAcs.jpg')">
+<section class="watch-room watch-mobile has-backdrop" style="--watch-image: url('https://image.tmdb.org/t/p/w1280/gz4ZIoruJ5e5n3SByTJeDS7qAcs.jpg')">
   <div class="watch-veil" aria-hidden="true"></div>
   <div class="watch-layout">
     <div class="watch-stage">
@@ -126,6 +128,21 @@
       </div>
     </aside>
   </div>
+
+  <section class="where-block" aria-labelledby="where-heading">
+  <div class="unsection-head">
+    <p class="detail-kicker">Legal availability</p>
+    <h2 id="where-heading">Where to watch</h2>
+    <p>Official streaming, rental, and purchase options when listed for your region. 2daymovie never hosts full films.</p>
+  </div>
+  
+  <p class="providers-note">
+    Provider listings appear when TMDB data is available for region US.
+    Use the official trailer above, then check your preferred streaming service.
+  </p>
+  
+  
+</section>
 </section>
 
   </main>
@@ -134,14 +151,14 @@
     <div class="footer-inner">
       <div>
         <div class="footer-brand">2daymovie</div>
-        <p>Official HD trailers for movies and series. Nothing on this site is a full film.</p>
+        <p>Legal HD trailers and where-to-watch discovery. Nothing on this site is a full film.</p>
       </div>
       <nav class="footer-nav" aria-label="Footer">
+        <a href="/2daymovie/browse">Browse</a>
+        <a href="/2daymovie/#trailers">Trailers</a>
+        <a href="/2daymovie/#where">Where to watch</a>
         <a href="/2daymovie/movies">Movies</a>
         <a href="/2daymovie/series">Series</a>
-        <a href="/2daymovie/categories">Categories</a>
-        <a href="/2daymovie/upcoming">Upcoming</a>
-        <a href="/2daymovie/reviews">Reviews</a>
         <a href="/2daymovie/about">About</a>
       </nav>
       <p class="footer-credit">
@@ -150,7 +167,8 @@
     </div>
   </footer>
 
-  <script src="/2daymovie/static/js/script.js?v=20261015d"></script>
+  <script src="/2daymovie/static/arnova/arnova-secure.js?v=20261015c"></script>
+  <script src="/2daymovie/static/js/script.js?v=20261015c"></script>
   
 </body>
 </html>
