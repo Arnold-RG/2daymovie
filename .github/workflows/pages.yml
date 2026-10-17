@@ -7,8 +7,6 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
   group: pages
@@ -38,6 +36,9 @@ jobs:
           REVIEWS_LOCAL_ONLY: "1"
         run: python scripts/export_site.py --out site
 
+      - name: Check internal links
+        run: python scripts/check_internal_links.py --root site --base /2daymovie
+
       - name: Check Pages source
         id: pages
         env:
@@ -56,6 +57,9 @@ jobs:
     needs: build
     if: github.ref == 'refs/heads/main' && needs.build.outputs.build_type == 'workflow'
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

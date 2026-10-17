@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}{{ meta_title|default('Movies by Year | 2daymovie') }}{% endblock %}
+
+{% block content %}
+<section class="year-hero">
+  <div class="year-hero-inner">
+    <div class="year-hero-copy">
+      <p class="detail-kicker">Curated library</p>
+      <h1>Movies by year</h1>
+      <p>Choose a year to open its official trailer shelf.</p>
+    </div>
+  </div>
+  <nav class="year-chip-wrap" aria-label="Years">
+    {% for y in years %}
+    <a class="year-chip" href="{{ url_for('year_page', year=y) }}" data-year="{{ y }}">{{ y }}</a>
+    {% endfor %}
+  </nav>
+</section>
+<script>
+(function () {
+  var raw = new URLSearchParams(window.location.search).get("year") || "";
+  var year = String(raw).trim().replace(/\/+$/, "");
+  if (!/^\d{4}$/.test(year)) return;
+  var link = document.querySelector('[data-year="' + year + '"]');
+  if (link) window.location.replace(link.getAttribute("href"));
+})();
+</script>
+{% endblock %}

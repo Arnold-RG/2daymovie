@@ -33,6 +33,11 @@ jobs:
       - name: Run tests
         run: pytest -q
 
+      - name: Check committed Pages links
+        env:
+          BASE_PATH: /2daymovie
+        run: python scripts/check_internal_links.py --root docs --base /2daymovie
+
       - name: Export public site
         env:
           BASE_PATH: /2daymovie
@@ -42,8 +47,9 @@ jobs:
         run: |
           python scripts/export_site.py --out /tmp/2daymovie-site
           test -f /tmp/2daymovie-site/index.html
-          test -f /tmp/2daymovie-site/.nojekyll || true
-          # Pages builds a fresh export each deploy; do not require committed docs/ to match.
+          test -f /tmp/2daymovie-site/.nojekyll
+          python scripts/check_internal_links.py --root /tmp/2daymovie-site --base /2daymovie
+          # Pages builds a fresh export each deploy; do not require committed docs/ to match byte for byte.
 
       - name: Health & metrics smoke
         run: |
