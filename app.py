@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import secrets
 import time
 
 from dotenv import load_dotenv
@@ -82,7 +83,10 @@ def create_app() -> Flask:
     app.config["OFFICIAL_URL"] = os.getenv(
         "OFFICIAL_URL", "https://twodaymovie.onrender.com/"
     )
-    app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "2daymovie-dev-secret-change-me")
+    app.config["SECRET_KEY"] = os.getenv("SECRET_KEY") or secrets.token_hex(32)
+    app.config["MAX_CONTENT_LENGTH"] = 64 * 1024
+    app.config["SESSION_COOKIE_HTTPONLY"] = True
+    app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
     app.config["BASE_PATH"] = _base_path()
     app.config["STATIC_EXPORT"] = os.getenv("STATIC_EXPORT", "").strip() == "1"
     if app.config["BASE_PATH"]:
@@ -358,9 +362,7 @@ Sitemap: {base}/sitemap.xml
                 name=form["name"],
                 rating=form["rating"],
                 message=form["message"],
-                ip=(request.headers.get("X-Forwarded-For") or request.remote_addr or "")
-                .split(",")[0]
-                .strip(),
+                ip=request.remote_addr or "",
                 honeypot=request.form.get("website", ""),
             )
             if review and not error:

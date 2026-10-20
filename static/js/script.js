@@ -258,7 +258,7 @@ function initHeroSlider(prefersReduced, saveData) {
   const setSoundUi = () => {
     if (!soundBtn) return;
     soundBtn.setAttribute("aria-pressed", soundOn ? "true" : "false");
-    soundBtn.textContent = soundOn ? "Sound on" : "Turn sound on";
+    soundBtn.textContent = soundOn ? "Sound on" : "Play featured trailer";
   };
 
   const syncFallback = (slide) => {
@@ -419,12 +419,7 @@ function initHeroSlider(prefersReduced, saveData) {
   updateMeta(slides[0]);
   setSoundUi();
 
-  const wideEnough = window.matchMedia("(min-width: 900px)").matches;
-  if (!prefersReduced && !saveData && wideEnough && playerHost) {
-    const start = () => bootPlayer();
-    if ("requestIdleCallback" in window) window.requestIdleCallback(start, { timeout: 1800 });
-    else window.setTimeout(start, 900);
-  }
+  // Load the third-party player only after an explicit user action.
 
   document.addEventListener("visibilitychange", () => {
     if (!player) return;

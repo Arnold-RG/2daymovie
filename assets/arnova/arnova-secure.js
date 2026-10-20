@@ -36,7 +36,7 @@
     var scope = root || document;
     var nodes = scope.querySelectorAll(".arn-reveal");
     if (!nodes.length) return;
-    if (!("IntersectionObserver" in window)) {
+    if (!("IntersectionObserver" in window) || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       nodes.forEach(function (n) { n.classList.add("is-in"); });
       return;
     }
@@ -67,8 +67,9 @@
       var tx = db.transaction(store, "readwrite");
       var os = tx.objectStore(store);
       var req = key === undefined ? os.put(value) : os.put(value, key);
-      req.onsuccess = function () { resolve(req.result); };
-      req.onerror = function () { reject(req.error); };
+      tx.oncomplete = function () { resolve(req.result); };
+      tx.onabort = function () { reject(tx.error || new Error("Storage write was cancelled.")); };
+      tx.onerror = function () { reject(tx.error || new Error("Could not save this change.")); };
     });
   }
 

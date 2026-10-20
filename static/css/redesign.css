@@ -1,0 +1,24 @@
+/* Premiere: midnight blue, electric lime and generous cinematic framing. */
+:root { --void:#090f1c; --elevated:#142037; --ink:#f3f6fc; --muted:#b0bdd1; --faint:#8c9cb6; --scarlet:#c7ff63; --scarlet-deep:#a4de43; --amber:#c7ff63; --amber-soft:#e0ffa9; --metal:#c7ff63; --metal-ink:#090f1c; --line:#2b3850; --line-strong:#c7ff6355; --stage:#101c31; --radius:16px; --font-display:"Sora","Segoe UI",sans-serif; }
+body { background:radial-gradient(ellipse at 90% 10%,#203656 0,transparent 40%),var(--void); }
+body::before,.hero-grain { display:none; }
+.site-header { background:#090f1cf2; border-bottom:1px solid var(--line); backdrop-filter:blur(18px); }
+.brand,.hero-brand { font-style:normal; letter-spacing:-.065em; }
+.brand-mark,.gel { color:var(--scarlet); background:none; -webkit-text-fill-color:currentColor; }
+.hero.hero-cinema { margin:24px auto 0; width:calc(100% - 48px); min-height:680px; border-radius:28px; overflow:hidden; border:1px solid var(--line); }
+.hero-veil { background:linear-gradient(90deg,#0b1426 0%,#0b1426eb 30%,#0b142640 85%),linear-gradient(0deg,#0b1426,transparent 60%); }
+.hero-stage { min-height:680px; align-items:center; padding:64px clamp(24px,5vw,80px); }
+.hero-lead { max-width:650px; }
+.hero-kicker { color:var(--scarlet); letter-spacing:.18em; }
+.hero-brand { font-size:clamp(3.2rem,7.4vw,7.5rem); line-height:.95; margin:22px 0; }
+.hero-lede { font-size:1.1rem; max-width:44ch; color:var(--ink); }
+.hero-now { padding:20px 24px; border:1px solid var(--line); border-radius:16px; background:#101c31cc; max-width:420px; margin-top:32px; }
+.btn,.search-form button { border-radius:10px; font-weight:650; letter-spacing:0; text-transform:none; }
+.btn-primary,.search-form button { background:var(--scarlet); color:#090f1c; border-color:var(--scarlet); }
+.btn-ghost { background:#ffffff0a; color:var(--ink); border-color:#8193af66; }
+.poster-card { border-radius:16px; overflow:hidden; background:var(--elevated); border:1px solid var(--line); }
+.category-chip { border-radius:100px; background:var(--elevated); padding:12px 18px; }
+.home-block { border-top:1px solid var(--line); padding-block:48px; }
+.unsection-head h2 { font-size:clamp(2rem,4vw,3.5rem); letter-spacing:-.05em; }
+.site-footer { background:#060b14; }
+@media(max-width:700px) { .hero.hero-cinema{margin:12px auto 0;width:calc(100% - 24px);min-height:620px;border-radius:20px}.hero-stage{min-height:620px;padding:40px 22px}.hero-brand{font-size:clamp(3rem,13vw,5rem)}.hero-veil{background:linear-gradient(0deg,#0b1426 10%,#0b1426dc 65%,#0b142660)}.hero-now{padding:16px}.hero-actions{gap:8px}.hero-actions .btn{flex:1 1 auto} }

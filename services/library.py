@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from functools import lru_cache
 import re
 from pathlib import Path
 from typing import Any
@@ -37,13 +38,18 @@ def _trailer_keys(row: dict[str, Any]) -> list[str]:
     return keys
 
 
+@lru_cache(maxsize=2)
+def _read_catalog(path: Path, modified_ns: int, size: int) -> list[dict[str, Any]]:
+    """Cache parsing by file revision; internal callers treat rows as read-only."""
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return [row for row in data if row.get("id") and _trailer_keys(row)]
+
+
 def _load_resolved() -> list[dict[str, Any]]:
-    if not CATALOG_PATH.exists():
-        return []
     try:
-        data = json.loads(CATALOG_PATH.read_text(encoding="utf-8"))
-        return [row for row in data if row.get("id") and _trailer_keys(row)]
-    except Exception:
+        version = CATALOG_PATH.stat()
+        return _read_catalog(CATALOG_PATH, version.st_mtime_ns, version.st_size)
+    except (OSError, ValueError, TypeError, AttributeError):
         return []
 
 

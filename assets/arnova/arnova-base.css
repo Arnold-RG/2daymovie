@@ -153,8 +153,8 @@ button, a, input, select, textarea {
 }
 
 .arn-reveal {
-  opacity: 0;
-  transform: translateY(18px);
+  opacity: 1;
+  transform: none;
   transition: opacity 0.7s var(--arn-ease), transform 0.7s var(--arn-ease);
 }
 .arn-reveal.is-in {

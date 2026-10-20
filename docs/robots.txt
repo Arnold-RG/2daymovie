@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://arnold-rg.github.io/2daymovie/sitemap.xml
+Sitemap: https://twodaymovie.onrender.com/sitemap.xml

@@ -3,35 +3,38 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#0b0a09" />
+  <meta name="theme-color" content="#0A0A0A" />
   <meta name="color-scheme" content="dark" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; img-src 'self' data: https://image.tmdb.org https://media.themoviedb.org https://i.ytimg.com; font-src 'self' https://fonts.gstatic.com data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' 'unsafe-inline' https://www.youtube.com https://www.youtube-nocookie.com; frame-src https://www.youtube.com https://www.youtube-nocookie.com; connect-src 'self' https://www.youtube.com https://www.youtube-nocookie.com; form-action 'self'" />
   <title>Upcoming Movies &amp; Series 2025–2027 | 2daymovie</title>
   <meta name="description" content="Browse upcoming 2025–2027 movies and series on 2daymovie. On-site trailers when available." />
-  <link rel="canonical" href="https://arnold-rg.github.io/2daymovie/upcoming" />
+  <link rel="canonical" href="https://twodaymovie.onrender.com/upcoming" />
   <meta property="og:locale" content="en_US" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Upcoming Movies &amp; Series 2025–2027 | 2daymovie" />
   <meta property="og:description" content="Browse upcoming 2025–2027 movies and series on 2daymovie. On-site trailers when available." />
-  <meta property="og:url" content="https://arnold-rg.github.io/2daymovie/upcoming" />
+  <meta property="og:url" content="https://twodaymovie.onrender.com/upcoming" />
   <meta property="og:site_name" content="2daymovie" />
-  <meta property="og:image" content="https://arnold-rg.github.io/2daymovie/static/img/og-image.svg" />
+  <meta property="og:image" content="https://twodaymovie.onrender.com/static/img/og-image.svg" />
   <meta property="og:image:alt" content="2daymovie, official HD movie and television trailers" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Upcoming Movies &amp; Series 2025–2027 | 2daymovie" />
   <meta name="twitter:description" content="Browse upcoming 2025–2027 movies and series on 2daymovie. On-site trailers when available." />
-  <meta name="twitter:image" content="https://arnold-rg.github.io/2daymovie/static/img/og-image.svg" />
-  <link rel="icon" href="/2daymovie/static/img/favicon.svg" type="image/svg+xml" />
+  <meta name="twitter:image" content="https://twodaymovie.onrender.com/static/img/og-image.svg" />
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://image.tmdb.org" />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/2daymovie/static/css/style.css?v=20261015d" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,650;1,9..144,500&family=Sora:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/arnova/arnova-base.css?v=20261015d" />
+  <link rel="stylesheet" href="/static/css/style.css?v=20261015d" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "2daymovie",
-    "url": "https://arnold-rg.github.io/2daymovie/",
+    "url": "https://twodaymovie.onrender.com/",
     "description": "Official HD movie and TV trailer discovery.",
     "creator": {
       "@type": "Person",
@@ -39,13 +42,15 @@
     },
     "potentialAction": {
       "@type": "SearchAction",
-      "target": "https://arnold-rg.github.io/2daymovie/search?q={search_term_string}",
+      "target": "https://twodaymovie.onrender.com/search?q={search_term_string}",
       "query-input": "required name=search_term_string"
     }
   }
   </script>
   
-</head>
+  <link rel="stylesheet" href="/static/css/redesign.css?v=37740797a33e" />
+<link rel="stylesheet" href="/static/css/mobile.css?v=4f5320acd7c9">
+<script src="/static/css/mobile.js?v=04ccb963cb5c" defer></script></head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   
@@ -53,7 +58,7 @@
   <header class="site-header">
     <div class="header-inner">
       <div class="header-bar">
-        <a class="brand" href="/2daymovie/" aria-label="2daymovie home">
+        <a class="brand" href="/" aria-label="2daymovie home">
           <span class="brand-mark">2day</span><span class="brand-rest">movie</span>
         </a>
       </div>
@@ -65,19 +70,18 @@
       </button>
 
       <nav class="site-nav" id="site-nav" aria-label="Primary" data-site-nav>
-        <a href="/2daymovie/" >Home</a>
-        <a href="/2daymovie/categories" >Categories</a>
-        <a href="/2daymovie/movies" >Movies</a>
-        <a href="/2daymovie/series" >Series</a>
-        <a href="/2daymovie/upcoming" aria-current="page">Upcoming</a>
-        <a href="/2daymovie/reviews" >Reviews</a>
-        <a href="/2daymovie/browse" >Catalog</a>
-        <a href="/2daymovie/about" >About</a>
+        <a href="/browse" >Browse</a>
+        <a href="/#trailers" aria-current="page">Trailers</a>
+        <a href="/#where" >Where to watch</a>
+        <a href="/movies" >Movies</a>
+        <a href="/series" >Series</a>
+        <a href="/reviews" >Reviews</a>
+        <a href="/about" >About</a>
       </nav>
 
-      <form class="search-form" action="/2daymovie/search" method="get" role="search">
+      <form class="search-form" action="/search" method="get" role="search">
         <label class="sr-only" for="q">Search movies and series</label>
-        <input id="q" name="q" type="search" placeholder="Search the shelf" value="" autocomplete="off" enterkeyhint="search" />
+        <input id="q" name="q" type="search" placeholder="Search titles" value="" maxlength="120" autocomplete="off" enterkeyhint="search" />
         <button type="submit">Search</button>
       </form>
     </div>
@@ -104,9 +108,9 @@
     <div class="poster-grid shelf-grid">
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/533533">
+        <a class="poster-card is-visible" href="/watch/533533">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/chpWmskl3aKm1aTZqUHRCtviwPy.jpg" alt="Poster for TRON: Ares" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/chpWmskl3aKm1aTZqUHRCtviwPy.jpg" alt="Poster for TRON: Ares" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -117,9 +121,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/83533">
+        <a class="poster-card is-visible" href="/watch/83533">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/bRBeSHfGHwkEpImlhxPmOcUsaeg.jpg" alt="Poster for Avatar: Fire and Ash" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/bRBeSHfGHwkEpImlhxPmOcUsaeg.jpg" alt="Poster for Avatar: Fire and Ash" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -140,9 +144,9 @@
     <div class="poster-grid shelf-grid">
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/687163">
+        <a class="poster-card is-visible" href="/watch/687163">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/yihdXomYb5kTeSivtFndMy5iDmf.jpg" alt="Poster for Project Hail Mary" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/yihdXomYb5kTeSivtFndMy5iDmf.jpg" alt="Poster for Project Hail Mary" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -153,9 +157,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1272837">
+        <a class="poster-card is-visible" href="/watch/1272837">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/kK1BGkG3KAvWB0WMV1DfOx9yTMZ.jpg" alt="Poster for 28 Years Later: The Bone Temple" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/kK1BGkG3KAvWB0WMV1DfOx9yTMZ.jpg" alt="Poster for 28 Years Later: The Bone Temple" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -166,9 +170,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1339713">
+        <a class="poster-card is-visible" href="/watch/1339713">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/bRwnj8WEKBCvmfeUNOukJPwB43K.jpg" alt="Poster for Obsession" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/bRwnj8WEKBCvmfeUNOukJPwB43K.jpg" alt="Poster for Obsession" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -179,9 +183,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/936075">
+        <a class="poster-card is-visible" href="/watch/936075">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/dueFqKLvjftnELZaGYwY7xinfaI.jpg" alt="Poster for Michael" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/dueFqKLvjftnELZaGYwY7xinfaI.jpg" alt="Poster for Michael" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -192,9 +196,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1325734">
+        <a class="poster-card is-visible" href="/watch/1325734">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/rnIOUhzwJDfgQakx8EjoNyItKgs.jpg" alt="Poster for The Drama" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/rnIOUhzwJDfgQakx8EjoNyItKgs.jpg" alt="Poster for The Drama" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -205,9 +209,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1280738">
+        <a class="poster-card is-visible" href="/watch/1280738">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/ivQ1Z3lI1xWvAeGDHBw3CCYZDGJ.jpg" alt="Poster for The Furious" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/ivQ1Z3lI1xWvAeGDHBw3CCYZDGJ.jpg" alt="Poster for The Furious" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -218,9 +222,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1083381">
+        <a class="poster-card is-visible" href="/watch/1083381">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/rhGx6E3qRNMgj3i5su2oukNHwIQ.jpg" alt="Poster for Backrooms" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/rhGx6E3qRNMgj3i5su2oukNHwIQ.jpg" alt="Poster for Backrooms" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -231,9 +235,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1204680">
+        <a class="poster-card is-visible" href="/watch/1204680">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/kYDCl2y0VPvhT5eYWbMRInPoB03.jpg" alt="Poster for Coyote vs. Acme" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/kYDCl2y0VPvhT5eYWbMRInPoB03.jpg" alt="Poster for Coyote vs. Acme" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -244,9 +248,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1084242">
+        <a class="poster-card is-visible" href="/watch/1084242">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/oJ7g2CifqpStmoYQyaLQgEU32qO.jpg" alt="Poster for Zootopia 2" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/oJ7g2CifqpStmoYQyaLQgEU32qO.jpg" alt="Poster for Zootopia 2" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -257,9 +261,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1226863">
+        <a class="poster-card is-visible" href="/watch/1226863">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/eJGWx219ZcEMVQJhAgMiqo8tYY.jpg" alt="Poster for The Super Mario Galaxy Movie" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/eJGWx219ZcEMVQJhAgMiqo8tYY.jpg" alt="Poster for The Super Mario Galaxy Movie" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -270,9 +274,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1248832">
+        <a class="poster-card is-visible" href="/watch/1248832">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/1ATXKrIPJyKNwnJ6lcG088Sa6zi.jpg" alt="Poster for Digger" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/1ATXKrIPJyKNwnJ6lcG088Sa6zi.jpg" alt="Poster for Digger" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -283,9 +287,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1400940">
+        <a class="poster-card is-visible" href="/watch/1400940">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/5jCpQnWPikggmQZoDp1eAi6BI6w.jpg" alt="Poster for Clayface" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/5jCpQnWPikggmQZoDp1eAi6BI6w.jpg" alt="Poster for Clayface" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -296,9 +300,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1153576">
+        <a class="poster-card is-visible" href="/watch/1153576">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/utKzCSCz2HtXwcDGfWLj2IHhSob.jpg" alt="Poster for Street Fighter" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/utKzCSCz2HtXwcDGfWLj2IHhSob.jpg" alt="Poster for Street Fighter" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -309,9 +313,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/510657">
+        <a class="poster-card is-visible" href="/watch/510657">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/vRwzVKNHeeQ9srX6u2qsuflBozb.jpg" alt="Poster for Wellwood" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/vRwzVKNHeeQ9srX6u2qsuflBozb.jpg" alt="Poster for Wellwood" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -322,9 +326,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1255833">
+        <a class="poster-card is-visible" href="/watch/1255833">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/vjTYUTgh9nO88i6HZ4YPRhiFL05.jpg" alt="Poster for Whalefall" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/vjTYUTgh9nO88i6HZ4YPRhiFL05.jpg" alt="Poster for Whalefall" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -335,9 +339,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1300968">
+        <a class="poster-card is-visible" href="/watch/1300968">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/hDDBRwPOIztAhawTjWWsEA7rDis.jpg" alt="Poster for The Hunger Games: Sunrise on the Reaping" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/hDDBRwPOIztAhawTjWWsEA7rDis.jpg" alt="Poster for The Hunger Games: Sunrise on the Reaping" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -348,9 +352,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1242898">
+        <a class="poster-card is-visible" href="/watch/1242898">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/pHpq9yNUIo6aDoCXEBzjSolywgz.jpg" alt="Poster for Predator: Badlands" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/pHpq9yNUIo6aDoCXEBzjSolywgz.jpg" alt="Poster for Predator: Badlands" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -361,9 +365,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1414189">
+        <a class="poster-card is-visible" href="/watch/1414189">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/Fajt4TRQJ9cd64QW8E1lzZzaJ5.jpg" alt="Poster for A Christmas Carol" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/Fajt4TRQJ9cd64QW8E1lzZzaJ5.jpg" alt="Poster for A Christmas Carol" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -374,9 +378,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/425274">
+        <a class="poster-card is-visible" href="/watch/425274">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/oD3Eey4e4Z259XLm3eD3WGcoJAh.jpg" alt="Poster for Now You See Me: Now You Don&#39;t" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/oD3Eey4e4Z259XLm3eD3WGcoJAh.jpg" alt="Poster for Now You See Me: Now You Don&#39;t" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -387,9 +391,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1195803">
+        <a class="poster-card is-visible" href="/watch/1195803">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/eOYkNDalgt1v6UGjw3AoFR5qo9D.jpg" alt="Poster for Wicker" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/eOYkNDalgt1v6UGjw3AoFR5qo9D.jpg" alt="Poster for Wicker" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -400,9 +404,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1694711">
+        <a class="poster-card is-visible" href="/watch/1694711">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/bLqeWTf9HGofglNZ6XENSsY1HbD.jpg" alt="Poster for Armored Trooper VOTOMS: Die Graue Hexe - Part 1" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/bLqeWTf9HGofglNZ6XENSsY1HbD.jpg" alt="Poster for Armored Trooper VOTOMS: Die Graue Hexe - Part 1" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -413,9 +417,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1117898">
+        <a class="poster-card is-visible" href="/watch/1117898">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/mWN6knIVJ2o7eGwSm7mOgSCwNUc.jpg" alt="Poster for The Cat in the Hat" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/mWN6knIVJ2o7eGwSm7mOgSCwNUc.jpg" alt="Poster for The Cat in the Hat" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -426,9 +430,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1003596">
+        <a class="poster-card is-visible" href="/watch/1003596">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/jzPwsojjFStf5lR5Nm07w2hH56G.jpg" alt="Poster for Avengers: Doomsday" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/jzPwsojjFStf5lR5Nm07w2hH56G.jpg" alt="Poster for Avengers: Doomsday" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -439,9 +443,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1170608">
+        <a class="poster-card is-visible" href="/watch/1170608">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/d43fvHQsIMa4kpyhKXw0haEJIvI.jpg" alt="Poster for Dune: Part Three" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/d43fvHQsIMa4kpyhKXw0haEJIvI.jpg" alt="Poster for Dune: Part Three" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -452,9 +456,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1078446">
+        <a class="poster-card is-visible" href="/watch/1078446">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/7HPvgItDw9NgW3iy4tFRRuGNbuN.jpg" alt="Poster for Violent Night 2" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/7HPvgItDw9NgW3iy4tFRRuGNbuN.jpg" alt="Poster for Violent Night 2" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -465,9 +469,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/940009">
+        <a class="poster-card is-visible" href="/watch/940009">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/rpP29aOKpHy1FhX8OZQdUICEs2j.jpg" alt="Poster for Ray Gunn" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/rpP29aOKpHy1FhX8OZQdUICEs2j.jpg" alt="Poster for Ray Gunn" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -478,9 +482,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1260649">
+        <a class="poster-card is-visible" href="/watch/1260649">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/qv0X60rC2SUWVvOkbgixpRoOSoq.jpg" alt="Poster for Jumanji: Open World" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/qv0X60rC2SUWVvOkbgixpRoOSoq.jpg" alt="Poster for Jumanji: Open World" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -491,9 +495,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/931285">
+        <a class="poster-card is-visible" href="/watch/931285">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/hwRdDFIhaEmpRgoki805YvyyjZf.jpg" alt="Poster for Mortal Kombat II" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/hwRdDFIhaEmpRgoki805YvyyjZf.jpg" alt="Poster for Mortal Kombat II" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -504,9 +508,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1300926">
+        <a class="poster-card is-visible" href="/watch/1300926">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/oxaW6X3xohnzdFSBKCrCjRDckMe.jpg" alt="Poster for The Angry Birds Movie 3" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/oxaW6X3xohnzdFSBKCrCjRDckMe.jpg" alt="Poster for The Angry Birds Movie 3" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -517,9 +521,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1567605">
+        <a class="poster-card is-visible" href="/watch/1567605">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/wmuMZrelOQBAN2KlA30yOIeIUJl.jpg" alt="Poster for Ebenezer" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/wmuMZrelOQBAN2KlA30yOIeIUJl.jpg" alt="Poster for Ebenezer" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -530,9 +534,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1084244">
+        <a class="poster-card is-visible" href="/watch/1084244">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/sfQtVlIHljToOwYjhe21KPGzZWK.jpg" alt="Poster for Toy Story 5" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/sfQtVlIHljToOwYjhe21KPGzZWK.jpg" alt="Poster for Toy Story 5" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -543,9 +547,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1384758">
+        <a class="poster-card is-visible" href="/watch/1384758">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/mPhAreyZLLcZ9pl4KRyEaqSu1Zv.jpg" alt="Poster for Ice Age: Boiling Point" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/mPhAreyZLLcZ9pl4KRyEaqSu1Zv.jpg" alt="Poster for Ice Age: Boiling Point" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -556,9 +560,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1314481">
+        <a class="poster-card is-visible" href="/watch/1314481">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/xTI42pmsP5EDnvsNJPEDubwWBQO.jpg" alt="Poster for The Devil Wears Prada 2" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/xTI42pmsP5EDnvsNJPEDubwWBQO.jpg" alt="Poster for The Devil Wears Prada 2" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -569,9 +573,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1384216">
+        <a class="poster-card is-visible" href="/watch/1384216">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/A7i16oDi03qrKep5pBfuTWNUTb.jpg" alt="Poster for The Dog Stars" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/A7i16oDi03qrKep5pBfuTWNUTb.jpg" alt="Poster for The Dog Stars" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -582,9 +586,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1198994">
+        <a class="poster-card is-visible" href="/watch/1198994">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/zbJWVHOtj3ljBzWgL1P8pxP03Up.jpg" alt="Poster for Send Help" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/zbJWVHOtj3ljBzWgL1P8pxP03Up.jpg" alt="Poster for Send Help" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -595,9 +599,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1107166">
+        <a class="poster-card is-visible" href="/watch/1107166">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/5xgxxmLivJXL8aF0HdZfpx8aAIo.jpg" alt="Poster for Psycho Killer" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/5xgxxmLivJXL8aF0HdZfpx8aAIo.jpg" alt="Poster for Psycho Killer" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -608,9 +612,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1401281">
+        <a class="poster-card is-visible" href="/watch/1401281">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/hBGg3IGRM7LM6ydMmDrl8mEx33Y.jpg" alt="Poster for The Testament of Ann Lee" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/hBGg3IGRM7LM6ydMmDrl8mEx33Y.jpg" alt="Poster for The Testament of Ann Lee" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -621,9 +625,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1266127">
+        <a class="poster-card is-visible" href="/watch/1266127">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/13ZcJzSGEqVgDSqsS9U5EkQwPkV.jpg" alt="Poster for Ready or Not: Here I Come" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/13ZcJzSGEqVgDSqsS9U5EkQwPkV.jpg" alt="Poster for Ready or Not: Here I Come" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -634,9 +638,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1228710">
+        <a class="poster-card is-visible" href="/watch/1228710">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/uwMKWjcNID0D9jjplsjkQS2OrB4.jpg" alt="Poster for The Mandalorian and Grogu" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/uwMKWjcNID0D9jjplsjkQS2OrB4.jpg" alt="Poster for The Mandalorian and Grogu" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -657,9 +661,9 @@
     <div class="poster-grid shelf-grid">
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/621304">
+        <a class="poster-card is-visible" href="/watch/621304">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/qxUPu92DF5Bo6jcCDhnMTHFPEEc.jpg" alt="Poster for Children of Blood and Bone" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/qxUPu92DF5Bo6jcCDhnMTHFPEEc.jpg" alt="Poster for Children of Blood and Bone" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -683,9 +687,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1518403">
+        <a class="poster-card is-visible" href="/watch/1518403">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/jn9IycsqyLsLluBPVkcHDyWHdGb.jpg" alt="Poster for Air Bud Returns" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/jn9IycsqyLsLluBPVkcHDyWHdGb.jpg" alt="Poster for Air Bud Returns" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -696,9 +700,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1380163">
+        <a class="poster-card is-visible" href="/watch/1380163">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/io2w1IcXJOC5JdgOtEukGkV4dw4.jpg" alt="Poster for Pendulum" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/io2w1IcXJOC5JdgOtEukGkV4dw4.jpg" alt="Poster for Pendulum" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -722,9 +726,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1636329">
+        <a class="poster-card is-visible" href="/watch/1636329">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/nISyNCKzPSReFagJIs9Svh5hWcB.jpg" alt="Poster for The Master And Margarita" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/nISyNCKzPSReFagJIs9Svh5hWcB.jpg" alt="Poster for The Master And Margarita" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -748,9 +752,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1417668">
+        <a class="poster-card is-visible" href="/watch/1417668">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/6LJetiEQjXUE9kDpXavXpZN1Vjk.jpg" alt="Poster for Star Wars: Starfighter" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/6LJetiEQjXUE9kDpXavXpZN1Vjk.jpg" alt="Poster for Star Wars: Starfighter" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -787,9 +791,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1403836">
+        <a class="poster-card is-visible" href="/watch/1403836">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/6SumSGYgZClqPy8rjhJXRrScGlq.jpg" alt="Poster for The Bluey Movie" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/6SumSGYgZClqPy8rjhJXRrScGlq.jpg" alt="Poster for The Bluey Movie" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -813,9 +817,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1122220">
+        <a class="poster-card is-visible" href="/watch/1122220">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/1mi6QRfUaSoe9pTvSY4L9AHdazh.jpg" alt="Poster for Untitled Blair Witch Film" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/1mi6QRfUaSoe9pTvSY4L9AHdazh.jpg" alt="Poster for Untitled Blair Witch Film" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -852,9 +856,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1024604">
+        <a class="poster-card is-visible" href="/watch/1024604">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/qzVuYNqRX7rBBuUdobS2SWEni5R.jpg" alt="Poster for Frozen III" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/qzVuYNqRX7rBBuUdobS2SWEni5R.jpg" alt="Poster for Frozen III" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -865,9 +869,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1423577">
+        <a class="poster-card is-visible" href="/watch/1423577">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/i23drDYlMobxkRLRstynrfVkPqL.jpg" alt="Poster for Gremlins 3" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/i23drDYlMobxkRLRstynrfVkPqL.jpg" alt="Poster for Gremlins 3" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -891,9 +895,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1090869">
+        <a class="poster-card is-visible" href="/watch/1090869">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/aRtIVdlgVNtvcqFUnuhR3V1RQ7o.jpg" alt="Poster for The Lord of the Rings: The Hunt for Gollum" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/aRtIVdlgVNtvcqFUnuhR3V1RQ7o.jpg" alt="Poster for The Lord of the Rings: The Hunt for Gollum" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -917,9 +921,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/1401586">
+        <a class="poster-card is-visible" href="/watch/1401586">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/t8uoHBODkFlSQJRL6qc4IclUBlH.jpg" alt="Poster for Sonic the Hedgehog 4" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/t8uoHBODkFlSQJRL6qc4IclUBlH.jpg" alt="Poster for Sonic the Hedgehog 4" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -956,9 +960,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/watch/421892">
+        <a class="poster-card is-visible" href="/watch/421892">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/m9jLiemA7t2umlXKptDwtIUHU8l.jpg" alt="Poster for Shrek 5" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/m9jLiemA7t2umlXKptDwtIUHU8l.jpg" alt="Poster for Shrek 5" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -979,9 +983,9 @@
     <div class="poster-grid shelf-grid">
       
         
-        <a class="poster-card is-visible" href="/2daymovie/series/watch/171802">
+        <a class="poster-card is-visible" href="/series/watch/171802">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/hr5aLuCdLC5X423c9G1pPkWR6Ud.jpg" alt="Poster for Blade Runner 2099" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/hr5aLuCdLC5X423c9G1pPkWR6Ud.jpg" alt="Poster for Blade Runner 2099" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -992,9 +996,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/series/watch/288673">
+        <a class="poster-card is-visible" href="/series/watch/288673">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/eXjk4W4robXs7l1YXwaXMv4f2qb.jpg" alt="Poster for Carrie" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/eXjk4W4robXs7l1YXwaXMv4f2qb.jpg" alt="Poster for Carrie" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -1005,9 +1009,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/series/watch/213375">
+        <a class="poster-card is-visible" href="/series/watch/213375">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/xK27l5uwaVyZSlENWnmLlWwDQNS.jpg" alt="Poster for VisionQuest" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/xK27l5uwaVyZSlENWnmLlWwDQNS.jpg" alt="Poster for VisionQuest" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -1018,9 +1022,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/series/watch/224372">
+        <a class="poster-card is-visible" href="/series/watch/224372">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/k8yARbD9iYn2nRX2HvsopfKDN2r.jpg" alt="Poster for A Knight of the Seven Kingdoms" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/k8yARbD9iYn2nRX2HvsopfKDN2r.jpg" alt="Poster for A Knight of the Seven Kingdoms" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -1031,9 +1035,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/series/watch/1457">
+        <a class="poster-card is-visible" href="/series/watch/1457">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/7od3Mob2qu5lL1l5RsdV6xuEquw.jpg" alt="Poster for Pride &amp; Prejudice" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/7od3Mob2qu5lL1l5RsdV6xuEquw.jpg" alt="Poster for Pride &amp; Prejudice" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -1044,9 +1048,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/series/watch/213562">
+        <a class="poster-card is-visible" href="/series/watch/213562">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/3ENhExiD2fcjk5FX0AcAXcvLu9N.jpg" alt="Poster for Crystal Lake" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/3ENhExiD2fcjk5FX0AcAXcvLu9N.jpg" alt="Poster for Crystal Lake" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -1057,9 +1061,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/series/watch/117488">
+        <a class="poster-card is-visible" href="/series/watch/117488">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/xRnGrn7Z7SC0KIBodocoU1QgDZF.jpg" alt="Poster for Yellowjackets" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/xRnGrn7Z7SC0KIBodocoU1QgDZF.jpg" alt="Poster for Yellowjackets" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -1070,9 +1074,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/series/watch/96677">
+        <a class="poster-card is-visible" href="/series/watch/96677">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/h6Z2oogE4mJk2uffdtIlLhb0EHx.jpg" alt="Poster for Lupin" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/h6Z2oogE4mJk2uffdtIlLhb0EHx.jpg" alt="Poster for Lupin" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -1083,9 +1087,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/series/watch/138505">
+        <a class="poster-card is-visible" href="/series/watch/138505">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/mwKj9ERGFXsWot0nXgQ5yMQf9I7.jpg" alt="Poster for Marvel Zombies" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/mwKj9ERGFXsWot0nXgQ5yMQf9I7.jpg" alt="Poster for Marvel Zombies" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -1096,9 +1100,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/series/watch/241388">
+        <a class="poster-card is-visible" href="/series/watch/241388">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/yuOfb1MgnaGPa4guzV0n1IFYVGN.jpg" alt="Poster for Eyes of Wakanda" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/yuOfb1MgnaGPa4guzV0n1IFYVGN.jpg" alt="Poster for Eyes of Wakanda" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -1135,9 +1139,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/series/watch/320909">
+        <a class="poster-card is-visible" href="/series/watch/320909">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/954dt0dTqoUhIW0EvMFZ0KvVQmk.jpg" alt="Poster for Firefly Wedding" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/954dt0dTqoUhIW0EvMFZ0KvVQmk.jpg" alt="Poster for Firefly Wedding" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -1148,9 +1152,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/series/watch/289219">
+        <a class="poster-card is-visible" href="/series/watch/289219">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/fTfLd3s9yBNOzbFHD2aXvwEs93H.jpg" alt="Poster for Star Wars: Maul – Shadow Lord" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/fTfLd3s9yBNOzbFHD2aXvwEs93H.jpg" alt="Poster for Star Wars: Maul – Shadow Lord" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -1200,9 +1204,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/series/watch/198178">
+        <a class="poster-card is-visible" href="/series/watch/198178">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/6yy9nQlFt2l6UVWzrfhszFCaZ5C.jpg" alt="Poster for Wonder Man" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/6yy9nQlFt2l6UVWzrfhszFCaZ5C.jpg" alt="Poster for Wonder Man" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -1213,9 +1217,9 @@
         
       
         
-        <a class="poster-card is-visible" href="/2daymovie/series/watch/111110">
+        <a class="poster-card is-visible" href="/series/watch/111110">
           <span class="poster-frame">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/blWCPEqDGLBuLB9u89CxP9ORQP4.jpg" alt="Poster for One Piece: Elbaph Arc" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';" />
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w500/blWCPEqDGLBuLB9u89CxP9ORQP4.jpg" alt="Poster for One Piece: Elbaph Arc" loading="lazy" width="200" height="300" onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';" />
             <span class="poster-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg></span>
           </span>
           <div class="poster-meta">
@@ -1417,15 +1421,15 @@
     <div class="footer-inner">
       <div>
         <div class="footer-brand">2daymovie</div>
-        <p>Official HD trailers for movies and series. Nothing on this site is a full film.</p>
+        <p>Legal HD trailers and where-to-watch discovery. Nothing on this site is a full film.</p>
       </div>
       <nav class="footer-nav" aria-label="Footer">
-        <a href="/2daymovie/movies">Movies</a>
-        <a href="/2daymovie/series">Series</a>
-        <a href="/2daymovie/categories">Categories</a>
-        <a href="/2daymovie/upcoming">Upcoming</a>
-        <a href="/2daymovie/reviews">Reviews</a>
-        <a href="/2daymovie/about">About</a>
+        <a href="/browse">Browse</a>
+        <a href="/#trailers">Trailers</a>
+        <a href="/#where">Where to watch</a>
+        <a href="/movies">Movies</a>
+        <a href="/series">Series</a>
+        <a href="/about">About</a>
       </nav>
       <p class="footer-credit">
         Created by <strong>Arnold Rurangwa</strong>, computer engineer at ARNOVA Group in Kigali.
@@ -1433,7 +1437,8 @@
     </div>
   </footer>
 
-  <script src="/2daymovie/static/js/script.js?v=20261015d"></script>
+  <script src="/static/arnova/arnova-secure.js?v=20261015c"></script>
+  <script src="/static/js/script.js?v=20261015c"></script>
   
-</body>
+<nav class="quick-nav" aria-label="Quick navigation"><a href="/browse"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>Browse</span></a><a href="/#trailers"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M7 3v4m10-4v4"/></svg><span>Trailers</span></a><a href="#q"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="6"/><path d="m15 15 6 6"/></svg><span>Search</span></a><button type="button" class="motion-toggle" data-motion-toggle aria-pressed="false">Pause glow</button></nav></body>
 </html>

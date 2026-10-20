@@ -33,12 +33,13 @@ Open http://127.0.0.1:5000/
 ## Docker (recommended)
 
 ```bash
+# Set GRAFANA_ADMIN_PASSWORD in .env to a unique strong password first.
 docker compose up --build -d
 ```
 
 - Site (Nginx → Gunicorn): http://localhost:8080/
 - Prometheus: http://localhost:9090/
-- Grafana: http://localhost:3000/ (admin/admin locally)
+- Grafana: http://localhost:3000/ (admin / your configured password; loopback access only)
 
 Full runbook: [DEVOPS.md](./DEVOPS.md)
 
