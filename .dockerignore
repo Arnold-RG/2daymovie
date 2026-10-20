@@ -11,3 +11,14 @@ docs
 scripts/scraped_meta.json
 .vscode
 .idea
+
+# Runtime credentials and visitor data must never enter image layers.
+.env.*
+!.env.example
+*.key
+credentials.json
+secrets.json
+data/official_database.url
+data/reviews*
+data/site_vault*
+data/*.json.migrated

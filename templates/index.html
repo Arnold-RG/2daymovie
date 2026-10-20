@@ -38,9 +38,9 @@
 
   <div class="hero-stage">
     <div class="hero-lead">
-      <p class="hero-kicker">Legal HD trailers</p>
+      <p class="hero-kicker">YOUR NEXT GREAT WATCH</p>
       <h1 class="hero-brand" aria-label="2daymovie"><span class="gel">2day</span>movie</h1>
-      <p class="hero-lede">Official HD trailers only. Find the title, play the studio trailer, then jump to legal stream / rent / buy links.</p>
+      <p class="hero-lede">The trailer first. The movie next. Discover something worth watching, then find its official streaming home.</p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="#browse">Browse</a>
         <a class="btn btn-ghost" href="#trailers">Trailers</a>
@@ -48,10 +48,10 @@
       </div>
       {% if slides %}
       <div class="hero-now">
-        <span class="hero-card-live">Now playing</span>
+        <span class="hero-card-live">Featured trailer</span>
         <a class="hero-now-title" data-hero-title href="{{ slides[0].href }}">{{ slides[0].title }}{% if slides[0].year %} · {{ slides[0].year }}{% endif %}</a>
         <div class="hero-now-controls">
-          <button type="button" class="hero-sound-btn" data-hero-sound aria-pressed="false">Turn sound on</button>
+          <button type="button" class="hero-sound-btn" data-hero-sound aria-pressed="false">Play featured trailer</button>
           <div class="hero-dots" role="tablist" aria-label="Featured trailers">
             {% for slide in slides %}
             <button
@@ -75,7 +75,7 @@
     <div class="unsection-head">
       <p class="detail-kicker">Browse</p>
       <h2>Find a title</h2>
-      <p>Scroll genres, years, and the full trailer catalog — ScreensDesign-style shelves that stay readable on a phone.</p>
+      <p>Find your next watch by genre, release year, or title. Explore the catalog and play an official trailer.</p>
     </div>
     <div class="unsection-actions">
       <a class="btn btn-primary" href="{{ url_for('browse') }}">Open catalog</a>

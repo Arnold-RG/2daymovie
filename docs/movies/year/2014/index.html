@@ -3,35 +3,38 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#0b0a09" />
+  <meta name="theme-color" content="#0A0A0A" />
   <meta name="color-scheme" content="dark" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; img-src 'self' data: https://image.tmdb.org https://media.themoviedb.org https://i.ytimg.com; font-src 'self' https://fonts.gstatic.com data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' 'unsafe-inline' https://www.youtube.com https://www.youtube-nocookie.com; frame-src https://www.youtube.com https://www.youtube-nocookie.com; connect-src 'self' https://www.youtube.com https://www.youtube-nocookie.com; form-action 'self'" />
   <title>Movies · 2daymovie</title>
   <meta name="description" content="Browse curated movies from classic cinema through 2027 with on-site official trailers on 2daymovie." />
-  <link rel="canonical" href="https://arnold-rg.github.io/2daymovie/movies/year/2014" />
+  <link rel="canonical" href="https://twodaymovie.onrender.com/movies/year/2014" />
   <meta property="og:locale" content="en_US" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Movies by Year | 2daymovie" />
   <meta property="og:description" content="Browse curated movies from classic cinema through 2027 with on-site official trailers on 2daymovie." />
-  <meta property="og:url" content="https://arnold-rg.github.io/2daymovie/movies/year/2014" />
+  <meta property="og:url" content="https://twodaymovie.onrender.com/movies/year/2014" />
   <meta property="og:site_name" content="2daymovie" />
-  <meta property="og:image" content="https://arnold-rg.github.io/2daymovie/static/img/og-image.svg" />
+  <meta property="og:image" content="https://twodaymovie.onrender.com/static/img/og-image.svg" />
   <meta property="og:image:alt" content="2daymovie, official HD movie and television trailers" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Movies by Year | 2daymovie" />
   <meta name="twitter:description" content="Browse curated movies from classic cinema through 2027 with on-site official trailers on 2daymovie." />
-  <meta name="twitter:image" content="https://arnold-rg.github.io/2daymovie/static/img/og-image.svg" />
-  <link rel="icon" href="/2daymovie/static/img/favicon.svg" type="image/svg+xml" />
+  <meta name="twitter:image" content="https://twodaymovie.onrender.com/static/img/og-image.svg" />
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://image.tmdb.org" />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/2daymovie/static/css/style.css?v=20261015d" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,650;1,9..144,500&family=Sora:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/arnova/arnova-base.css?v=20261015d" />
+  <link rel="stylesheet" href="/static/css/style.css?v=20261015d" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "2daymovie",
-    "url": "https://arnold-rg.github.io/2daymovie/",
+    "url": "https://twodaymovie.onrender.com/",
     "description": "Official HD movie and TV trailer discovery.",
     "creator": {
       "@type": "Person",
@@ -39,13 +42,15 @@
     },
     "potentialAction": {
       "@type": "SearchAction",
-      "target": "https://arnold-rg.github.io/2daymovie/search?q={search_term_string}",
+      "target": "https://twodaymovie.onrender.com/search?q={search_term_string}",
       "query-input": "required name=search_term_string"
     }
   }
   </script>
   
-</head>
+  <link rel="stylesheet" href="/static/css/redesign.css?v=37740797a33e" />
+<link rel="stylesheet" href="/static/css/mobile.css?v=4f5320acd7c9">
+<script src="/static/css/mobile.js?v=04ccb963cb5c" defer></script></head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   
@@ -53,7 +58,7 @@
   <header class="site-header">
     <div class="header-inner">
       <div class="header-bar">
-        <a class="brand" href="/2daymovie/" aria-label="2daymovie home">
+        <a class="brand" href="/" aria-label="2daymovie home">
           <span class="brand-mark">2day</span><span class="brand-rest">movie</span>
         </a>
       </div>
@@ -65,19 +70,18 @@
       </button>
 
       <nav class="site-nav" id="site-nav" aria-label="Primary" data-site-nav>
-        <a href="/2daymovie/" >Home</a>
-        <a href="/2daymovie/categories" >Categories</a>
-        <a href="/2daymovie/movies" aria-current="page">Movies</a>
-        <a href="/2daymovie/series" >Series</a>
-        <a href="/2daymovie/upcoming" >Upcoming</a>
-        <a href="/2daymovie/reviews" >Reviews</a>
-        <a href="/2daymovie/browse" >Catalog</a>
-        <a href="/2daymovie/about" >About</a>
+        <a href="/browse" >Browse</a>
+        <a href="/#trailers" >Trailers</a>
+        <a href="/#where" >Where to watch</a>
+        <a href="/movies" aria-current="page">Movies</a>
+        <a href="/series" >Series</a>
+        <a href="/reviews" >Reviews</a>
+        <a href="/about" >About</a>
       </nav>
 
-      <form class="search-form" action="/2daymovie/search" method="get" role="search">
+      <form class="search-form" action="/search" method="get" role="search">
         <label class="sr-only" for="q">Search movies and series</label>
-        <input id="q" name="q" type="search" placeholder="Search the shelf" value="" autocomplete="off" enterkeyhint="search" />
+        <input id="q" name="q" type="search" placeholder="Search titles" value="" maxlength="120" autocomplete="off" enterkeyhint="search" />
         <button type="submit">Search</button>
       </form>
     </div>
@@ -104,7 +108,7 @@
       <div class="year-panel-body">
         
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="/2daymovie/movies/year/2027">Show 2027 movies</a>
+          <a class="btn btn-primary" href="/movies/year/2027">Show 2027 movies</a>
         </p>
         
       </div>
@@ -119,7 +123,7 @@
       <div class="year-panel-body">
         
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="/2daymovie/movies/year/2026">Show 2026 movies</a>
+          <a class="btn btn-primary" href="/movies/year/2026">Show 2026 movies</a>
         </p>
         
       </div>
@@ -134,7 +138,7 @@
       <div class="year-panel-body">
         
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="/2daymovie/movies/year/2025">Show 2025 movies</a>
+          <a class="btn btn-primary" href="/movies/year/2025">Show 2025 movies</a>
         </p>
         
       </div>
@@ -149,7 +153,7 @@
       <div class="year-panel-body">
         
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="/2daymovie/movies/year/2024">Show 2024 movies</a>
+          <a class="btn btn-primary" href="/movies/year/2024">Show 2024 movies</a>
         </p>
         
       </div>
@@ -164,7 +168,7 @@
       <div class="year-panel-body">
         
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="/2daymovie/movies/year/2023">Show 2023 movies</a>
+          <a class="btn btn-primary" href="/movies/year/2023">Show 2023 movies</a>
         </p>
         
       </div>
@@ -179,7 +183,7 @@
       <div class="year-panel-body">
         
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="/2daymovie/movies/year/2022">Show 2022 movies</a>
+          <a class="btn btn-primary" href="/movies/year/2022">Show 2022 movies</a>
         </p>
         
       </div>
@@ -194,7 +198,7 @@
       <div class="year-panel-body">
         
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="/2daymovie/movies/year/2021">Show 2021 movies</a>
+          <a class="btn btn-primary" href="/movies/year/2021">Show 2021 movies</a>
         </p>
         
       </div>
@@ -209,7 +213,7 @@
       <div class="year-panel-body">
         
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="/2daymovie/movies/year/2020">Show 2020 movies</a>
+          <a class="btn btn-primary" href="/movies/year/2020">Show 2020 movies</a>
         </p>
         
       </div>
@@ -224,7 +228,7 @@
       <div class="year-panel-body">
         
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="/2daymovie/movies/year/2019">Show 2019 movies</a>
+          <a class="btn btn-primary" href="/movies/year/2019">Show 2019 movies</a>
         </p>
         
       </div>
@@ -239,7 +243,7 @@
       <div class="year-panel-body">
         
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="/2daymovie/movies/year/2018">Show 2018 movies</a>
+          <a class="btn btn-primary" href="/movies/year/2018">Show 2018 movies</a>
         </p>
         
       </div>
@@ -254,7 +258,7 @@
       <div class="year-panel-body">
         
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="/2daymovie/movies/year/2017">Show 2017 movies</a>
+          <a class="btn btn-primary" href="/movies/year/2017">Show 2017 movies</a>
         </p>
         
       </div>
@@ -269,7 +273,7 @@
       <div class="year-panel-body">
         
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="/2daymovie/movies/year/2016">Show 2016 movies</a>
+          <a class="btn btn-primary" href="/movies/year/2016">Show 2016 movies</a>
         </p>
         
       </div>
@@ -284,7 +288,7 @@
       <div class="year-panel-body">
         
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="/2daymovie/movies/year/2015">Show 2015 movies</a>
+          <a class="btn btn-primary" href="/movies/year/2015">Show 2015 movies</a>
         </p>
         
       </div>
@@ -300,7 +304,7 @@
         
         <div class="poster-grid shelf-grid">
           
-          <a class="poster-card is-visible" href="/2daymovie/watch/367412">
+          <a class="poster-card is-visible" href="/watch/367412">
             <span class="poster-frame">
               <img
                 class="poster-img"
@@ -310,7 +314,7 @@
                 decoding="async"
                 width="200"
                 height="300"
-                onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
+                onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';"
               />
               
               <span class="poster-play" aria-hidden="true">
@@ -324,7 +328,7 @@
             </div>
           </a>
           
-          <a class="poster-card is-visible" href="/2daymovie/watch/1204780">
+          <a class="poster-card is-visible" href="/watch/1204780">
             <span class="poster-frame">
               <img
                 class="poster-img"
@@ -334,7 +338,7 @@
                 decoding="async"
                 width="200"
                 height="300"
-                onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
+                onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';"
               />
               
               <span class="poster-play" aria-hidden="true">
@@ -348,7 +352,7 @@
             </div>
           </a>
           
-          <a class="poster-card is-visible" href="/2daymovie/watch/85350">
+          <a class="poster-card is-visible" href="/watch/85350">
             <span class="poster-frame">
               <img
                 class="poster-img"
@@ -358,7 +362,7 @@
                 decoding="async"
                 width="200"
                 height="300"
-                onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
+                onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';"
               />
               
               <span class="poster-play" aria-hidden="true">
@@ -372,7 +376,7 @@
             </div>
           </a>
           
-          <a class="poster-card is-visible" href="/2daymovie/watch/120467">
+          <a class="poster-card is-visible" href="/watch/120467">
             <span class="poster-frame">
               <img
                 class="poster-img"
@@ -382,7 +386,7 @@
                 decoding="async"
                 width="200"
                 height="300"
-                onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
+                onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';"
               />
               
               <span class="poster-play" aria-hidden="true">
@@ -396,7 +400,7 @@
             </div>
           </a>
           
-          <a class="poster-card is-visible" href="/2daymovie/watch/210577">
+          <a class="poster-card is-visible" href="/watch/210577">
             <span class="poster-frame">
               <img
                 class="poster-img"
@@ -406,7 +410,7 @@
                 decoding="async"
                 width="200"
                 height="300"
-                onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
+                onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';"
               />
               
               <span class="poster-play" aria-hidden="true">
@@ -420,7 +424,7 @@
             </div>
           </a>
           
-          <a class="poster-card is-visible" href="/2daymovie/watch/157336">
+          <a class="poster-card is-visible" href="/watch/157336">
             <span class="poster-frame">
               <img
                 class="poster-img"
@@ -430,7 +434,7 @@
                 decoding="async"
                 width="200"
                 height="300"
-                onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
+                onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';"
               />
               
               <span class="poster-play" aria-hidden="true">
@@ -444,7 +448,7 @@
             </div>
           </a>
           
-          <a class="poster-card is-visible" href="/2daymovie/watch/242582">
+          <a class="poster-card is-visible" href="/watch/242582">
             <span class="poster-frame">
               <img
                 class="poster-img"
@@ -454,7 +458,7 @@
                 decoding="async"
                 width="200"
                 height="300"
-                onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
+                onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';"
               />
               
               <span class="poster-play" aria-hidden="true">
@@ -468,7 +472,7 @@
             </div>
           </a>
           
-          <a class="poster-card is-visible" href="/2daymovie/watch/273895">
+          <a class="poster-card is-visible" href="/watch/273895">
             <span class="poster-frame">
               <img
                 class="poster-img"
@@ -478,7 +482,7 @@
                 decoding="async"
                 width="200"
                 height="300"
-                onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
+                onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';"
               />
               
               <span class="poster-play" aria-hidden="true">
@@ -492,7 +496,7 @@
             </div>
           </a>
           
-          <a class="poster-card is-visible" href="/2daymovie/watch/87492">
+          <a class="poster-card is-visible" href="/watch/87492">
             <span class="poster-frame">
               <img
                 class="poster-img"
@@ -502,7 +506,7 @@
                 decoding="async"
                 width="200"
                 height="300"
-                onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
+                onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';"
               />
               
               <span class="poster-play" aria-hidden="true">
@@ -516,7 +520,7 @@
             </div>
           </a>
           
-          <a class="poster-card is-visible" href="/2daymovie/watch/265189">
+          <a class="poster-card is-visible" href="/watch/265189">
             <span class="poster-frame">
               <img
                 class="poster-img"
@@ -526,7 +530,7 @@
                 decoding="async"
                 width="200"
                 height="300"
-                onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
+                onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';"
               />
               
               <span class="poster-play" aria-hidden="true">
@@ -540,7 +544,7 @@
             </div>
           </a>
           
-          <a class="poster-card is-visible" href="/2daymovie/watch/265177">
+          <a class="poster-card is-visible" href="/watch/265177">
             <span class="poster-frame">
               <img
                 class="poster-img"
@@ -550,7 +554,7 @@
                 decoding="async"
                 width="200"
                 height="300"
-                onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
+                onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';"
               />
               
               <span class="poster-play" aria-hidden="true">
@@ -564,7 +568,7 @@
             </div>
           </a>
           
-          <a class="poster-card is-visible" href="/2daymovie/watch/265195">
+          <a class="poster-card is-visible" href="/watch/265195">
             <span class="poster-frame">
               <img
                 class="poster-img"
@@ -574,7 +578,7 @@
                 decoding="async"
                 width="200"
                 height="300"
-                onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
+                onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';"
               />
               
               <span class="poster-play" aria-hidden="true">
@@ -588,7 +592,7 @@
             </div>
           </a>
           
-          <a class="poster-card is-visible" href="/2daymovie/watch/118340">
+          <a class="poster-card is-visible" href="/watch/118340">
             <span class="poster-frame">
               <img
                 class="poster-img"
@@ -598,7 +602,7 @@
                 decoding="async"
                 width="200"
                 height="300"
-                onerror="this.onerror=null;this.src='/2daymovie/static/img/poster-fallback.svg';"
+                onerror="this.onerror=null;this.src='/static/img/poster-fallback.svg';"
               />
               
               <span class="poster-play" aria-hidden="true">
@@ -626,7 +630,7 @@
       <div class="year-panel-body">
         
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="/2daymovie/movies/year/2013">Show 2013 movies</a>
+          <a class="btn btn-primary" href="/movies/year/2013">Show 2013 movies</a>
         </p>
         
       </div>
@@ -641,7 +645,7 @@
       <div class="year-panel-body">
         
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="/2daymovie/movies/year/2012">Show 2012 movies</a>
+          <a class="btn btn-primary" href="/movies/year/2012">Show 2012 movies</a>
         </p>
         
       </div>
@@ -656,7 +660,7 @@
       <div class="year-panel-body">
         
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="/2daymovie/movies/year/2011">Show 2011 movies</a>
+          <a class="btn btn-primary" href="/movies/year/2011">Show 2011 movies</a>
         </p>
         
       </div>
@@ -671,7 +675,7 @@
       <div class="year-panel-body">
         
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="/2daymovie/movies/year/2010">Show 2010 movies</a>
+          <a class="btn btn-primary" href="/movies/year/2010">Show 2010 movies</a>
         </p>
         
       </div>
@@ -686,7 +690,7 @@
       <div class="year-panel-body">
         
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="/2daymovie/movies/year/2009">Show 2009 movies</a>
+          <a class="btn btn-primary" href="/movies/year/2009">Show 2009 movies</a>
         </p>
         
       </div>
@@ -701,7 +705,7 @@
       <div class="year-panel-body">
         
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="/2daymovie/movies/year/2008">Show 2008 movies</a>
+          <a class="btn btn-primary" href="/movies/year/2008">Show 2008 movies</a>
         </p>
         
       </div>
@@ -716,7 +720,7 @@
       <div class="year-panel-body">
         
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="/2daymovie/movies/year/2007">Show 2007 movies</a>
+          <a class="btn btn-primary" href="/movies/year/2007">Show 2007 movies</a>
         </p>
         
       </div>
@@ -731,7 +735,7 @@
       <div class="year-panel-body">
         
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="/2daymovie/movies/year/2006">Show 2006 movies</a>
+          <a class="btn btn-primary" href="/movies/year/2006">Show 2006 movies</a>
         </p>
         
       </div>
@@ -746,7 +750,7 @@
       <div class="year-panel-body">
         
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="/2daymovie/movies/year/2005">Show 2005 movies</a>
+          <a class="btn btn-primary" href="/movies/year/2005">Show 2005 movies</a>
         </p>
         
       </div>
@@ -761,7 +765,7 @@
       <div class="year-panel-body">
         
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="/2daymovie/movies/year/2004">Show 2004 movies</a>
+          <a class="btn btn-primary" href="/movies/year/2004">Show 2004 movies</a>
         </p>
         
       </div>
@@ -776,7 +780,7 @@
       <div class="year-panel-body">
         
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="/2daymovie/movies/year/2003">Show 2003 movies</a>
+          <a class="btn btn-primary" href="/movies/year/2003">Show 2003 movies</a>
         </p>
         
       </div>
@@ -791,7 +795,7 @@
       <div class="year-panel-body">
         
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="/2daymovie/movies/year/2002">Show 2002 movies</a>
+          <a class="btn btn-primary" href="/movies/year/2002">Show 2002 movies</a>
         </p>
         
       </div>
@@ -806,7 +810,7 @@
       <div class="year-panel-body">
         
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="/2daymovie/movies/year/2001">Show 2001 movies</a>
+          <a class="btn btn-primary" href="/movies/year/2001">Show 2001 movies</a>
         </p>
         
       </div>
@@ -821,7 +825,7 @@
       <div class="year-panel-body">
         
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="/2daymovie/movies/year/2000">Show 2000 movies</a>
+          <a class="btn btn-primary" href="/movies/year/2000">Show 2000 movies</a>
         </p>
         
       </div>
@@ -836,7 +840,7 @@
       <div class="year-panel-body">
         
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="/2daymovie/movies/year/1998">Show 1998 movies</a>
+          <a class="btn btn-primary" href="/movies/year/1998">Show 1998 movies</a>
         </p>
         
       </div>
@@ -851,7 +855,7 @@
       <div class="year-panel-body">
         
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="/2daymovie/movies/year/1997">Show 1997 movies</a>
+          <a class="btn btn-primary" href="/movies/year/1997">Show 1997 movies</a>
         </p>
         
       </div>
@@ -866,7 +870,7 @@
       <div class="year-panel-body">
         
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="/2daymovie/movies/year/1994">Show 1994 movies</a>
+          <a class="btn btn-primary" href="/movies/year/1994">Show 1994 movies</a>
         </p>
         
       </div>
@@ -881,7 +885,7 @@
       <div class="year-panel-body">
         
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="/2daymovie/movies/year/1993">Show 1993 movies</a>
+          <a class="btn btn-primary" href="/movies/year/1993">Show 1993 movies</a>
         </p>
         
       </div>
@@ -896,7 +900,7 @@
       <div class="year-panel-body">
         
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="/2daymovie/movies/year/1992">Show 1992 movies</a>
+          <a class="btn btn-primary" href="/movies/year/1992">Show 1992 movies</a>
         </p>
         
       </div>
@@ -911,7 +915,7 @@
       <div class="year-panel-body">
         
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="/2daymovie/movies/year/1991">Show 1991 movies</a>
+          <a class="btn btn-primary" href="/movies/year/1991">Show 1991 movies</a>
         </p>
         
       </div>
@@ -926,7 +930,7 @@
       <div class="year-panel-body">
         
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="/2daymovie/movies/year/1988">Show 1988 movies</a>
+          <a class="btn btn-primary" href="/movies/year/1988">Show 1988 movies</a>
         </p>
         
       </div>
@@ -941,7 +945,7 @@
       <div class="year-panel-body">
         
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="/2daymovie/movies/year/1987">Show 1987 movies</a>
+          <a class="btn btn-primary" href="/movies/year/1987">Show 1987 movies</a>
         </p>
         
       </div>
@@ -956,7 +960,7 @@
       <div class="year-panel-body">
         
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="/2daymovie/movies/year/1985">Show 1985 movies</a>
+          <a class="btn btn-primary" href="/movies/year/1985">Show 1985 movies</a>
         </p>
         
       </div>
@@ -971,7 +975,7 @@
       <div class="year-panel-body">
         
         <p class="year-panel-hint">
-          <a class="btn btn-primary" href="/2daymovie/movies/year/1975">Show 1975 movies</a>
+          <a class="btn btn-primary" href="/movies/year/1975">Show 1975 movies</a>
         </p>
         
       </div>
@@ -986,15 +990,15 @@
     <div class="footer-inner">
       <div>
         <div class="footer-brand">2daymovie</div>
-        <p>Official HD trailers for movies and series. Nothing on this site is a full film.</p>
+        <p>Legal HD trailers and where-to-watch discovery. Nothing on this site is a full film.</p>
       </div>
       <nav class="footer-nav" aria-label="Footer">
-        <a href="/2daymovie/movies">Movies</a>
-        <a href="/2daymovie/series">Series</a>
-        <a href="/2daymovie/categories">Categories</a>
-        <a href="/2daymovie/upcoming">Upcoming</a>
-        <a href="/2daymovie/reviews">Reviews</a>
-        <a href="/2daymovie/about">About</a>
+        <a href="/browse">Browse</a>
+        <a href="/#trailers">Trailers</a>
+        <a href="/#where">Where to watch</a>
+        <a href="/movies">Movies</a>
+        <a href="/series">Series</a>
+        <a href="/about">About</a>
       </nav>
       <p class="footer-credit">
         Created by <strong>Arnold Rurangwa</strong>, computer engineer at ARNOVA Group in Kigali.
@@ -1002,7 +1006,8 @@
     </div>
   </footer>
 
-  <script src="/2daymovie/static/js/script.js?v=20261015d"></script>
+  <script src="/static/arnova/arnova-secure.js?v=20261015c"></script>
+  <script src="/static/js/script.js?v=20261015c"></script>
   
-</body>
+<nav class="quick-nav" aria-label="Quick navigation"><a href="/browse"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>Browse</span></a><a href="/#trailers"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M7 3v4m10-4v4"/></svg><span>Trailers</span></a><a href="#q"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="6"/><path d="m15 15 6 6"/></svg><span>Search</span></a><button type="button" class="motion-toggle" data-motion-toggle aria-pressed="false">Pause glow</button></nav></body>
 </html>
