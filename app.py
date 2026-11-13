@@ -49,7 +49,7 @@ def _hero_slides(limit: int = 8) -> list[dict]:
                     "trailer_key": key,
                     "backdrop": backdrop,
                     "poster": movie.get("poster"),
-                    "href": f"/watch/{mid}",
+                    "href": url_for("watch_page", movie_id=mid),
                 }
             )
             if len(slides) >= limit:
