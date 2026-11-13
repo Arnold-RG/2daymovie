@@ -1,3 +1,4 @@
+from pathlib import Path
 from app import app
 from services import library
 
@@ -257,3 +258,44 @@ def test_reviews_migrate_legacy_json(tmp_path, monkeypatch):
     reviews_mod._init_db()
     rows = reviews_mod.list_reviews()
     assert any(r["name"] == "Sam" and r["id"] == "legacy-1" for r in rows)
+
+
+def test_hero_watch_links_honor_base_path(monkeypatch):
+    """Hero slideshow hrefs must include BASE_PATH so Pages links do not 404."""
+    monkeypatch.setenv("BASE_PATH", "/2daymovie")
+    from app import create_app
+
+    client = create_app().test_client()
+    # Export and the live Flask app request the unprefixed path; the
+    # SCRIPT_NAME middleware makes url_for emit /2daymovie/... links.
+    response = client.get("/")
+    assert response.status_code == 200, response.status_code
+    html = response.data.decode("utf-8")
+    assert "data-hero-slider" in html
+    # Every hero watch link is prefixed; none point at the site root.
+    assert 'data-href="/2daymovie/watch/' in html
+    assert 'href="/2daymovie/watch/' in html
+    assert 'data-href="/watch/' not in html
+    assert 'href="/watch/' not in html
+
+
+def test_hero_watch_links_at_root_have_no_prefix():
+    """The Render app is served at the domain root; unprefixed /watch/ is correct there."""
+    from app import app
+
+    client = app.test_client()
+    response = client.get("/")
+    assert response.status_code == 200
+    html = response.data.decode("utf-8")
+    if "data-hero-slider" in html:
+        assert 'data-href="/watch/' in html
+        assert 'data-href="/2daymovie/watch/' not in html
+
+
+def test_committed_docs_hero_links_are_prefixed():
+    """The legacy Pages tree in docs/ must not ship unprefixed hero watch links."""
+    html = Path(__file__).resolve().parents[1].joinpath("docs/index.html").read_text(encoding="utf-8")
+    assert 'data-href="/2daymovie/watch/' in html
+    assert 'href="/2daymovie/watch/' in html
+    assert 'data-href="/watch/' not in html
+    assert 'href="/watch/' not in html
