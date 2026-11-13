@@ -1,5 +1,5 @@
 /**
- * Arnova shared client helpers — XSS-safe DOM + IndexedDB vault + reveal motion.
+ * Vira shared client helpers — XSS-safe DOM + IndexedDB vault + reveal motion.
  * No secrets. Safe for public static sites.
  */
 (function (global) {
@@ -109,7 +109,7 @@
     boot();
   }
 
-  global.ArnovaSecure = {
+  global.ViraSecure = {
     escapeHtml: escapeHtml,
     text: text,
     hardenExternalLinks: hardenExternalLinks,
