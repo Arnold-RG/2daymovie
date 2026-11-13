@@ -2,6 +2,11 @@
 
 Official **HD movie and TV trailers** only — curated library, on-site embeds, no full-film streaming.
 
+[![Live demo](https://img.shields.io/badge/Live_demo-GitHub_Pages-2ea44f?style=for-the-badge&logo=github)](https://arnold-rg.github.io/2daymovie/)
+
+[![2daymovie](docs/screenshot.jpg)](https://arnold-rg.github.io/2daymovie/)
+
+
 **2daymovie** is created and developed by **Arnold Rurangwa**.
 
 - **Website:** https://arnold-rg.github.io/2daymovie/
@@ -101,3 +106,7 @@ Buying `2daymovie.com` (or `.net`) and pointing it at Render is recommended for 
 ## Legal note
 
 Trailers are official embeds shown on this site. We do not host or stream full films. Titles without an on-site trailer are removed from browse/search catalogs.
+
+## Author
+
+Arnold Rurangwa
