@@ -67,12 +67,6 @@ Review secrets, trust boundaries, external services and permission handling. Use
 
 **These are intended gates, not an assertion of passing tests.** Kubernetes is unnecessary for purely static pages; reassess it only where multi-service infrastructure warrants the complexity.
 
-## Next engineering milestones
-
-1. Test API/service integration with mocks and retries.
-2. Harden Docker image and container privileges.
-3. Add health checks, production logging, database backup/restore and releases.
-
 ## Contributions and release policy
 
 Use reviewable branches and pull requests. Don't add unlicensed visual assets, mock client testimonials, private customer data or unverified integrations. Owners approve public releases; note remaining limitations in the release report.
