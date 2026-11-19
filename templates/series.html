@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Series · {{ site_name }}{% endblock %}
+
+{% block content %}
+{% set fallback = url_for('static', filename='img/poster-fallback.svg') %}
+<section class="page-band shelf-page">
+  <header class="section-head">
+    <p class="detail-kicker">Prestige &amp; standout TV</p>
+    <h1>Series</h1>
+    <p>{{ stats.planned }} shows. Open a premiere year to see its shelf.</p>
+  </header>
+
+  <div class="year-accordion" data-year-accordion>
+    {% for y in years %}
+    <details class="year-panel" {% if y.year == selected_year %}open{% endif %}>
+      <summary class="year-panel-summary">
+        <span class="year-panel-year">{{ y.year }}</span>
+        <span class="year-panel-meta">{{ y.planned }} series · {{ y.with_trailer }} trailers</span>
+        <span class="year-panel-chevron" aria-hidden="true"></span>
+      </summary>
+      <div class="year-panel-body">
+        {% if y.year == selected_year %}
+        <div class="poster-grid shelf-grid">
+          {% for show in shows %}
+          <a class="poster-card is-visible" href="{% if show.id %}{{ url_for('series_watch', tv_id=show.id) }}{% else %}#{% endif %}">
+            <span class="poster-frame">
+              <img
+                class="poster-img"
+                src="{{ show.poster or fallback }}"
+                alt="Poster for {{ show.title }}"
+                loading="lazy"
+                decoding="async"
+                width="200"
+                height="300"
+                onerror="this.onerror=null;this.src='{{ fallback }}';"
+              />
+              {% if show.id %}
+              <span class="poster-play" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+              </span>
+              {% endif %}
+            </span>
+            <div class="poster-meta">
+              <h3>{{ show.title }}</h3>
+              <p>{{ show.years }}</p>
+            </div>
+          </a>
+          {% else %}
+          <p class="empty-state">No series for this year yet.</p>
+          {% endfor %}
+        </div>
+        {% else %}
+        <p class="year-panel-hint">
+          <a class="btn btn-primary" href="{{ url_for('series_year', year=y.year) }}">Show {{ y.year }} series</a>
+        </p>
+        {% endif %}
+      </div>
+    </details>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

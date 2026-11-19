@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}{{ meta_title|default('Categories · 2daymovie') }}{% endblock %}
+
+{% block content %}
+<section class="page-band categories-page">
+  <header class="section-head">
+    <p class="detail-kicker">Browse by mood</p>
+    <h1>Categories</h1>
+    <p>Pick a genre — Action, Drama, Animation, Sci-Fi, Horror, and more. Adult content is excluded.</p>
+  </header>
+
+  <div class="category-grid" role="list">
+    {% for g in genres %}
+    <a class="category-tile" role="listitem" href="{{ url_for('genre', genre_id=g.id) }}">
+      <span class="category-tile-name">{{ g.name }}</span>
+      <span class="category-tile-go" aria-hidden="true">Open</span>
+    </a>
+    {% else %}
+    <p class="empty-state">No categories available right now.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

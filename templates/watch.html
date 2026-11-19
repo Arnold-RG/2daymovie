@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% from "_macros.html" import where_to_watch %}
+
+{% block title %}{{ meta_title|default(movie.title ~ ' | 2daymovie') }}{% endblock %}
+
+{% block content %}
+{% set fallback = url_for('static', filename='img/poster-fallback.svg') %}
+{% set trailers = movie.trailer_keys if movie.trailer_keys else ([movie.trailer_key] if movie.trailer_key else []) %}
+<section class="watch-room watch-mobile {% if movie.backdrop %}has-backdrop{% endif %}" {% if movie.backdrop %}style="--watch-image: url('{{ movie.backdrop }}')"{% endif %}>
+  <div class="watch-veil" aria-hidden="true"></div>
+  <div class="watch-layout">
+    <div class="watch-stage">
+      <p class="watch-stage-label">Official trailer{% if trailers|length > 1 %}s · {{ trailers|length }}{% endif %}</p>
+      {% if trailers %}
+      <div class="trailer-stack" data-embed-stack>
+        {% for key in trailers %}
+        <div class="watch-player" data-embed-slot data-yt-key="{{ key }}">
+          <div class="watch-yt-host" id="watch-yt-{{ loop.index0 }}"></div>
+        </div>
+        {% if trailers|length > 1 %}
+        <p class="watch-note" data-embed-label>Trailer {{ loop.index }} of {{ trailers|length }}</p>
+        {% endif %}
+        {% endfor %}
+      </div>
+      <p class="watch-note">Official HD trailers play on this page. We do not host or stream full films.</p>
+      {% else %}
+      <div class="watch-empty">
+        <img src="{{ movie.poster or fallback }}" alt="" width="280" height="420" onerror="this.onerror=null;this.src='{{ fallback }}';" />
+        <p>Official trailer not listed yet for this title.</p>
+      </div>
+      {% endif %}
+    </div>
+
+    <aside class="watch-panel">
+      <p class="detail-kicker">Trailer room</p>
+      <h1>{{ movie.title }}</h1>
+      <p class="detail-meta">
+        <span>{{ movie.year }}</span>
+        {% if movie.runtime %}<span>{{ movie.runtime }} min</span>{% endif %}
+        {% if movie.vote_average %}<span>★ {{ movie.vote_average }}</span>{% endif %}
+        {% if trailers|length > 1 %}<span>{{ trailers|length }} trailers</span>{% endif %}
+      </p>
+      {% if movie.overview %}
+      <p class="overview">{{ movie.overview }}</p>
+      {% endif %}
+
+      <div class="watch-cta">
+        <a class="btn btn-ghost" href="{{ url_for('movie_details', movie_id=movie.id) }}">Full details</a>
+        {% if movie.year %}
+        <a class="text-link" href="{{ url_for('year_page', year=movie.year) }}">← Back to {{ movie.year }}</a>
+        {% endif %}
+      </div>
+    </aside>
+  </div>
+
+  {{ where_to_watch(movie.providers, movie.watch_link) }}
+</section>
+{% endblock %}
