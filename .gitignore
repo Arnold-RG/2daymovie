@@ -24,3 +24,4 @@ data/site_vault.tmp
 _cmsg.txt
 commitmsg.txt
 
+scripts/.cache/

@@ -1,0 +1,332 @@
+/* 2DayMovie app shell: data loading, category rows, navbar and the embedded
+   player modal. hero.js (carousel) and search.js plug in through window.TDM. */
+(() => {
+  "use strict";
+
+  const ROW_LIMIT = 40;            // cards per row before "See all"
+  const NOCOOKIE = "https://www.youtube-nocookie.com";
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  const $ = (sel, root = document) => root.querySelector(sel);
+  const el = (tag, cls, text) => {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  };
+  const svg = (path) => {
+    const s = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    s.setAttribute("viewBox", "0 0 24 24");
+    s.setAttribute("aria-hidden", "true");
+    const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    p.setAttribute("d", path);
+    s.appendChild(p);
+    return s;
+  };
+  const ICON_PLAY = "M8 5v14l11-7z";
+  const ICON_INFO = "M11 7h2v2h-2zm0 4h2v6h-2zm1-9a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z";
+
+  const thumb = (id, q = "mqdefault") => `https://i.ytimg.com/vi/${id}/${q}.jpg`;
+  const fmtDuration = (s) => {
+    const h = Math.floor(s / 3600), m = Math.round((s % 3600) / 60);
+    if (h) return `${h}h ${String(m).padStart(2, "0")}m`;
+    return `${Math.max(1, m)} min`;
+  };
+  const fmtDate = (iso) => new Date(iso + "T12:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+  const norm = (s) => s.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
+  /* ---------------- YouTube IFrame API ---------------- */
+  let ytReady = null;
+  function loadYT() {
+    if (ytReady) return ytReady;
+    ytReady = new Promise((resolve, reject) => {
+      if (window.YT && window.YT.Player) return resolve(window.YT);
+      const prev = window.onYouTubeIframeAPIReady;
+      window.onYouTubeIframeAPIReady = () => { if (prev) prev(); resolve(window.YT); };
+      const s = document.createElement("script");
+      s.src = "https://www.youtube.com/iframe_api";
+      s.async = true;
+      s.onerror = () => reject(new Error("YouTube player could not load"));
+      document.head.appendChild(s);
+      setTimeout(() => reject(new Error("YouTube player timed out")), 15000);
+    });
+    return ytReady;
+  }
+
+  /* ---------------- data ---------------- */
+  // Sections in page order; rows inside a section come from each item's first genre.
+  const SECTIONS = [
+    ["movies", "Movies"], ["series", "Series"], ["kids", "Kids"], ["cartoons", "Cartoons"],
+    ["ai", "AI Animation / Manhwa"], ["wildlife", "Wildlife & Nature"],
+  ];
+  // catalog.json items: { id, title, type, genres[], duration, thumbnail }
+  // trailers.json items: { title, release_date, youtube_id, start, end }
+  let catalog = { sections: [], videos: [] };
+  let trailers = [];
+  const byId = new Map();
+
+  async function loadData() {
+    const base = document.documentElement.dataset.base || "";
+    const [c, t] = await Promise.all([
+      fetch(base + "data/catalog.json", { cache: "no-cache" }).then((r) => r.json()),
+      fetch(base + "data/trailers.json", { cache: "no-cache" }).then((r) => r.json()),
+    ]);
+    const items = Array.isArray(c) ? c : c.items || [];
+    catalog.generated = c.generated;
+    catalog.videos = items.map((v) => ({ ...v, section: v.type, row: (v.genres && v.genres[0]) || "More to watch" }));
+    catalog.sections = SECTIONS.filter(([id]) => catalog.videos.some((v) => v.section === id)).map(([id, title]) => ({
+      id, title, rows: [...new Set(catalog.videos.filter((v) => v.section === id).map((v) => v.row))],
+    }));
+    trailers = (Array.isArray(t) ? t : t.items || []).map((x) => ({
+      id: x.youtube_id, film: x.title, release: x.release_date, clip_start: x.start, clip_end: x.end,
+    }));
+    for (const v of catalog.videos) byId.set(v.id, v);
+    for (const tr of trailers) byId.set(tr.id, { ...tr, title: tr.film, trailer: true });
+  }
+
+  /* ---------------- cards & rows ---------------- */
+  function card(v, opts = {}) {
+    const b = el("button", "card" + (opts.trailer ? " card--trailer" : ""));
+    b.type = "button";
+    b.dataset.id = v.id;
+    const th = el("div", "card__thumb");
+    const img = el("img");
+    img.loading = "lazy";
+    img.decoding = "async";
+    img.alt = "";
+    img.src = (!opts.trailer && v.thumbnail) || thumb(v.id, opts.trailer ? "hqdefault" : "mqdefault");
+    img.addEventListener("error", () => { img.style.visibility = "hidden"; }, { once: true });
+    th.appendChild(img);
+    const play = el("span", "card__play");
+    play.appendChild(svg(ICON_PLAY));
+    th.appendChild(play);
+    if (opts.trailer) th.appendChild(el("span", "card__new", "Trailer"));
+    th.appendChild(el("span", "card__badge", opts.trailer ? fmtDate(v.release) : fmtDuration(v.duration)));
+    b.appendChild(th);
+    b.appendChild(el("p", "card__title", opts.trailer ? v.film : v.title));
+    const meta = opts.trailer ? "Official trailer" : [opts.rowLabel || v.row, v.year].filter(Boolean).join(" · ");
+    b.appendChild(el("p", "card__meta", meta));
+    b.setAttribute("aria-label", `Play ${opts.trailer ? v.film + " trailer" : v.title}`);
+    return b;
+  }
+
+  function row(title, items, opts = {}) {
+    const wrap = el("div", "row");
+    const head = el("div", "row__head");
+    head.appendChild(el("h3", "row__title", title));
+    if (items.length > ROW_LIMIT) {
+      const more = el("button", "row__more", `See all ${items.length}`);
+      more.type = "button";
+      more.addEventListener("click", () => showResults(title, items));
+      head.appendChild(more);
+    } else {
+      head.appendChild(el("span", "row__count", `${items.length} titles`));
+    }
+    wrap.appendChild(head);
+    const sc = el("div", "row__scroller");
+    sc.setAttribute("role", "list");
+    for (const v of items.slice(0, ROW_LIMIT)) sc.appendChild(card(v, opts));
+    const prev = el("button", "row__btn row__btn--prev");
+    prev.appendChild(svg("M15.4 5.4 14 4l-8 8 8 8 1.4-1.4L8.8 12z"));
+    prev.setAttribute("aria-label", `Scroll ${title} left`);
+    const next = el("button", "row__btn row__btn--next");
+    next.appendChild(svg("M8.6 5.4 10 4l8 8-8 8-1.4-1.4 6.6-6.6z"));
+    next.setAttribute("aria-label", `Scroll ${title} right`);
+    const step = () => sc.clientWidth * 0.85;
+    prev.addEventListener("click", () => sc.scrollBy({ left: -step(), behavior: reduceMotion.matches ? "auto" : "smooth" }));
+    next.addEventListener("click", () => sc.scrollBy({ left: step(), behavior: reduceMotion.matches ? "auto" : "smooth" }));
+    const sync = () => {
+      prev.disabled = sc.scrollLeft < 8;
+      next.disabled = sc.scrollLeft + sc.clientWidth >= sc.scrollWidth - 8;
+    };
+    sc.addEventListener("scroll", sync, { passive: true });
+    requestAnimationFrame(sync);
+    wrap.append(prev, sc, next);
+    return wrap;
+  }
+
+  function renderBrowse() {
+    const root = $("#browse");
+    root.textContent = "";
+    if (trailers.length) {
+      const s = el("section", "section");
+      s.id = "trailers";
+      s.appendChild(el("h2", "section__title", "Upcoming Trailers"));
+      s.appendChild(row("Coming soon to cinemas", trailers, { trailer: true }));
+      root.appendChild(s);
+    }
+    for (const sec of catalog.sections) {
+      const vids = catalog.videos.filter((v) => v.section === sec.id);
+      if (!vids.length) continue;
+      const s = el("section", "section");
+      s.id = sec.id;
+      s.appendChild(el("h2", "section__title", sec.title));
+      for (const r of sec.rows) {
+        const items = vids.filter((v) => v.row === r);
+        if (items.length) s.appendChild(row(r, items, { rowLabel: r }));
+      }
+      root.appendChild(s);
+    }
+    $("#loading").hidden = true;
+    const total = catalog.videos.length;
+    $("#footerMeta").textContent = `${total} titles and ${trailers.length} upcoming trailers · catalog updated ${catalog.generated || ""}`;
+  }
+
+  /* ---------------- search / see all ---------------- */
+  let lastScroll = 0;
+  function showResults(title, items) {
+    if (!document.body.classList.contains("is-results")) lastScroll = window.scrollY;
+    document.body.classList.add("is-results");
+    $("#results").hidden = false;
+    $("#resultsTitle").textContent = title;
+    const grid = $("#resultsGrid");
+    grid.textContent = "";
+    const frag = document.createDocumentFragment();
+    for (const v of items) frag.appendChild(card(v, { trailer: !!v.trailer || !!v.film }));
+    grid.appendChild(frag);
+    $("#resultsEmpty").hidden = items.length > 0;
+    window.scrollTo(0, 0);
+    hero.pause("results");
+  }
+  function hideResults() {
+    if (!document.body.classList.contains("is-results")) return;
+    document.body.classList.remove("is-results");
+    $("#results").hidden = true;
+    window.scrollTo(0, lastScroll);
+    hero.resume("results");
+  }
+  /* ---------------- modal player ---------------- */
+  let modalPlayer = null;
+  let lastFocus = null;
+  function openPlayer(id) {
+    const v = byId.get(id);
+    if (!v) return;
+    lastFocus = document.activeElement;
+    const modal = $("#player");
+    modal.hidden = false;
+    document.body.classList.add("modal-open");
+    $("#playerTitle").textContent = v.trailer ? `${v.film}: official trailer` : v.title;
+    $("#playerMeta").textContent = v.trailer
+      ? `In cinemas ${fmtDate(v.release)}`
+      : [v.row, v.year, fmtDuration(v.duration)].filter(Boolean).join(" · ");
+    $("#playerError").hidden = true;
+    hero.pause("modal");
+    const url = new URL(location.href);
+    url.searchParams.set("v", id);
+    history.replaceState(null, "", url);
+    const host = $("#playerFrame");
+    host.textContent = "";
+    const mount = el("div");
+    host.appendChild(mount);
+    loadYT().then((YT) => {
+      if (modal.hidden) return;
+      modalPlayer = new YT.Player(mount, {
+        host: NOCOOKIE, videoId: id, width: "100%", height: "100%",
+        playerVars: { autoplay: 1, rel: 0, playsinline: 1, modestbranding: 1, iv_load_policy: 3, origin: location.origin },
+        events: { onError: () => { $("#playerError").hidden = false; } },
+      });
+    }).catch(() => {
+      const f = el("iframe");
+      f.src = `${NOCOOKIE}/embed/${id}?autoplay=1&rel=0&playsinline=1`;
+      f.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+      f.allowFullscreen = true;
+      f.title = v.title;
+      host.appendChild(f);
+    });
+    $(".modal__close").focus();
+  }
+  function closePlayer() {
+    const modal = $("#player");
+    if (modal.hidden) return;
+    if (modalPlayer && modalPlayer.destroy) modalPlayer.destroy();
+    modalPlayer = null;
+    $("#playerFrame").textContent = "";
+    modal.hidden = true;
+    document.body.classList.remove("modal-open");
+    const url = new URL(location.href);
+    url.searchParams.delete("v");
+    history.replaceState(null, "", url);
+    hero.resume("modal");
+    if (lastFocus) lastFocus.focus();
+  }
+
+  // Hero carousel lives in hero.js; it registers TDM.hero. Calls are no-ops until then.
+  const hero = {
+    pause: (r) => TDM.hero && TDM.hero.pause(r),
+    resume: (r) => TDM.hero && TDM.hero.resume(r),
+  };
+
+  /* ---------------- nav ---------------- */
+  function bindNav() {
+    const nav = $("#nav");
+    const onScroll = () => nav.classList.toggle("is-solid", window.scrollY > 40);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    const toggle = $("#navToggle"), links = $("#navLinks");
+    toggle.addEventListener("click", () => {
+      const open = links.classList.toggle("is-open");
+      toggle.setAttribute("aria-expanded", String(open));
+    });
+    links.addEventListener("click", (e) => {
+      if (!e.target.closest("a")) return;
+      links.classList.remove("is-open");
+      toggle.setAttribute("aria-expanded", "false");
+      hideResults();
+      $("#searchInput").value = "";
+    });
+    const anchors = [...links.querySelectorAll("a")];
+    const io = new IntersectionObserver((entries) => {
+      for (const en of entries) {
+        if (!en.isIntersecting) continue;
+        const id = en.target.id;
+        anchors.forEach((a) => a.classList.toggle("is-active", a.dataset.nav === id));
+      }
+    }, { rootMargin: "-45% 0px -50% 0px" });
+    ["top", "trailers", ...catalog.sections.map((s) => s.id)].forEach((id) => {
+      const n = document.getElementById(id);
+      if (n) io.observe(n);
+    });
+  }
+
+  function bindGlobal() {
+    document.addEventListener("click", (e) => {
+      const c = e.target.closest(".card");
+      if (c) { openPlayer(c.dataset.id); return; }
+      if (e.target.closest("[data-close]")) closePlayer();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        if (!$("#player").hidden) closePlayer();
+        else if (document.body.classList.contains("is-results")) { $("#searchInput").value = ""; hideResults(); }
+      }
+    });
+    const input = $("#searchInput");
+    $("#resultsClose").addEventListener("click", () => { input.value = ""; hideResults(); });
+  }
+
+  async function init() {
+    try {
+      await loadData();
+    } catch (err) {
+      $("#loading").textContent = "The catalog could not be loaded. Please refresh the page.";
+      return;
+    }
+    renderBrowse();
+    bindGlobal();
+    bindNav();
+    document.dispatchEvent(new CustomEvent("tdm:ready"));
+    const v = new URL(location.href).searchParams.get("v");
+    if (v && byId.has(v)) openPlayer(v);
+  }
+
+  // Shared API for hero.js and search.js
+  const TDM = (window.TDM = window.TDM || {});
+  Object.assign(TDM, {
+    $, el, svg, thumb, fmtDate, fmtDuration, norm, loadYT, openPlayer, showResults, hideResults,
+    ICON_PLAY, ICON_INFO, NOCOOKIE, reduceMotion,
+    get catalog() { return catalog; },
+    get trailers() { return trailers; },
+  });
+
+  init();
+})();

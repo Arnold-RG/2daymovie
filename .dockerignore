@@ -11,3 +11,4 @@ docs
 scripts/scraped_meta.json
 .vscode
 .idea
+scripts/.cache

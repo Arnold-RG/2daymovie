@@ -43,7 +43,8 @@ jobs:
           python scripts/export_site.py --out /tmp/2daymovie-site
           test -f /tmp/2daymovie-site/index.html
           test -f /tmp/2daymovie-site/.nojekyll || true
-          # Pages builds a fresh export each deploy; do not require committed docs/ to match.
+          # GitHub Pages serves main:/docs, so the committed copy must match the site.
+          diff -r /tmp/2daymovie-site docs
 
       - name: Health & metrics smoke
         run: |
@@ -52,8 +53,10 @@ jobs:
           c = app.test_client()
           assert c.get("/healthz").status_code == 200
           assert c.get("/readyz").status_code == 200
+          assert c.get("/").status_code == 200
+          assert c.get("/data/catalog.json").status_code == 200
           assert c.get("/metrics").status_code == 200
-          # /library redirects to the movies shelf
+          # legacy /library links redirect to the new home page
           assert c.get("/library").status_code in (301, 302)
           assert c.get("/library", follow_redirects=True).status_code == 200
           print("ops smoke ok")

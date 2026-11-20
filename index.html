@@ -1,157 +1,91 @@
 <!doctype html>
-<html lang="en">
+
+<html lang="en" data-base="">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="referrer" content="strict-origin-when-cross-origin">
-<title>2DayMovie</title>
-<style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: #141414; color: #fff; font-family: system-ui, -apple-system, sans-serif; }
-header { position: sticky; top: 0; z-index: 100; background: linear-gradient(180deg, rgba(0,0,0,.8) 0%, transparent); padding: 16px 4%; display: flex; align-items: center; justify-content: space-between; }
-header.scrolled { background: #141414; }
-.logo { font-size: 26px; font-weight: 800; color: #e50914; }
-nav { display: flex; gap: 20px; }
-nav a { color: #e5e5e5; font-size: 14px; text-decoration: none; }
-nav a:hover { color: #fff; }
-.search { background: rgba(0,0,0,.5); border: 1px solid #555; color: #fff; padding: 8px 12px; border-radius: 4px; width: 180px; }
-.hero { height: 80vh; min-height: 500px; position: relative; overflow: hidden; }
-.hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.hero-overlay { position: absolute; inset: 0; background: linear-gradient(to right, rgba(20,20,20,.85) 30%, transparent 70%); }
-.hero-content { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; justify-content: center; padding: 0 4%; max-width: 580px; }
-.hero h1 { font-size: clamp(36px, 5vw, 58px); font-weight: 800; line-height: 1.05; margin-bottom: 12px; }
-.hero p { font-size: 17px; color: #ddd; margin-bottom: 20px; }
-.btn-row { display: flex; gap: 12px; }
-.btn { padding: 12px 24px; border-radius: 4px; font-weight: 600; border: none; cursor: pointer; }
-.btn-primary { background: #fff; color: #000; }
-.btn-secondary { background: rgba(109,109,110,.7); color: #fff; }
-.rows { padding: 20px 0 60px; }
-.row { margin-bottom: 28px; }
-.row h2 { padding: 0 4%; margin-bottom: 10px; font-size: 20px; font-weight: 700; }
-.row-scroll { display: flex; gap: 8px; overflow-x: auto; padding: 0 4% 10px; scrollbar-width: none; }
-.row-scroll::-webkit-scrollbar { display: none; }
-.card { flex: 0 0 230px; position: relative; border-radius: 4px; overflow: hidden; cursor: pointer; transition: transform .2s; }
-.card:hover { transform: scale(1.07); z-index: 5; }
-.card img { width: 100%; aspect-ratio: 16/9; object-fit: cover; background: #222; display: block; }
-.card-info { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,.9)); padding: 30px 10px 10px; opacity: 0; transition: opacity .2s; }
-.card:hover .card-info { opacity: 1; }
-.card-info h3 { font-size: 14px; font-weight: 600; }
-.player { position: fixed; inset: 0; background: rgba(0,0,0,.96); z-index: 200; display: none; flex-direction: column; }
-.player.show { display: flex; }
-.player header { background: #111; padding: 12px 4%; display: flex; justify-content: space-between; align-items: center; }
-.player button { background: none; border: none; color: #fff; font-size: 28px; cursor: pointer; }
-.player .screen { flex: 1; display: grid; place-items: center; padding: 20px; }
-.player iframe { width: 100%; max-width: 1200px; aspect-ratio: 16/9; border: 0; border-radius: 8px; }
-.fallback { text-align: center; max-width: 440px; display: none; }
-.fallback.show { display: block; }
-.fallback a { display: inline-block; margin-top: 16px; background: #e50914; color: #fff; padding: 12px 24px; border-radius: 4px; text-decoration: none; font-weight: 600; }
-@media (max-width: 700px) { nav { display: none; } .search { width: 120px; } }
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>2DayMovie: movies, series, kids, anime and nature, free to stream</title>
+  <meta name="description" content="Stream full movies, series, kids' shows, cartoons, AI animation and nature documentaries on 2DayMovie through official YouTube embeds, plus trailers for the biggest upcoming films.">
+  <meta name="theme-color" content="#0b0b0f">
+  <meta property="og:title" content="2DayMovie">
+  <meta property="og:description" content="Full movies, series, kids, cartoons, AI animation and nature documentaries, plus upcoming trailers.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="static/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://www.youtube-nocookie.com">
+  <link rel="preconnect" href="https://i.ytimg.com">
+  <link rel="stylesheet" href="static/css/app.css">
 </head>
 <body>
-<header id="header">
-  <div class="logo">2DAYMOVIE</div>
-  <nav>
-    <a href="#movies">Movies</a>
-    <a href="#series">Series</a>
-    <a href="#kids">Kids</a>
-    <a href="#cartoons">Cartoons</a>
-    <a href="#trailers">Upcoming</a>
-  </nav>
-  <input class="search" type="search" id="search" placeholder="Search...">
-</header>
+  <a class="skip" href="#main">Skip to content</a>
 
-<div class="hero">
-  <iframe class="hero-video" id="heroVideo" src="https://www.youtube-nocookie.com/embed/irVNGjRFZGk?autoplay=1&mute=1&loop=1&playlist=irVNGjRFZGk&controls=0&showinfo=0&modestbranding=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-  <div class="hero-overlay"></div>
-  <div class="hero-content">
-    <h1>Avengers: Doomsday</h1>
-    <p>In theaters December 18. Watch the trailer and explore more below.</p>
-    <div class="btn-row">
-      <button class="btn btn-primary" onclick="play('irVNGjRFZGk','Avengers: Doomsday')">▶ Play Trailer</button>
-      <button class="btn btn-secondary" onclick="document.getElementById('trailers').scrollIntoView({behavior:'smooth'})">More Trailers</button>
+  <header class="nav" id="nav">
+    <div class="nav__inner">
+      <a class="brand" href="#top" aria-label="2DayMovie home"><span class="brand__mark">2</span>Day<span>Movie</span></a>
+      <button class="nav__toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav__links" id="navLinks" aria-label="Sections">
+        <a href="#top" data-nav="top">Home</a>
+        <a href="#trailers" data-nav="trailers">Upcoming</a>
+        <a href="#movies" data-nav="movies">Movies</a>
+        <a href="#series" data-nav="series">Series</a>
+        <a href="#kids" data-nav="kids">Kids</a>
+        <a href="#cartoons" data-nav="cartoons">Cartoons</a>
+        <a href="#ai" data-nav="ai">AI / Manhwa</a>
+        <a href="#wildlife" data-nav="wildlife">Wildlife &amp; Nature</a>
+      </nav>
+      <form class="search" id="searchForm" role="search" autocomplete="off">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 3a7.5 7.5 0 0 1 5.9 12.1l4.2 4.2-1.4 1.4-4.2-4.2A7.5 7.5 0 1 1 10.5 3zm0 2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11z"/></svg>
+        <label class="sr" for="searchInput">Search titles</label>
+        <input id="searchInput" type="search" placeholder="Search titles" enterkeyhint="search">
+      </form>
+    </div>
+  </header>
+
+  <section class="hero" id="top" aria-roledescription="carousel" aria-label="Upcoming movie trailers">
+    <div class="hero__track" id="heroTrack"></div>
+    <div class="hero__shade"></div>
+    <div class="hero__content" id="heroContent" aria-live="polite"></div>
+    <button class="hero__arrow hero__arrow--prev" id="heroPrev" aria-label="Previous trailer"><svg viewBox="0 0 24 24"><path d="M15.4 5.4 14 4l-8 8 8 8 1.4-1.4L8.8 12z"/></svg></button>
+    <button class="hero__arrow hero__arrow--next" id="heroNext" aria-label="Next trailer"><svg viewBox="0 0 24 24"><path d="M8.6 5.4 10 4l8 8-8 8-1.4-1.4 6.6-6.6z"/></svg></button>
+    <div class="hero__dots" id="heroDots" role="tablist" aria-label="Choose trailer"></div>
+    <div class="hero__progress"><span id="heroProgress"></span></div>
+  </section>
+
+  <main id="main">
+    <div id="browse"></div>
+    <section class="results" id="results" hidden>
+      <div class="results__head">
+        <h2 id="resultsTitle">Results</h2>
+        <button class="btn btn--ghost" id="resultsClose">Back to browse</button>
+      </div>
+      <p class="results__empty" id="resultsEmpty" hidden>Nothing matches that search yet. Try another title.</p>
+      <div class="grid" id="resultsGrid"></div>
+    </section>
+    <p class="loading" id="loading">Loading the catalog…</p>
+  </main>
+
+  <footer class="footer">
+    <p><strong>2DayMovie</strong>. Every title plays through YouTube's official embedded player and stays on its owner's account. All rights belong to their owners.</p>
+    <p class="footer__meta" id="footerMeta"></p>
+  </footer>
+
+  <div class="modal" id="player" role="dialog" aria-modal="true" aria-labelledby="playerTitle" hidden>
+    <div class="modal__backdrop" data-close></div>
+    <div class="modal__box">
+      <button class="modal__close" data-close aria-label="Close player"><svg viewBox="0 0 24 24"><path d="m6.4 5 5.6 5.6L17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6L6.4 19 5 17.6l5.6-5.6L5 6.4z"/></svg></button>
+      <div class="modal__frame"><div id="playerFrame"></div></div>
+      <div class="modal__info">
+        <h2 id="playerTitle"></h2>
+        <p id="playerMeta"></p>
+        <p class="modal__error" id="playerError" hidden>This title can't play here right now. Try another one.</p>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="rows" id="rows"></div>
-
-<div class="player" id="player">
-  <header>
-    <strong id="ptitle">Now Playing</strong>
-    <button onclick="closePlayer()">✕</button>
-  </header>
-  <div class="screen" id="pscreen"></div>
-</div>
-
-<script>
-const records = [
-  {id:'irVNGjRFZGk', title:'Avengers: Doomsday', type:'Upcoming Trailers'},
-  {id:'X1aFkAkFASk', title:'Avengers: Doomsday Special Look', type:'Upcoming Trailers'},
-  {id:'Fg0jyss_YnU', title:'Avengers: Doomsday The Return', type:'Upcoming Trailers'},
-  {id:'AVjdUMbaEsA', title:'Avengers: Doomsday Official Trailer', type:'Upcoming Trailers'},
-  {id:'GPn9wajnOWA', title:'Avengers Doomsday Teaser', type:'Upcoming Trailers'},
-  {id:'S-SNLzfrUNw', title:'Ice Age: Boiling Point', type:'Upcoming Trailers'},
-  {id:'OT8J-1DO9Fw', title:'Artificial', type:'Upcoming Trailers'},
-  {id:'m7b2briPoEk', title:'Remain', type:'Upcoming Trailers'},
-  {id:'8q9PUGbIzxw', title:'Children of Blood and Bone', type:'Upcoming Trailers'},
-  {id:'mi4gQMDgB_g', title:'Office Romance', type:'Movies'},
-  {id:'NTWA_7-ld_U', title:'Moscow Does Not Believe in Tears', type:'Movies'},
-  {id:'Q3hBLv-HLEc', title:'Stalker', type:'Movies'},
-  {id:'Z8ZhQPaw4rE', title:'Solaris', type:'Movies'},
-  {id:'GgFLr2bjUNM', title:'Mimino', type:'Movies'},
-  {id:'MkHiu9fD820', title:'The Diamond Arm', type:'Movies'},
-  {id:'EYHv8eJrW2Y', title:'Kin-Dza-Dza!', type:'Movies'},
-  {id:'tSAKzVP2IGk', title:'Wild Kratts - Stuck on Sharks', type:'Series'},
-  {id:'F1z5E5gzlLA', title:'Wild Kratts - Creature Power', type:'Series'},
-  {id:'KX2HzjI0XO4', title:'Wild Kratts - Spider Web', type:'Series'},
-  {id:'PfgJJ2Sst6A', title:'SUPER WHY! Three Little Pigs', type:'Kids'},
-  {id:'DOuRjoRYby8', title:'SUPER WHY! Cinderella', type:'Kids'},
-  {id:'QjWhDynv-SQ', title:'Sid the Science Kid', type:'Kids'},
-  {id:'wkk_fPp_ZMs', title:'Gulliver\'s Travels', type:'Cartoons'},
-  {id:'9kncDIPfWr8', title:'Booba Compilation', type:'Cartoons'},
-  {id:'7tuAFeTkBAU', title:'Booba Episodes', type:'Cartoons'}
-];
-
-function render(f='') {
-  const q = f.toLowerCase();
-  const g = {};
-  records.forEach(r => {
-    if (r.title.toLowerCase().includes(q)) {
-      if (!g[r.type]) g[r.type] = [];
-      g[r.type].push(r);
-    }
-  });
-  let h = '';
-  Object.keys(g).forEach(t => {
-    const id = t.toLowerCase().replace(/[^a-z0-9]/g, '');
-    h += `<div class="row" id="${id}"><h2>${t}</h2><div class="row-scroll">`;
-    g[t].forEach(r => {
-      const s = r.title.replace(/'/g, "\\'");
-      h += `<div class="card" onclick="play('${r.id}','${s}')"><img src="https://i.ytimg.com/vi/${r.id}/hqdefault.jpg"><div class="card-info"><h3>${r.title}</h3></div></div>`;
-    });
-    h += '</div></div>';
-  });
-  document.getElementById('rows').innerHTML = h || '<p style="padding:20px 4%">No results</p>';
-}
-
-function play(id, title) {
-  document.getElementById('ptitle').textContent = title;
-  document.getElementById('pscreen').innerHTML = `
-    <iframe src="https://www.youtube-nocookie.com/embed/${id}?autoplay=1&playsinline=1&rel=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
-    <div class="fallback" id="fb"><p>This video cannot be played here because the owner has disabled embedding.</p><a href="https://www.youtube.com/watch?v=${id}" target="_blank">Watch on YouTube</a></div>`;
-  document.getElementById('player').classList.add('show');
-  setTimeout(() => { document.getElementById('fb')?.classList.add('show'); }, 1200);
-}
-
-function closePlayer() {
-  document.getElementById('player').classList.remove('show');
-  document.getElementById('pscreen').innerHTML = '';
-}
-
-document.getElementById('search').oninput = e => render(e.target.value);
-window.addEventListener('scroll', () => document.getElementById('header').classList.toggle('scrolled', window.scrollY > 40));
-render();
-</script>
+  <noscript><p class="loading">2DayMovie needs JavaScript to play videos.</p></noscript>
+  <script src="static/js/hero.js" defer></script>
+  <script src="static/js/search.js" defer></script>
+  <script src="static/js/app.js" defer></script>
 </body>
 </html>

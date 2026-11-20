@@ -19,7 +19,7 @@ Live: https://twodaymovie.onrender.com/
 ## Local (Linux / macOS / WSL / Git Bash)
 
 ```bash
-cp .env.example .env   # add TMDB_API_KEY if you have one
+cp .env.example .env
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 make test
@@ -80,7 +80,7 @@ Render auto-deploys from `main`.
 - Security headers on every response (`X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`)
 - Non-root container UID `10001`
 - TLS at the edge (Render / Ingress `ssl-redirect`)
-- Legal streaming only — TMDB watch providers, official YouTube trailers
+- Legal streaming only: every title plays through the official YouTube embed
 
 ## Networking notes
 
