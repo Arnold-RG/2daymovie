@@ -40,3 +40,19 @@ def test_homepage_has_security_headers():
     response = create_app().test_client().get("/")
     assert response.headers["X-Content-Type-Options"] == "nosniff"
     assert "frame-src https://www.youtube.com https://www.youtube-nocookie.com" in response.headers["Content-Security-Policy"]
+
+
+def test_metrics_can_be_secured_with_private_token(monkeypatch):
+    monkeypatch.setenv("METRICS_TOKEN", "very-long-test-only-token")
+    client = create_app().test_client()
+    assert client.get("/metrics").status_code == 403
+    assert client.get("/metrics", headers={"X-Metrics-Token": "wrong"}).status_code == 403
+    assert client.get("/metrics", headers={"X-Metrics-Token": "very-long-test-only-token"}).status_code == 200
+
+
+def test_session_secret_is_not_default_hardcoded(monkeypatch):
+    monkeypatch.delenv("SECRET_KEY", raising=False)
+    one = create_app()
+    two = create_app()
+    assert len(one.config["SECRET_KEY"]) >= 32
+    assert one.config["SECRET_KEY"] != two.config["SECRET_KEY"]
