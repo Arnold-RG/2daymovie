@@ -21,6 +21,7 @@
   "use strict";
   const SLIDE_MS = 30000; // default auto-advance when a clip has no start/end
   const STORE_KEY = "tdm.hero.v2"; // v2: Full is the default size; v1 sizes are ignored
+  const REVEAL_MS = 4300; // YouTube auto-hides its centre play/pause button about 4 s after playback starts
   const LEGACY_KEY = "tdm.hero.v1";
   const FADE_MS = 650;    // sound fade in / out
   const BRIGHT = { dim: 0.65, normal: 1, bright: 1.3 };
@@ -308,12 +309,12 @@
       const mount = box.firstElementChild;
       const start = t.clip_start || 0;
       const end = t.clip_end || start + 32;
-      const entry = { player: null, ready: false, wantPlay: i === cur, fade: 0 };
+      const entry = { player: null, ready: false, wantPlay: i === cur, fade: 0, reveal: 0 };
       players.set(i, entry);
       // Build the sandboxed nocookie iframe ourselves, then let the IFrame API attach to it.
       const frame = embedFrame(t.id, {
         // no YouTube chrome in the header: our control bar is the only control surface
-        autoplay: i === cur ? 1 : 0, mute: 1, controls: 0, disablekb: 1, fs: 0, rel: 0, playsinline: 1,
+        autoplay: 0, mute: 1, controls: 0, disablekb: 1, fs: 0, rel: 0, playsinline: 1,
         modestbranding: 1, iv_load_policy: 3, cc_load_policy: 0, showinfo: 0, start, end,
       }, `${t.film} trailer clip`);
       frame.tabIndex = -1;
@@ -332,8 +333,15 @@
             if (e.data === S.PLAYING) {
               if (!entry.wantPlay || holds.size) { e.target.mute(); e.target.pauseVideo(); return; } // parked
               applyMute(entry);
-              box.classList.add("is-playing");
-              slides[i].classList.add("has-video");
+              // YouTube draws its own centre play/pause button for ~4 s after every play, even with
+              // controls:0. Keep the poster up until it has auto-hidden, then fade the live video in.
+              box.classList.remove("is-playing");
+              clearTimeout(entry.reveal);
+              entry.reveal = setTimeout(() => {
+                if (!players.has(i) || !entry.wantPlay) return;
+                box.classList.add("is-playing");
+                slides[i].classList.add("has-video");
+              }, REVEAL_MS);
             } else if (e.data === S.ENDED) {
               e.target.seekTo(start, true); // loop the clip from start to end
               if (entry.wantPlay) e.target.playVideo();
@@ -375,6 +383,7 @@
       for (const [i, p] of players) {
         if (!keep.has(i)) {
           cancelAnimationFrame(p.fade);
+          clearTimeout(p.reveal);
           try { p.player.destroy(); } catch (_) { /* already gone */ }
           players.delete(i);
           const box = slides[i].querySelector(".slide__video");

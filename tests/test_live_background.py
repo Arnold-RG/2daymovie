@@ -22,7 +22,7 @@ def test_hero_starts_live_muted_trailers_on_load():
     assert "if (reduceMotion.matches) return;" in build, "reduced motion keeps the static poster"
     after_rm = build.split("if (reduceMotion.matches) return;", 1)[1]
     assert re.search(r"loadYT\(\)\.then\(\(YT\) => \{ YTlib = YT; warm\(\); \}\)", after_rm), "player loads right away"
-    assert "autoplay: i === cur ? 1 : 0, mute: 1" in HERO and "playsinline: 1" in HERO
+    assert "autoplay: 0, mute: 1" in HERO and "playsinline: 1" in HERO  # autoplay=1 makes YouTube draw its own pause glyph
     assert "e.target.mute(); // start silent" in HERO and "e.target.playVideo()" in HERO
 
 
@@ -58,3 +58,10 @@ def test_screen_reader_text_in_cards_cannot_widen_the_page():
     # .sr is position:absolute; cards must contain it or it escapes the row scroller
     # and widens the mobile layout viewport (seen as a zoomed-out page on phones).
     assert re.search(r"^\.card \{ position: relative;", CSS, re.M)
+
+
+def test_video_revealed_only_after_youtube_overlay_autohides():
+    # YouTube shows its own centre play/pause button for ~4 s after each play, even with controls:0.
+    assert "const REVEAL_MS = 4300" in HERO
+    assert "setTimeout(() => {" in HERO and "}, REVEAL_MS);" in HERO
+    assert "clearTimeout(p.reveal)" in HERO and "clearTimeout(entry.reveal)" in HERO
