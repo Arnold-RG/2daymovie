@@ -21,6 +21,7 @@
   "use strict";
   const SLIDE_MS = 30000; // default auto-advance when a clip has no start/end
   const STORE_KEY = "tdm.hero.v2"; // v2: Full is the default size; v1 sizes are ignored
+  const FIRST_WAIT_MS = 15000; // longest the first slide waits for its trailer before the countdown starts anyway
   const NEIGHBOUR_MS = 8000; // load the next/previous trailer after this even if the current one has not started
   const KICK_MS = 1200, KICK_TRIES = 10; // re-ask a stalled player to play for ~12 s, then wait for a gesture
   const REVEAL_MS = 4300; // YouTube auto-hides its centre play/pause button about 4 s after playback starts
@@ -114,7 +115,9 @@
       bind();
       buildTools();
       if (reduceMotion.matches) return; // static thumbnails only: no autoplay, no auto-advance
-      startTimer(durationOf(trailers[0]));
+      // The countdown to the next slide starts when the first trailer actually plays, so a slow
+      // start never skips it; FIRST_WAIT_MS caps the wait when autoplay is blocked or slow.
+      firstWait = setTimeout(startFirstTimer, FIRST_WAIT_MS);
       // Live background: muted trailers start on load, no click needed.
       loadYT().then((YT) => { YTlib = YT; warm(); }).catch(() => {}); // posters stay up if the API fails
     }
@@ -340,7 +343,7 @@
             if (e.data === S.PLAYING) {
               entry.kicks = 0;
               unblocked();
-              if (i === cur) warmNeighbours();
+              if (i === cur) { warmNeighbours(); startFirstTimer(); }
               if (!entry.wantPlay || holds.size) { e.target.mute(); e.target.pauseVideo(); return; } // parked
               applyMute(entry);
               // YouTube draws its own centre play/pause button for ~4 s after every play, even with
@@ -519,7 +522,16 @@
       if (left <= 0) { go(cur + 1, 1, false); return; }
       raf = requestAnimationFrame(tick);
     }
+    let firstWait = 0, timerOn = false;
+    function startFirstTimer() {
+      clearTimeout(firstWait);
+      if (timerOn) return;
+      timerOn = true;
+      startTimer(durationOf(trailers[cur]));
+    }
     function startTimer(ms) {
+      timerOn = true;
+      clearTimeout(firstWait);
       cancelAnimationFrame(raf);
       clearTimeout(timer);
       remaining = ms;
@@ -533,7 +545,7 @@
       if (!slides.length) return;
       if (reason === "modal" && fsElement() === heroEl) toggleFullscreen(); // the player opens outside the hero
       if (!holds.size) {
-        remaining = Math.max(0, remaining - (performance.now() - started));
+        if (timerOn) remaining = Math.max(0, remaining - (performance.now() - started));
         cancelAnimationFrame(raf);
         const p = players.get(cur);
         if (p && p.ready) { applyMute(p, true); p.player.pauseVideo(); }
@@ -547,7 +559,7 @@
       syncPause();
       if (holds.size) return;
       started = performance.now();
-      if (!reduceMotion.matches) raf = requestAnimationFrame(tick);
+      if (!reduceMotion.matches && timerOn) raf = requestAnimationFrame(tick);
       const p = players.get(cur);
       if (p && p.ready && p.wantPlay) {
         p.kicks = 0;

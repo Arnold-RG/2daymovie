@@ -63,4 +63,11 @@ def test_phone_layout_fills_the_screen_and_fits_2_3_posters():
 
 def test_neighbour_trailers_wait_for_the_first_one_to_play():
     assert "const NEIGHBOUR_MS = 8000;" in HERO
-    assert "if (p && p.playing) warmNeighbours();" in HERO and "if (i === cur) warmNeighbours();" in HERO
+    assert "if (p && p.playing) warmNeighbours();" in HERO and "if (i === cur) { warmNeighbours(); startFirstTimer(); }" in HERO
+
+
+def test_first_slide_countdown_waits_for_its_trailer():
+    assert "const FIRST_WAIT_MS = 15000;" in HERO
+    assert "firstWait = setTimeout(startFirstTimer, FIRST_WAIT_MS);" in HERO
+    assert "if (i === cur) { warmNeighbours(); startFirstTimer(); }" in HERO
+    assert "if (!reduceMotion.matches && timerOn) raf = requestAnimationFrame(tick);" in HERO
