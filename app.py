@@ -8,6 +8,7 @@ redirects every legacy URL from the old site to the new home page.
 """
 from __future__ import annotations
 
+import hashlib
 import hmac
 import json
 import os
@@ -92,8 +93,19 @@ def _og_image() -> str:
     return f"https://i.ytimg.com/vi/{tid}/hqdefault.jpg" if tid else ""
 
 
+def asset_version() -> str:
+    """Short hash of static/ so each build gets new CSS/JS URLs (no stale browser or CDN copies)."""
+    h = hashlib.sha256()
+    for f in sorted((ROOT / "static").rglob("*")):
+        if f.is_file() and f.suffix in {".js", ".css"}:
+            h.update(f.relative_to(ROOT).as_posix().encode())
+            h.update(f.read_bytes())
+    return h.hexdigest()[:10]
+
+
 def create_app() -> Flask:
     app = Flask(__name__, static_folder="static", template_folder="templates")
+    app.jinja_env.globals["asset_v"] = asset_version()
 
     @app.before_request
     def _start_timer():

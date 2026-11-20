@@ -21,6 +21,7 @@
   "use strict";
   const SLIDE_MS = 30000; // default auto-advance when a clip has no start/end
   const STORE_KEY = "tdm.hero.v2"; // v2: Full is the default size; v1 sizes are ignored
+  const KICK_MS = 1200, KICK_TRIES = 10; // re-ask a stalled player to play for ~12 s, then wait for a gesture
   const REVEAL_MS = 4300; // YouTube auto-hides its centre play/pause button about 4 s after playback starts
   const LEGACY_KEY = "tdm.hero.v1";
   const FADE_MS = 650;    // sound fade in / out
@@ -309,7 +310,7 @@
       const mount = box.firstElementChild;
       const start = t.clip_start || 0;
       const end = t.clip_end || start + 32;
-      const entry = { player: null, ready: false, wantPlay: i === cur, fade: 0, reveal: 0 };
+      const entry = { player: null, ready: false, wantPlay: i === cur, fade: 0, reveal: 0, playing: false, kicks: 0, retry: 0 };
       players.set(i, entry);
       // Build the sandboxed nocookie iframe ourselves, then let the IFrame API attach to it.
       const frame = embedFrame(t.id, {
@@ -326,11 +327,16 @@
           onReady: (e) => {
             entry.ready = true;
             e.target.mute(); // start silent; applyMute fades in for the current slide
-            e.target.playVideo(); // buffer the first frames even for the preloaded neighbour
+            // Only the current slide starts; neighbours stay cued. Safari/WebKit can drop a muted
+            // play() when several embeds start at once, so kick() retries until it really plays.
+            if (entry.wantPlay && !holds.size) kick(entry);
           },
           onStateChange: (e) => {
             const S = YTlib.PlayerState;
+            entry.playing = e.data === S.PLAYING || e.data === S.BUFFERING;
             if (e.data === S.PLAYING) {
+              entry.kicks = 0;
+              unblocked();
               if (!entry.wantPlay || holds.size) { e.target.mute(); e.target.pauseVideo(); return; } // parked
               applyMute(entry);
               // YouTube draws its own centre play/pause button for ~4 s after every play, even with
@@ -365,9 +371,52 @@
       if (!p) return;
       p.wantPlay = true;
       if (p.ready && !holds.size) {
-        p.player.playVideo();
+        kick(p);
         applyMute(p);
       }
+    }
+
+    // Ask the player to play (muted) and check again shortly. Browsers that refuse autoplay
+    // (iOS Low Power Mode, data saver, site autoplay set to "never") leave the player unstarted;
+    // after KICK_TRIES the poster keeps its slow zoom and the first touch, click, key or scroll
+    // anywhere on the page tries again.
+    function kick(p) {
+      clearTimeout(p.retry);
+      if (!p.ready || !p.wantPlay || holds.size || p.playing) return;
+      try { p.player.mute(); p.player.playVideo(); } catch (_) { /* player gone */ }
+      if (p.kicks++ < KICK_TRIES) p.retry = setTimeout(() => kick(p), KICK_MS);
+      else armGestureRetry();
+    }
+    let gestureArmed = false;
+    const GESTURES = ["pointerdown", "touchstart", "keydown", "scroll", "wheel"];
+    function onGesture() {
+      const p = players.get(cur);
+      if (p && !p.playing) { p.kicks = 0; kick(p); }
+      tapThrough();
+    }
+    // A tap in our page does not count as a gesture inside YouTube's cross-origin frame, so while
+    // autoplay is blocked the current (invisible) player takes taps on the empty background:
+    // one tap there starts it, muted, and normal pointer-events: none comes back once it plays.
+    function tapThrough() {
+      slides.forEach((s, i) => {
+        const f = s.querySelector(".slide__video iframe");
+        if (f) f.style.pointerEvents = gestureArmed && i === cur ? "auto" : "none";
+        s.querySelector(".slide__video").classList.toggle("is-tappable", gestureArmed && i === cur);
+      });
+    }
+    function armGestureRetry() {
+      if (gestureArmed) return;
+      gestureArmed = true;
+      heroEl.classList.add("is-blocked");
+      GESTURES.forEach((t) => window.addEventListener(t, onGesture, { capture: true, passive: true }));
+      tapThrough();
+    }
+    function unblocked() {
+      heroEl.classList.remove("is-blocked");
+      if (!gestureArmed) return;
+      gestureArmed = false;
+      GESTURES.forEach((t) => window.removeEventListener(t, onGesture, { capture: true, passive: true }));
+      tapThrough();
     }
     function pauseAt(i) {
       const p = players.get(i);
@@ -384,6 +433,7 @@
         if (!keep.has(i)) {
           cancelAnimationFrame(p.fade);
           clearTimeout(p.reveal);
+          clearTimeout(p.retry);
           try { p.player.destroy(); } catch (_) { /* already gone */ }
           players.delete(i);
           const box = slides[i].querySelector(".slide__video");
@@ -397,6 +447,7 @@
       playAt(cur);
       ensurePlayer(mod(cur + 1));
       ensurePlayer(mod(cur - 1));
+      if (gestureArmed) tapThrough();
     }
 
     function go(target, dir, manual) {
@@ -484,7 +535,8 @@
       if (!reduceMotion.matches) raf = requestAnimationFrame(tick);
       const p = players.get(cur);
       if (p && p.ready && p.wantPlay) {
-        p.player.playVideo();
+        p.kicks = 0;
+        kick(p);
         applyMute(p);
       }
     }
@@ -627,7 +679,8 @@
         } catch (_) { /* */ }
       }
       return { index: cur, soundOn, volume, brightness, size, paused: holds.has("user"),
-        fullscreen: fsElement() === heroEl, playerMuted: muted, playerVolume: vol, playerState, currentTime };
+        fullscreen: fsElement() === heroEl, playerMuted: muted, playerVolume: vol, playerState, currentTime,
+        holds: [...holds], wantPlay: !!(e && e.wantPlay), ready: !!(e && e.ready) };
     }
 
     return { build, pause, resume, state };

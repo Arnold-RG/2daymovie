@@ -88,6 +88,7 @@ body.modal-open { overflow: hidden; }
 @keyframes kenburns { from { transform: scale(1.02) translate3d(0,0,0); } to { transform: scale(1.14) translate3d(-1.5%,-1%,0); } }
 .slide__video { position: absolute; inset: 0; overflow: hidden; opacity: 0; transition: opacity .6s ease; pointer-events: none; }
 .slide__video.is-playing { opacity: 1; }
+.slide__video.is-tappable { pointer-events: auto; } /* autoplay blocked: a tap on the background starts the trailer */
 .slide__video { container-type: size; }
 /* cover the hero at any size with no letterboxing: a 16:9 box at least as wide and as tall as the hero */
 .slide__video iframe { pointer-events: none; position: absolute; top: 50%; left: 50%; width: max(100%, 177.78vh); height: max(100%, 56.25vw); transform: translate(-50%,-50%) scale(1.18); border: 0; }

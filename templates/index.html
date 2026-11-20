@@ -22,7 +22,7 @@
   <link rel="icon" href="{{ base }}static/img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://i.ytimg.com">
   {% if lcp_id and not page.anchor %}<link rel="preload" as="image" href="https://i.ytimg.com/vi/{{ lcp_id }}/maxresdefault.jpg" imagesrcset="https://i.ytimg.com/vi/{{ lcp_id }}/sddefault.jpg 640w, https://i.ytimg.com/vi/{{ lcp_id }}/maxresdefault.jpg 1280w" imagesizes="100vw" fetchpriority="high">{% endif %}
-  <link rel="stylesheet" href="{{ base }}static/css/app.css">
+  <link rel="stylesheet" href="{{ base }}static/css/app.css?v={{ asset_v }}">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -156,8 +156,8 @@
   </div>
 
   <noscript><p class="loading">2DayMovie needs JavaScript to play videos.</p></noscript>
-  <script src="{{ base }}static/js/hero.js" defer></script>
-  <script src="{{ base }}static/js/search.js" defer></script>
-  <script src="{{ base }}static/js/app.js" defer></script>
+  <script src="{{ base }}static/js/hero.js?v={{ asset_v }}" defer></script>
+  <script src="{{ base }}static/js/search.js?v={{ asset_v }}" defer></script>
+  <script src="{{ base }}static/js/app.js?v={{ asset_v }}" defer></script>
 </body>
 </html>

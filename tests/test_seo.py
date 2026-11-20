@@ -55,7 +55,7 @@ def test_each_page_renders_its_own_meta(client, page):
     assert f'<link rel="canonical" href="{seo.SITE_URL}{seo.page_path(page)}">' in html
     if page["anchor"]:
         assert f'data-start="{page["anchor"]}"' in html
-        assert 'href="../../static/css/app.css"' in html and 'data-base="../../"' in html
+        assert 'href="../../static/css/app.css?v=' in html and 'data-base="../../"' in html
     exported = ROOT / seo.page_path(page) / "index.html"
     assert exported.read_text(encoding="utf-8") == html, "export is stale: run scripts/export_site.py"
 

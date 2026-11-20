@@ -65,3 +65,25 @@ def test_video_revealed_only_after_youtube_overlay_autohides():
     assert "const REVEAL_MS = 4300" in HERO
     assert "setTimeout(() => {" in HERO and "}, REVEAL_MS);" in HERO
     assert "clearTimeout(p.reveal)" in HERO and "clearTimeout(entry.reveal)" in HERO
+
+
+def test_stalled_autoplay_is_retried_then_waits_for_a_tap():
+    # WebKit/Safari can ignore the first muted playVideo(); keep asking, then fall back to a tap.
+    assert "const KICK_MS = 1200, KICK_TRIES = 10" in HERO
+    assert "if (entry.wantPlay && !holds.size) kick(entry);" in HERO
+    assert "p.player.mute(); p.player.playVideo();" in HERO
+    for g in ('"pointerdown"', '"touchstart"', '"keydown"', '"scroll"'):
+        assert g in HERO
+    assert 'heroEl.classList.add("is-blocked")' in HERO and "tapThrough()" in HERO
+    assert ".slide__video.is-tappable { pointer-events: auto; }" in CSS
+
+
+def test_assets_are_cache_busted_per_build():
+    from app import app, asset_version
+    v = asset_version()
+    assert len(v) == 10
+    html = app.test_client().get("/").get_data(as_text=True)
+    for a in ("static/css/app.css", "static/js/hero.js", "static/js/app.js", "static/js/search.js"):
+        assert f"{a}?v={v}" in html
+    exported = (ROOT / "index.html").read_text(encoding="utf-8")
+    assert f"static/js/hero.js?v={v}" in exported  # export_site.py was re-run after the last JS/CSS edit
