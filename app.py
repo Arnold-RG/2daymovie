@@ -11,6 +11,7 @@ from flask import Flask, Response, abort, g, jsonify, redirect, render_template,
 from prometheus_client import CONTENT_TYPE_LATEST, Counter, Histogram, generate_latest
 
 from data.year_movies import all_years
+from data.release_window import WINDOW_RELEASES
 from services import library, series, tmdb, upcoming, reviews
 from services.search import search_catalog as unified_search
 
@@ -386,11 +387,30 @@ Sitemap: {base}/sitemap.xml
         rows = reviews.list_reviews(limit=40)
         return jsonify({"reviews": rows, "stats": reviews.stats()})
 
+    def _release_window_cards(payload):
+        """Join dated release listings to existing trailer entries only when available."""
+        catalog = payload.get("movies", []) + payload.get("movies_2027", [])
+        trailer_by_title = {
+            str(movie.get("title", "")).casefold(): movie
+            for movie in catalog
+            if movie.get("status") == "trailer" and movie.get("trailer_key") and movie.get("id")
+        }
+        cards = []
+        for release in WINDOW_RELEASES:
+            trailer = trailer_by_title.get(release["title"].casefold())
+            cards.append({
+                **release,
+                "watch_id": trailer.get("id") if trailer else None,
+                "trailer_verified": False,  # A catalog key is not an audit of publisher rights
+            })
+        return cards
+
     @app.route("/upcoming")
     def upcoming_home():
         payload = upcoming.upcoming_payload()
         return render_template(
             "upcoming.html",
+            release_window=_release_window_cards(payload),
             movies_2025=payload.get("movies_2025") or [],
             movies=payload["movies"],
             movies_2027=payload["movies_2027"],
