@@ -42,7 +42,8 @@ def test_robots_allows_site_and_hides_operator_endpoints(client):
 def test_privacy_and_rights_notes_are_on_the_page(client):
     html = client.get("/").get_data(as_text=True)
     assert 'id="privacy"' in html
-    for phrase in ("no accounts", "no tracking cookies", "youtube-nocookie.com", "localStorage", "tdm.hero.v1",
+    for phrase in ("no accounts", "no tracking cookies of its own", "sets no cookies", "youtube-nocookie.com",
+                   "YouTube still sets its own cookies", "localStorage", "tdm.hero.v1",
                    "rehosted", "YouTube's Terms of Service"):
         assert phrase in html, phrase
 

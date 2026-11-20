@@ -19,9 +19,16 @@ Of the five standing areas, three apply and two do not.
   license, so by default all rights are reserved. Choosing one (for example MIT
   for the code) is the owner's call; it was not added automatically.
 - **Privacy:** a Privacy section is in the site footer (`#privacy`). It says there are no accounts, no
-  analytics and no tracking cookies; the site sets no cookies (tested); videos come from
+  analytics and no tracking cookies of our own; the site sets no cookies (tested); videos come from
   `youtube-nocookie.com`; `localStorage` key `tdm.hero.v1` holds only the header
   video's sound, volume, brightness and size choices (tested).
+- **YouTube cookies (measured):** a headless load of the home page ends with
+  YouTube's own cookies on `.youtube.com` (`YSC`, `VISITOR_INFO1_LIVE`,
+  `VISITOR_PRIVACY_METADATA`, `__Secure-YNID`, `__Secure-ROLLOUT_TOKEN`), because the
+  header autoplays and the IFrame API script loads from `www.youtube.com`.
+  `youtube-nocookie` reduces tracking but does not stop this. The privacy note says so
+  plainly. Stopping it entirely would need a click-to-load or consent gate before any
+  YouTube request, which is a product decision for the owner.
 - **Content rights:** the footer says every video is an official YouTube embed,
   nothing is rehosted, and each video stays under its owner's rights and YouTube's terms.
 - **Third-party licenses:** no vendored JS or CSS. Icon path data is Material
