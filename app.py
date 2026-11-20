@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import secrets
 import time
 
 from dotenv import load_dotenv
@@ -83,7 +84,7 @@ def create_app() -> Flask:
     app.config["OFFICIAL_URL"] = os.getenv(
         "OFFICIAL_URL", "https://twodaymovie.onrender.com/"
     )
-    app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "2daymovie-dev-secret-change-me")
+    app.config["SECRET_KEY"] = os.getenv("SECRET_KEY") or secrets.token_hex(32)
     app.config["BASE_PATH"] = _base_path()
     app.config["STATIC_EXPORT"] = os.getenv("STATIC_EXPORT", "").strip() == "1"
     if app.config["BASE_PATH"]:
@@ -252,6 +253,9 @@ def create_app() -> Flask:
 
     @app.get("/metrics")
     def metrics():
+        token = os.getenv("METRICS_TOKEN", "").strip()
+        if token and not secrets.compare_digest(request.headers.get("X-Metrics-Token", ""), token):
+            abort(403)
         return Response(generate_latest(), mimetype=CONTENT_TYPE_LATEST)
 
     @app.get("/robots.txt")
