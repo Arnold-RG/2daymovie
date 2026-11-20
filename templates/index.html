@@ -1,16 +1,24 @@
 <!doctype html>
 {# Rendered by app.py and exported to /index.html and /docs by scripts/export_site.py #}
-<html lang="en" data-base="{{ base }}">
+<html lang="en" data-base="{{ base }}"{% if page.anchor %} data-start="{{ page.anchor }}"{% endif %}>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   {% if csp_meta %}<meta http-equiv="Content-Security-Policy" content="{{ csp_meta }}">{% endif %}
-  <title>2DayMovie: movies, series, kids, anime and nature, free to stream</title>
-  <meta name="description" content="Stream full movies, series, kids' shows, cartoons, AI animation and nature documentaries on 2DayMovie through official YouTube embeds, plus trailers for the biggest upcoming films.">
+  <title>{{ page.title }}</title>
+  <meta name="description" content="{{ page.description }}">
+  <link rel="canonical" href="{{ canonical }}">
+  <meta name="robots" content="index, follow, max-image-preview:large">
   <meta name="theme-color" content="#0b0b0f">
-  <meta property="og:title" content="2DayMovie">
-  <meta property="og:description" content="Full movies, series, kids, cartoons, AI animation and nature documentaries, plus upcoming trailers.">
+  <meta property="og:site_name" content="2DayMovie">
+  <meta property="og:title" content="{{ page.title }}">
+  <meta property="og:description" content="{{ page.description }}">
   <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ canonical }}">
+  {% if og_image %}<meta property="og:image" content="{{ og_image }}">{% endif %}
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ page.title }}">
+  <meta name="twitter:description" content="{{ page.description }}">
   <link rel="icon" href="{{ base }}static/img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://i.ytimg.com">
   <link rel="stylesheet" href="{{ base }}static/css/app.css">

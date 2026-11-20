@@ -18,6 +18,8 @@ from dotenv import load_dotenv
 from flask import Flask, Response, abort, g, jsonify, redirect, render_template, request, send_from_directory
 from prometheus_client import CONTENT_TYPE_LATEST, Counter, Histogram, generate_latest
 
+import seo
+
 load_dotenv()
 
 ROOT = Path(__file__).resolve().parent
@@ -78,6 +80,14 @@ def load_trailers() -> dict:
     return json.loads((ROOT / "data" / "trailers.json").read_text(encoding="utf-8"))
 
 
+def _og_image() -> str:
+    try:
+        first = _items(load_trailers())[0]
+        return f"https://i.ytimg.com/vi/{first['youtube_id']}/hqdefault.jpg"
+    except (OSError, ValueError, KeyError, IndexError):
+        return ""
+
+
 def create_app() -> Flask:
     app = Flask(__name__, static_folder="static", template_folder="templates")
 
@@ -122,9 +132,25 @@ def create_app() -> Flask:
         resp.headers["Cache-Control"] = "no-store"
         return resp
 
+    def _page(slug: str, base: str):
+        catalog = load_catalog()
+        found = next((p for p in seo.pages(catalog) if p["slug"] == slug), None)
+        if found is None:
+            abort(404)
+        return render_template("index.html", base=base, csp_meta=CSP_META, page=found,
+                               canonical=seo.SITE_URL + seo.page_path(found), og_image=_og_image())
+
     @app.get("/")
     def index():
-        return render_template("index.html", base="", csp_meta=CSP_META)
+        return _page("", "")
+
+    @app.get("/explore/<slug>/")
+    def explore(slug: str):
+        return _page(slug, "../../")
+
+    @app.get("/sitemap.xml")
+    def sitemap():
+        return Response(seo.sitemap_xml(load_catalog()), mimetype="application/xml")
 
     @app.get("/data/<name>")
     def data(name: str):
@@ -134,7 +160,7 @@ def create_app() -> Flask:
 
     @app.get("/robots.txt")
     def robots():
-        return send_from_directory(ROOT, "robots.txt", mimetype="text/plain")
+        return Response(seo.robots_txt(), mimetype="text/plain")
 
     @app.get("/.well-known/security.txt")
     def security_txt():

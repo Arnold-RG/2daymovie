@@ -17,7 +17,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from app import CSP_META, app  # noqa: E402
+import seo  # noqa: E402
+from app import CSP_META, _og_image, app, load_catalog  # noqa: E402
 
 DATA = ["catalog.json", "trailers.json"]
 
@@ -35,8 +36,23 @@ def write_pages(target: Path, error_base: str = "/") -> None:
     """index.html uses relative URLs; 404.html needs an absolute base because it
     is served at whatever nested path was not found."""
     target.mkdir(parents=True, exist_ok=True)
-    (target / "index.html").write_text(render("index.html", base="", csp_meta=CSP_META), encoding="utf-8")
+    catalog = load_catalog()
+    og = _og_image()
+    explore = target / "explore"
+    if explore.exists():
+        shutil.rmtree(explore)
+    for p in seo.pages(catalog):
+        rel = seo.page_path(p)
+        base = "../../" if rel else ""
+        dest = target / rel / "index.html"
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_text(render("index.html", base=base, csp_meta=CSP_META, page=p,
+                               canonical=seo.SITE_URL + rel, og_image=og), encoding="utf-8")
     (target / "404.html").write_text(render("404.html", base=error_base), encoding="utf-8")
+    # sitemap and robots describe the host that serves this copy
+    site = seo.PAGES_URL if error_base == PAGES_BASE else seo.SITE_URL
+    (target / "sitemap.xml").write_text(seo.sitemap_xml(catalog, site), encoding="utf-8")
+    (target / "robots.txt").write_text(seo.robots_txt(site), encoding="utf-8")
 
 
 def export(out: Path, error_base: str = "/") -> None:
@@ -47,7 +63,6 @@ def export(out: Path, error_base: str = "/") -> None:
     (out / "data").mkdir()
     for f in DATA:
         shutil.copy2(ROOT / "data" / f, out / "data" / f)
-    shutil.copy2(ROOT / "robots.txt", out / "robots.txt")
     (out / ".well-known").mkdir()
     shutil.copy2(ROOT / ".well-known" / "security.txt", out / ".well-known" / "security.txt")
     (out / ".nojekyll").write_text("")

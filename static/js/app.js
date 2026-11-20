@@ -413,6 +413,10 @@
     bindGlobal();
     bindNav();
     document.dispatchEvent(new CustomEvent("tdm:ready"));
+    // Landing pages (/explore/<slug>/) open at their section or genre row.
+    const start = document.documentElement.dataset.start;
+    const target = start && document.getElementById(start);
+    if (target) requestAnimationFrame(() => target.scrollIntoView({ block: "start" }));
     const v = new URL(location.href).searchParams.get("v");
     if (v && byId.has(v)) openPlayer(v, false);
   }
