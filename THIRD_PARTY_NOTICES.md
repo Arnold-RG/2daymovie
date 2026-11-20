@@ -1,5 +1,10 @@
 # Third-party notices
 
+2DayMovie's own code is MIT-licensed (see `LICENSE`). **Video content is not
+covered by that license**: every video, trailer, thumbnail, title and piece of
+artwork belongs to its owner and is shown only through official YouTube embeds
+under YouTube's Terms of Service. Nothing is downloaded or rehosted.
+
 2DayMovie ships **no vendored third-party JavaScript or CSS**. Everything in
 `static/` is first-party code. Fonts are the visitor's system fonts.
 

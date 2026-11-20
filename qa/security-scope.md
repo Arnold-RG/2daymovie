@@ -15,9 +15,9 @@ Of the five standing areas, three apply and two do not.
 
 ## GRC
 
-- **LICENSE: missing.** The repository has no LICENSE file and GitHub reports no
-  license, so by default all rights are reserved. Choosing one (for example MIT
-  for the code) is the owner's call; it was not added automatically.
+- **LICENSE:** MIT for the code, Copyright (c) 2026 Arnold Rurangwa. README and
+  THIRD_PARTY_NOTICES state that video content belongs to its owners and is not
+  covered by it.
 - **Privacy:** a Privacy section is in the site footer (`#privacy`). It says there are no accounts, no
   analytics and no tracking cookies of our own; the site sets no cookies (tested); videos come from
   `youtube-nocookie.com`; `localStorage` key `tdm.hero.v1` holds only the header

@@ -16,7 +16,7 @@ trailers for the biggest upcoming films.
 | `data/catalog.json` | Public catalog: `{ generated, items: [{ id, title, type, genres, duration, thumbnail }] }` |
 | `data/trailers.json` | Upcoming trailers: `{ generated, items: [{ title, release_date, youtube_id, start, end }] }` |
 | `data/catalog_sources.json` | Internal only (never served by the app): video id to source channel id |
-| `scripts/channels.json` | The source channel list, grouped by content type |
+| `scripts/channels.json` | The source channel list, grouped by content type (private, kept out of git) |
 | `app.py` | Flask: renders the shell, serves `data/`, `/healthz`, `/readyz`, `/metrics` |
 
 `type` is the section (`movies`, `series`, `kids`, `cartoons`, `ai`, `wildlife`); `genres[0]` is the
@@ -48,3 +48,12 @@ Every catalog video is checked individually: public, not live, not age-restricte
 - Render static site `twodaymovie-site` publishes the repo root from `main` (`index.html` is generated).
 - Render web service `twodaymovie` builds the `Dockerfile` from `main` (gunicorn `app:app`).
 - GitHub Pages serves `main:/docs`.
+
+## License
+
+The code is released under the [MIT License](LICENSE), Copyright (c) 2026 Arnold Rurangwa.
+
+The license covers this repository's code only. **The videos, trailers, thumbnails, titles and
+artwork shown on the site are not covered by it**: they belong to their owners and are played
+through official YouTube embeds under YouTube's Terms of Service. Nothing is rehosted. Third-party
+components are listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
