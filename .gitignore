@@ -25,3 +25,7 @@ _cmsg.txt
 commitmsg.txt
 
 scripts/.cache/
+
+# Catalog refine working logs (not served)
+data/catalog_dropped.json
+data/catalog_review.json
