@@ -105,6 +105,16 @@
       </div>
       <p class="tm-muted">Availability and country permissions vary by individual YouTube video; we cannot promise playback throughout Europe and Africa without checking each one.</p>
     </section>
+    <section class="tm-section" aria-labelledby="reviews-heading">
+      <div class="tm-heading"><div><p class="tm-overline">From our community</p><h2 id="reviews-heading">Live reviews</h2><p>Real feedback from 2daymovie visitors.</p></div><a href="{{ url_for('reviews_home') }}">Read or leave a review</a></div>
+      <div class="tm-reviews">
+      {% for review in latest_reviews %}
+        <article class="tm-note"><strong>{{ review.name }}</strong><p aria-label="Rating {{ review.rating }} out of 5">★ {{ review.rating }}/5</p><p>{{ review.message }}</p></article>
+      {% else %}
+        <div class="tm-note">Be the first to share your experience with the cinema.</div>
+      {% endfor %}
+      </div>
+    </section>
   </div>
 </div>
 {% endblock %}
