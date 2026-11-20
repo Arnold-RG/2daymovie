@@ -3,21 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>2DayMovie — Worldwide Cinema</title>
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>2DayMovie</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { background: #141414; color: #fff; font-family: system-ui, -apple-system, sans-serif; }
-header { position: sticky; top: 0; z-index: 100; background: linear-gradient(180deg, rgba(0,0,0,.8) 0%, transparent); padding: 16px 4%; display: flex; align-items: center; justify-content: space-between; transition: background .3s; }
+header { position: sticky; top: 0; z-index: 100; background: linear-gradient(180deg, rgba(0,0,0,.8) 0%, transparent); padding: 16px 4%; display: flex; align-items: center; justify-content: space-between; }
 header.scrolled { background: #141414; }
 .logo { font-size: 26px; font-weight: 800; color: #e50914; }
 nav { display: flex; gap: 20px; }
 nav a { color: #e5e5e5; font-size: 14px; text-decoration: none; }
 nav a:hover { color: #fff; }
 .search { background: rgba(0,0,0,.5); border: 1px solid #555; color: #fff; padding: 8px 12px; border-radius: 4px; width: 180px; }
-.hero { height: 75vh; min-height: 480px; position: relative; overflow: hidden; }
-.hero-slide { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; transition: opacity 1.2s; }
-.hero-slide.active { opacity: 1; }
-.hero-overlay { position: absolute; inset: 0; background: linear-gradient(to right, rgba(20,20,20,.85) 35%, transparent 70%); }
+.hero { height: 80vh; min-height: 500px; position: relative; overflow: hidden; }
+.hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.hero-overlay { position: absolute; inset: 0; background: linear-gradient(to right, rgba(20,20,20,.85) 30%, transparent 70%); }
 .hero-content { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; justify-content: center; padding: 0 4%; max-width: 580px; }
 .hero h1 { font-size: clamp(36px, 5vw, 58px); font-weight: 800; line-height: 1.05; margin-bottom: 12px; }
 .hero p { font-size: 17px; color: #ddd; margin-bottom: 20px; }
@@ -30,12 +30,21 @@ nav a:hover { color: #fff; }
 .row h2 { padding: 0 4%; margin-bottom: 10px; font-size: 20px; font-weight: 700; }
 .row-scroll { display: flex; gap: 8px; overflow-x: auto; padding: 0 4% 10px; scrollbar-width: none; }
 .row-scroll::-webkit-scrollbar { display: none; }
-.card { flex: 0 0 220px; background: #1a1a1a; border-radius: 6px; overflow: hidden; cursor: pointer; transition: transform .2s; }
-.card:hover { transform: scale(1.06); }
-.card img { width: 100%; height: 124px; object-fit: cover; background: #222; display: block; }
-.card .info { padding: 8px 10px 12px; }
-.card h3 { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
-.card small { color: #888; font-size: 11px; }
+.card { flex: 0 0 230px; position: relative; border-radius: 4px; overflow: hidden; cursor: pointer; transition: transform .2s; }
+.card:hover { transform: scale(1.07); z-index: 5; }
+.card img { width: 100%; aspect-ratio: 16/9; object-fit: cover; background: #222; display: block; }
+.card-info { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,.9)); padding: 30px 10px 10px; opacity: 0; transition: opacity .2s; }
+.card:hover .card-info { opacity: 1; }
+.card-info h3 { font-size: 14px; font-weight: 600; }
+.player { position: fixed; inset: 0; background: rgba(0,0,0,.96); z-index: 200; display: none; flex-direction: column; }
+.player.show { display: flex; }
+.player header { background: #111; padding: 12px 4%; display: flex; justify-content: space-between; align-items: center; }
+.player button { background: none; border: none; color: #fff; font-size: 28px; cursor: pointer; }
+.player .screen { flex: 1; display: grid; place-items: center; padding: 20px; }
+.player iframe { width: 100%; max-width: 1200px; aspect-ratio: 16/9; border: 0; border-radius: 8px; }
+.fallback { text-align: center; max-width: 440px; display: none; }
+.fallback.show { display: block; }
+.fallback a { display: inline-block; margin-top: 16px; background: #e50914; color: #fff; padding: 12px 24px; border-radius: 4px; text-decoration: none; font-weight: 600; }
 @media (max-width: 700px) { nav { display: none; } .search { width: 120px; } }
 </style>
 </head>
@@ -43,107 +52,102 @@ nav a:hover { color: #fff; }
 <header id="header">
   <div class="logo">2DAYMOVIE</div>
   <nav>
-    <a href="#nollywood">Nollywood</a>
-    <a href="#rwanda">Rwanda</a>
-    <a href="#france">France</a>
-    <a href="#international">International</a>
-    <a href="#india">India</a>
-    <a href="#asia">Asia</a>
+    <a href="#movies">Movies</a>
+    <a href="#series">Series</a>
     <a href="#kids">Kids</a>
-    <a href="#ai">AI & Manhwa</a>
-    <a href="#wildlife">Wildlife</a>
+    <a href="#cartoons">Cartoons</a>
+    <a href="#trailers">Upcoming</a>
   </nav>
-  <input class="search" type="search" id="search" placeholder="Search channels...">
+  <input class="search" type="search" id="search" placeholder="Search...">
 </header>
 
 <div class="hero">
-  <div class="hero-slide active" style="background-image:url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1400')"></div>
-  <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1400')"></div>
-  <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=1400')"></div>
+  <iframe class="hero-video" id="heroVideo" src="https://www.youtube-nocookie.com/embed/irVNGjRFZGk?autoplay=1&mute=1&loop=1&playlist=irVNGjRFZGk&controls=0&showinfo=0&modestbranding=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
   <div class="hero-overlay"></div>
   <div class="hero-content">
-    <h1>Worldwide Cinema</h1>
-    <p>Nollywood, Rwanda, France, India, Asia, Kids, AI Animation and Wildlife — all from official YouTube channels.</p>
+    <h1>Avengers: Doomsday</h1>
+    <p>In theaters December 18. Watch the trailer and explore more below.</p>
     <div class="btn-row">
-      <button class="btn btn-primary" onclick="document.getElementById('nollywood').scrollIntoView({behavior:'smooth'})">▶ Browse</button>
-      <button class="btn btn-secondary">More Info</button>
+      <button class="btn btn-primary" onclick="play('irVNGjRFZGk','Avengers: Doomsday')">▶ Play Trailer</button>
+      <button class="btn btn-secondary" onclick="document.getElementById('trailers').scrollIntoView({behavior:'smooth'})">More Trailers</button>
     </div>
   </div>
 </div>
 
 <div class="rows" id="rows"></div>
 
+<div class="player" id="player">
+  <header>
+    <strong id="ptitle">Now Playing</strong>
+    <button onclick="closePlayer()">✕</button>
+  </header>
+  <div class="screen" id="pscreen"></div>
+</div>
+
 <script>
-const channels = [
-  {name:'RuthKadiri247', url:'https://www.youtube.com/@RuthKadiri247', cat:'Nollywood'},
-  {name:'Omoni Oboli TV', url:'https://www.youtube.com/@OmoniOboliTV', cat:'Nollywood'},
-  {name:'Uchenna Mbunabo TV', url:'https://www.youtube.com/@UCHENNAMBUNABOTV02', cat:'Nollywood'},
-  {name:'Maurice Sam TV', url:'https://www.youtube.com/@mauricesamtv', cat:'Nollywood'},
-  {name:'Bimbo Ademoye TV', url:'https://www.youtube.com/@BimboAdemoyeTV', cat:'Nollywood'},
-  {name:'Royal Arts TV', url:'https://www.youtube.com/@RoyalArtsTV', cat:'Nollywood'},
-  {name:'Biodun Stephen TV', url:'https://www.youtube.com/@BiodunStephenTV', cat:'Nollywood'},
-  {name:'Mercy Johnson Okojie TV', url:'https://www.youtube.com/@MercyJohnsonOkojieTV', cat:'Nollywood'},
-  {name:'ZACU ENTERTAINMENT', url:'https://www.youtube.com/channel/UC6V5-_gKvbQ8P86cUM5UkxQ', cat:'Rwanda'},
-  {name:'Grace Rwanda Movies', url:'https://www.youtube.com/channel/UC7blKkBISrBIk3tTCR_El6w', cat:'Rwanda'},
-  {name:'Vision House Films', url:'https://www.youtube.com/@visionhousefilms', cat:'Rwanda'},
-  {name:'myCINÉMA', url:'https://www.youtube.com/@mycinemafr', cat:'France'},
-  {name:'Cinéma Cinémas', url:'https://www.youtube.com/@CinemaCinemas', cat:'France'},
-  {name:'CINE PRIME', url:'https://www.youtube.com/@cine_prime', cat:'France'},
-  {name:'FilmRise Movies', url:'https://www.youtube.com/@FilmRiseMovies', cat:'International'},
-  {name:'Mosfilm', url:'https://www.youtube.com/MosfilmRuOfficial', cat:'International'},
-  {name:'The Midnight Screening', url:'https://www.youtube.com/@themidnightscreening', cat:'International'},
-  {name:'Goldmines', url:'https://www.youtube.com/@goldminestelefilms', cat:'India'},
-  {name:'Shemaroo Movies', url:'https://www.youtube.com/@ShemarooMovies', cat:'India'},
-  {name:'Rajshri', url:'https://www.youtube.com/@rajshri', cat:'India'},
-  {name:'China Movie Channel ENGLISH', url:'https://www.youtube.com/@cctv6-english', cat:'Asia'},
-  {name:'iQIYI', url:'https://www.youtube.com/@iQIYIofficial', cat:'Asia'},
-  {name:'Korean Classic Film', url:'https://www.youtube.com/KoreanFilm', cat:'Asia'},
-  {name:'KBS World TV', url:'https://www.youtube.com/@kbsworldtv', cat:'Asia'},
-  {name:'Peppa Pig', url:'https://www.youtube.com/@PeppaPigOfficial', cat:'Kids'},
-  {name:'Bluey', url:'https://www.youtube.com/@blueyofficialchannel', cat:'Kids'},
-  {name:'Masha and the Bear', url:'https://www.youtube.com/@mashabearen', cat:'Kids'},
-  {name:'PBS KIDS', url:'https://www.youtube.com/@PBSKIDS', cat:'Kids'},
-  {name:'CoComelon', url:'https://www.youtube.com/@CoComelon', cat:'Kids'},
-  {name:'KNK Studio Official', url:'https://www.youtube.com/channel/UCq0dmizYYTl_QcBuHTPOLMQ', cat:'AI & Manhwa'},
-  {name:'Manhwa Horizon', url:'https://www.youtube.com/channel/UCFBbqzFEX8NAP5z1qlKA0Vw', cat:'AI & Manhwa'},
-  {name:'FILM CRUX', url:'https://www.youtube.com/@FILMCRUX', cat:'AI & Manhwa'},
-  {name:'BBC Earth', url:'https://www.youtube.com/@BBCEarth', cat:'Wildlife'},
-  {name:'National Geographic', url:'https://www.youtube.com/@NatGeo', cat:'Wildlife'},
-  {name:'Nat Geo WILD', url:'https://www.youtube.com/@NatGeoWild', cat:'Wildlife'},
-  {name:'WildEarth', url:'https://www.youtube.com/@WildEarth', cat:'Wildlife'}
+const records = [
+  {id:'irVNGjRFZGk', title:'Avengers: Doomsday', type:'Upcoming Trailers'},
+  {id:'X1aFkAkFASk', title:'Avengers: Doomsday Special Look', type:'Upcoming Trailers'},
+  {id:'Fg0jyss_YnU', title:'Avengers: Doomsday The Return', type:'Upcoming Trailers'},
+  {id:'AVjdUMbaEsA', title:'Avengers: Doomsday Official Trailer', type:'Upcoming Trailers'},
+  {id:'GPn9wajnOWA', title:'Avengers Doomsday Teaser', type:'Upcoming Trailers'},
+  {id:'S-SNLzfrUNw', title:'Ice Age: Boiling Point', type:'Upcoming Trailers'},
+  {id:'OT8J-1DO9Fw', title:'Artificial', type:'Upcoming Trailers'},
+  {id:'m7b2briPoEk', title:'Remain', type:'Upcoming Trailers'},
+  {id:'8q9PUGbIzxw', title:'Children of Blood and Bone', type:'Upcoming Trailers'},
+  {id:'mi4gQMDgB_g', title:'Office Romance', type:'Movies'},
+  {id:'NTWA_7-ld_U', title:'Moscow Does Not Believe in Tears', type:'Movies'},
+  {id:'Q3hBLv-HLEc', title:'Stalker', type:'Movies'},
+  {id:'Z8ZhQPaw4rE', title:'Solaris', type:'Movies'},
+  {id:'GgFLr2bjUNM', title:'Mimino', type:'Movies'},
+  {id:'MkHiu9fD820', title:'The Diamond Arm', type:'Movies'},
+  {id:'EYHv8eJrW2Y', title:'Kin-Dza-Dza!', type:'Movies'},
+  {id:'tSAKzVP2IGk', title:'Wild Kratts - Stuck on Sharks', type:'Series'},
+  {id:'F1z5E5gzlLA', title:'Wild Kratts - Creature Power', type:'Series'},
+  {id:'KX2HzjI0XO4', title:'Wild Kratts - Spider Web', type:'Series'},
+  {id:'PfgJJ2Sst6A', title:'SUPER WHY! Three Little Pigs', type:'Kids'},
+  {id:'DOuRjoRYby8', title:'SUPER WHY! Cinderella', type:'Kids'},
+  {id:'QjWhDynv-SQ', title:'Sid the Science Kid', type:'Kids'},
+  {id:'wkk_fPp_ZMs', title:'Gulliver\'s Travels', type:'Cartoons'},
+  {id:'9kncDIPfWr8', title:'Booba Compilation', type:'Cartoons'},
+  {id:'7tuAFeTkBAU', title:'Booba Episodes', type:'Cartoons'}
 ];
 
-function render(filter='') {
-  const q = filter.toLowerCase();
-  const groups = {};
-  channels.forEach(c => {
-    if (c.name.toLowerCase().includes(q)) {
-      if (!groups[c.cat]) groups[c.cat] = [];
-      groups[c.cat].push(c);
+function render(f='') {
+  const q = f.toLowerCase();
+  const g = {};
+  records.forEach(r => {
+    if (r.title.toLowerCase().includes(q)) {
+      if (!g[r.type]) g[r.type] = [];
+      g[r.type].push(r);
     }
   });
-  let html = '';
-  Object.keys(groups).forEach(cat => {
-    const id = cat.toLowerCase().replace(/[^a-z0-9]/g, '');
-    html += `<div class="row" id="${id}"><h2>${cat}</h2><div class="row-scroll">`;
-    groups[cat].forEach(c => {
-      html += `<div class="card" onclick="window.open('${c.url}','_blank')">
-        <img src="https://via.placeholder.com/220x124/222/fff?text=${encodeURIComponent(c.name)}" alt="">
-        <div class="info"><h3>${c.name}</h3><small>Official Channel</small></div>
-      </div>`;
+  let h = '';
+  Object.keys(g).forEach(t => {
+    const id = t.toLowerCase().replace(/[^a-z0-9]/g, '');
+    h += `<div class="row" id="${id}"><h2>${t}</h2><div class="row-scroll">`;
+    g[t].forEach(r => {
+      const s = r.title.replace(/'/g, "\\'");
+      h += `<div class="card" onclick="play('${r.id}','${s}')"><img src="https://i.ytimg.com/vi/${r.id}/hqdefault.jpg"><div class="card-info"><h3>${r.title}</h3></div></div>`;
     });
-    html += '</div></div>';
+    h += '</div></div>';
   });
-  document.getElementById('rows').innerHTML = html || '<p style="padding:20px 4%">No channels found.</p>';
+  document.getElementById('rows').innerHTML = h || '<p style="padding:20px 4%">No results</p>';
 }
 
-let slide = 0;
-const slides = document.querySelectorAll('.hero-slide');
-setInterval(() => {
-  slides[slide].classList.remove('active');
-  slide = (slide + 1) % slides.length;
-  slides[slide].classList.add('active');
-}, 5000);
+function play(id, title) {
+  document.getElementById('ptitle').textContent = title;
+  document.getElementById('pscreen').innerHTML = `
+    <iframe src="https://www.youtube-nocookie.com/embed/${id}?autoplay=1&playsinline=1&rel=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    <div class="fallback" id="fb"><p>This video cannot be played here because the owner has disabled embedding.</p><a href="https://www.youtube.com/watch?v=${id}" target="_blank">Watch on YouTube</a></div>`;
+  document.getElementById('player').classList.add('show');
+  setTimeout(() => { document.getElementById('fb')?.classList.add('show'); }, 1200);
+}
+
+function closePlayer() {
+  document.getElementById('player').classList.remove('show');
+  document.getElementById('pscreen').innerHTML = '';
+}
 
 document.getElementById('search').oninput = e => render(e.target.value);
 window.addEventListener('scroll', () => document.getElementById('header').classList.toggle('scrolled', window.scrollY > 40));
