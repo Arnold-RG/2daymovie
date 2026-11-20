@@ -30,7 +30,7 @@
   "use strict";
   const SLIDE_MS = 30000; // default auto-advance when a clip has no start/end
   const TDM = (window.TDM = window.TDM || {});
-  let $, el, svg, thumb, fmtDate, loadYT, openPlayer, ICON_PLAY, ICON_INFO, NOCOOKIE, reduceMotion, trailers;
+  let $, el, svg, thumb, fmtDate, loadYT, openPlayer, embedFrame, ICON_PLAY, ICON_INFO, NOCOOKIE, reduceMotion, trailers;
 
   function durationOf(t) {
     const start = Number(t && t.clip_start);
@@ -127,12 +127,17 @@
       const end = t.clip_end || start + 32;
       const entry = { player: null, ready: false, wantPlay: i === cur };
       players.set(i, entry);
-      entry.player = new YTlib.Player(mount, {
-        host: NOCOOKIE, videoId: t.id, width: "100%", height: "100%",
-        playerVars: {
-          autoplay: 0, mute: 1, controls: 0, disablekb: 1, fs: 0, rel: 0, playsinline: 1,
-          modestbranding: 1, iv_load_policy: 3, start, end, origin: location.origin,
-        },
+      // Build the sandboxed nocookie iframe ourselves, then let the IFrame API attach to it.
+      const frame = embedFrame(t.id, {
+        // no YouTube chrome in the header: our Pause/Sound buttons are the only controls
+        autoplay: 0, mute: 1, controls: 0, disablekb: 1, fs: 0, rel: 0, playsinline: 1,
+        modestbranding: 1, iv_load_policy: 3, cc_load_policy: 0, showinfo: 0, start, end,
+      }, `${t.film} trailer clip`);
+      frame.tabIndex = -1;
+      frame.setAttribute("aria-hidden", "true");
+      frame.style.pointerEvents = "none"; // clicks/taps never reach YouTube's own overlay
+      mount.replaceWith(frame);
+      entry.player = new YTlib.Player(frame, {
         events: {
           onReady: (e) => {
             entry.ready = true;
@@ -154,8 +159,13 @@
           onError: () => box.classList.remove("is-playing"), // fall back to the static thumbnail
         },
       });
-      const iframe = box.querySelector("iframe");
-      if (iframe) { iframe.tabIndex = -1; iframe.setAttribute("aria-hidden", "true"); }
+      // The API may swap in its own element; keep the sandbox and focus rules on whatever iframe is live.
+      const live = box.querySelector("iframe");
+      if (live && live !== frame) {
+        live.setAttribute("sandbox", TDM.SANDBOX);
+        live.tabIndex = -1;
+        live.setAttribute("aria-hidden", "true");
+      }
     }
 
     function playAt(i) {
@@ -298,6 +308,21 @@
       soundBtn.textContent = "Sound";
       soundBtn.addEventListener("click", toggleSound);
 
+      // WCAG 2.2.2: moving, auto-updating content needs a visible pause control.
+      const playBtn = el("button", "hero__sound hero__playpause", "Pause");
+      playBtn.type = "button";
+      playBtn.id = "heroPause";
+      playBtn.setAttribute("aria-pressed", "false");
+      playBtn.setAttribute("aria-label", "Pause trailers");
+      playBtn.addEventListener("click", () => {
+        const api = TDM.hero || { pause, resume };
+        const paused = playBtn.getAttribute("aria-pressed") === "true";
+        if (paused) api.resume("user"); else api.pause("user");
+        playBtn.setAttribute("aria-pressed", String(!paused));
+        playBtn.textContent = paused ? "Pause" : "Play";
+        playBtn.setAttribute("aria-label", paused ? "Pause trailers" : "Play trailers");
+      });
+
       const brightness = el("div", "hero__brightness");
       const label = el("label", "hero__brightness-label", "Brightness");
       label.setAttribute("for", "heroBrightness");
@@ -316,7 +341,7 @@
         heroEl.style.setProperty("--hero-brightness", input.value);
       });
       brightness.append(label, input);
-      tools.append(soundBtn, brightness);
+      tools.append(playBtn, soundBtn, brightness);
       heroEl.appendChild(tools);
     }
 
@@ -346,7 +371,7 @@
   }
 
   document.addEventListener("tdm:ready", () => {
-    ({ $, el, svg, thumb, fmtDate, loadYT, openPlayer, ICON_PLAY, ICON_INFO, NOCOOKIE, reduceMotion } = TDM);
+    ({ $, el, svg, thumb, fmtDate, loadYT, openPlayer, embedFrame, ICON_PLAY, ICON_INFO, NOCOOKIE, reduceMotion } = TDM);
     trailers = TDM.trailers;
     const hero = makeHero();
     TDM.hero = hero;

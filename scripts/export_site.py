@@ -17,7 +17,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from app import app  # noqa: E402
+from app import CSP_META, app  # noqa: E402
 
 DATA = ["catalog.json", "trailers.json"]
 
@@ -28,16 +28,21 @@ def render(name: str, **ctx) -> str:
         return render_template(name, **ctx)
 
 
-def write_pages(target: Path) -> None:
+PAGES_BASE = "/2daymovie/"  # GitHub Pages project path for docs/
+
+
+def write_pages(target: Path, error_base: str = "/") -> None:
+    """index.html uses relative URLs; 404.html needs an absolute base because it
+    is served at whatever nested path was not found."""
     target.mkdir(parents=True, exist_ok=True)
-    (target / "index.html").write_text(render("index.html", base=""), encoding="utf-8")
-    (target / "404.html").write_text(render("404.html", base=""), encoding="utf-8")
+    (target / "index.html").write_text(render("index.html", base="", csp_meta=CSP_META), encoding="utf-8")
+    (target / "404.html").write_text(render("404.html", base=error_base), encoding="utf-8")
 
 
-def export(out: Path) -> None:
+def export(out: Path, error_base: str = "/") -> None:
     if out.exists():
         shutil.rmtree(out)
-    write_pages(out)
+    write_pages(out, error_base)
     shutil.copytree(ROOT / "static", out / "static")
     (out / "data").mkdir()
     for f in DATA:
@@ -49,9 +54,10 @@ def export(out: Path) -> None:
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--out")
+    ap.add_argument("--base", default="/", help="absolute base for 404.html in --out")
     args = ap.parse_args()
     if args.out:
-        export(Path(args.out).resolve())
+        export(Path(args.out).resolve(), args.base)
     else:
         write_pages(ROOT)
-        export(ROOT / "docs")
+        export(ROOT / "docs", PAGES_BASE)

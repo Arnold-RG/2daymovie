@@ -105,14 +105,35 @@ def test_no_youtube_at_or_channel_links_in_our_html_and_assets(client, app):
     )
 
 
+def _split_titles(text: str) -> tuple[str, str]:
+    """Return (titles, everything else) for a catalog/trailers JSON document."""
+    import json
+    doc = json.loads(text)
+    items = doc.get("items", []) if isinstance(doc, dict) else doc
+    titles = "\n".join(str(it.get("title", "")) for it in items if isinstance(it, dict))
+    for it in items:
+        if isinstance(it, dict):
+            it["title"] = ""
+    return titles, json.dumps(doc, ensure_ascii=False)
+
+
+# Same policy as scripts/validate_catalog.py: a show-name channel ("Peppa Pig",
+# "Mr Bean") may appear in a title because it is the title of the work; brand-like
+# channel names ("X TV", "Y Movies") may not appear anywhere.
+BRANDY = re.compile(
+    r"\b(tv|movies?|films?|studios?|entertainment|channel|recaps?|cinema|official|flix|plus)\b", re.I)
+
+
 def test_denylist_not_in_public_catalog_or_trailers():
     """Public JSON is fetched by the client and titles are shown in our UI."""
     deny = load_denylist()
     if deny is None:
         pytest.skip(DENYLIST_MISSING_MSG)
+    brand_names = {n for n in deny["names"] if BRANDY.search(n)}
     hits = []
     for label, text in _data_sources():
-        n = count_name_hits(text, deny["names"])
+        titles, rest = _split_titles(text)
+        n = count_name_hits(rest, deny["names"]) + count_name_hits(titles, brand_names)
         h = count_handle_hits(text, deny["handles"])
         l = count_link_hits(text, deny["links"])
         at = len(YT_AT.findall(text))

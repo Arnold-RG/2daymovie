@@ -1,4 +1,4 @@
-"""Every public route returns 200; unknown paths return 404."""
+"""Every public route returns 200 (/metrics is private); unknown paths return 404."""
 from __future__ import annotations
 
 from tests.helpers import public_get_rules
@@ -17,6 +17,8 @@ def test_public_routes_return_200(client, app):
                     if resp.status_code != 200:
                         missing.append((path, resp.status_code))
             continue
+        if rule.endpoint == "metrics":
+            continue  # private: token-gated, covered in tests/test_app.py
         resp = client.get(rule.rule)
         checked.append(rule.rule)
         if resp.status_code != 200:

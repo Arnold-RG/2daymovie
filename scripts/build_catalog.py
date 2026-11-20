@@ -122,6 +122,14 @@ GENRE_RULES = [
 ]
 
 
+def load_channels() -> list[dict]:
+    """scripts/channels.json is local-only (gitignored) so channel names never ship."""
+    if not CHANNELS.exists():
+        raise SystemExit(f"{CHANNELS} not found. It is not tracked in git; copy the private "
+                         "channel list there (see README) and run again.")
+    return json.loads(CHANNELS.read_text())
+
+
 def norm(s: str) -> str:
     s = unicodedata.normalize("NFKD", s).encode("ascii", "ignore").decode().lower()
     return re.sub(r"[^a-z0-9]", "", s)
@@ -554,7 +562,7 @@ def duration_ok(section: str, duration: int) -> bool:
 
 # ---------- refine: verify existing + fill thin kids/cartoon rows ----------
 def refine(args) -> int:
-    channels = json.loads(CHANNELS.read_text())
+    channels = load_channels()
     catalog = json.loads(OUT.read_text())
     existing = catalog["items"] if isinstance(catalog, dict) else catalog
     sources = {}
@@ -767,7 +775,7 @@ def main() -> int:
     if args.refine:
         return refine(args)
 
-    channels = json.loads(CHANNELS.read_text())
+    channels = load_channels()
     with cf.ThreadPoolExecutor(args.workers) as ex:
         resolutions = [confident(r) for r in ex.map(resolve, channels)]
     RESOLUTION.write_text(json.dumps(

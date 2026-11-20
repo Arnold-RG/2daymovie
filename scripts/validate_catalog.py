@@ -145,7 +145,12 @@ def main() -> int:
         if not isinstance(thumb, str) or not thumb.startswith("https://"):
             errors.append(f"{loc}.thumbnail must be an https URL")
 
-    channels = json.loads(ch_path.read_text(encoding="utf-8"))
+    if ch_path.exists():
+        channels = json.loads(ch_path.read_text(encoding="utf-8"))
+    else:
+        # channels.json is local-only (gitignored); CI checks schema only.
+        warnings.append(f"{ch_path} not found: channel-name leak checks skipped")
+        channels = []
     # Texts: full catalog, titles only, non-title fields
     raw = json.dumps(catalog, ensure_ascii=False)
     title_blob = "\n".join(titles)

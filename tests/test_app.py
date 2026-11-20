@@ -12,7 +12,8 @@ from app import app as flask_app
 ROOT = Path(__file__).resolve().parent.parent
 CATALOG = json.loads((ROOT / "data" / "catalog.json").read_text(encoding="utf-8"))["items"]
 TRAILERS = json.loads((ROOT / "data" / "trailers.json").read_text(encoding="utf-8"))["items"]
-CHANNELS = json.loads((ROOT / "scripts" / "channels.json").read_text(encoding="utf-8"))
+_CH = ROOT / "scripts" / "channels.json"  # local-only, gitignored
+CHANNELS = json.loads(_CH.read_text(encoding="utf-8")) if _CH.exists() else []
 YT_ID = re.compile(r"^[A-Za-z0-9_-]{11}$")
 SECTIONS = {"movies", "series", "kids", "cartoons", "ai", "wildlife"}
 
@@ -23,11 +24,45 @@ def client():
     return flask_app.test_client()
 
 
-def test_health_ready_metrics(client):
+def test_health_ready_metrics(client, monkeypatch):
     assert client.get("/healthz").get_json() == {"status": "ok"}
     ready = client.get("/readyz").get_json()
     assert ready["status"] == "ready" and ready["videos"] == len(CATALOG)
-    assert client.get("/metrics").status_code == 200
+    monkeypatch.delenv("METRICS_TOKEN", raising=False)
+    assert client.get("/metrics").status_code == 404, "metrics are private without a token"
+    monkeypatch.setenv("METRICS_TOKEN", "s3cret-token")
+    assert client.get("/metrics").status_code == 404
+    assert client.get("/metrics", headers={"Authorization": "Bearer wrong"}).status_code == 404
+    ok = client.get("/metrics", headers={"Authorization": "Bearer s3cret-token"})
+    assert ok.status_code == 200 and b"twodaymovie_http_requests_total" in ok.data
+
+
+def test_validate_catalog_script_passes():
+    import subprocess
+    import sys
+    res = subprocess.run([sys.executable, str(ROOT / "scripts" / "validate_catalog.py")],
+                         capture_output=True, text=True, timeout=120)
+    assert res.returncode == 0, res.stdout + res.stderr
+
+
+def test_genre_rows_have_enough_titles():
+    from collections import Counter
+    genres = Counter(g for v in CATALOG for g in v["genres"][1:])
+    shown = [g for g in ("Drama", "Action", "Adventure", "Sci-Fi", "Musical", "Horror", "Comedy",
+                         "Romance", "Thriller", "Documentary") if genres[g] >= 6]
+    assert len(shown) >= 5, f"too few genre rows: {shown}"
+    js = (ROOT / "static" / "js" / "app.js").read_text(encoding="utf-8")
+    assert "GENRE_MIN = 6" in js and 'id="genreMenu"' in (ROOT / "templates" / "index.html").read_text()
+
+
+def test_render_yaml_static_headers_match_app():
+    from app import SECURITY_HEADERS
+    text = (ROOT / "render.yaml").read_text(encoding="utf-8")
+    assert "runtime: static" in text, "render.yaml should describe the static site headers"
+    block = text.split("runtime: static", 1)[1]
+    pairs = re.findall(r'- path: /\*\n\s+name: (.+)\n\s+value: "((?:[^"\\]|\\.)*)"', block)
+    got = {name.strip(): value.replace('\\"', '"') for name, value in pairs}
+    assert got == SECURITY_HEADERS
 
 
 def test_home_page_has_navigation_hero_search_and_player(client):

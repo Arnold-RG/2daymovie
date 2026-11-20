@@ -1,116 +1,75 @@
-"""Search endpoint contract: only catalog items, escaped output, junk queries.
+"""Search is client-side only (static/js/search.js); there is no server route.
 
-Search is currently client-side only (static/js/search.js). These tests require
-a server-side search route and will fail until Forge adds one.
+These checks replace the old server-endpoint contract: the matcher is run in
+node against the real catalog with ordinary, empty and junk/XSS queries, and the
+rendering path is checked statically for HTML sinks.
 """
 from __future__ import annotations
 
 import json
 import re
+import shutil
+import subprocess
+
+import pytest
+
 from tests.helpers import ROOT
 
-# Queries include empty, ordinary titles, and junk/XSS strings.
 SEARCH_QUERIES = [
-    "",
-    "a",
-    "movie",
-    "the",
-    "<script>alert(1)</script>",
-    '"><img src=x onerror=alert(1)>',
-    "{{7*7}}",
-    "<svg/onload=alert(1)>",
-    "' OR 1=1 --",
+    "", "a", "movie", "the", "nollywood", "documentary", "avengers",
+    "<script>alert(1)</script>", '"><img src=x onerror=alert(1)>', "{{7*7}}",
+    "<svg/onload=alert(1)>", "' OR 1=1 --", "x" * 5000,
 ]
+HTML_SINKS = re.compile(r"\.innerHTML\b|\.outerHTML\b|insertAdjacentHTML|document\.write|\beval\(|new Function\(")
+JS = ["app.js", "hero.js", "search.js"]
 
 
-def _catalog_ids_and_titles():
-    doc = json.loads((ROOT / "data" / "catalog.json").read_text(encoding="utf-8"))
-    items = doc["items"] if isinstance(doc, dict) else doc
-    ids = {item["id"] for item in items}
-    titles = {item["title"] for item in items}
-    return ids, titles
+def test_no_server_search_route(app):
+    rules = [r.rule for r in app.url_map.iter_rules() if "search" in r.rule.lower()]
+    assert not rules, f"search must stay client-side; found routes {rules}"
 
 
-def discover_search_paths(app) -> list[str]:
-    """Return candidate search paths from the Flask url_map."""
-    paths = []
-    for rule in app.url_map.iter_rules():
-        if "GET" not in rule.methods:
-            continue
-        if "<" in rule.rule:
-            continue
-        name = f"{rule.endpoint} {rule.rule}".lower()
-        if "search" in name:
-            paths.append(rule.rule)
-    return paths
+def test_frontend_has_no_html_injection_sinks():
+    for name in JS:
+        text = (ROOT / "static" / "js" / name).read_text(encoding="utf-8")
+        assert not HTML_SINKS.search(text), f"{name} uses an HTML injection sink"
 
 
-def _get_search(client, path, query):
-    return client.get(path, query_string={"q": query})
+def test_search_input_is_bounded():
+    html = (ROOT / "templates" / "index.html").read_text(encoding="utf-8")
+    assert 'id="searchInput"' in html and 'type="search"' in html
+    js = (ROOT / "static" / "js" / "search.js").read_text(encoding="utf-8")
+    assert "maxLength = MAX_QUERY" in js
 
 
-def test_search_endpoint_exists(app):
-    paths = discover_search_paths(app)
-    assert paths, (
-        "No search endpoint found in app.url_map. Search is implemented only in "
-        "static/js/search.js (client-side). Forge needs a GET search route "
-        "(for example /api/search?q=) that returns only catalog items, so empty, "
-        "junk, and XSS queries can be tested on the server."
+@pytest.mark.skipif(shutil.which("node") is None, reason="node is not installed")
+def test_search_matcher_returns_only_catalog_items():
+    harness = r"""
+const fs = require("fs");
+global.window = {};
+global.document = { addEventListener() {} };
+eval(fs.readFileSync(process.argv[1], "utf8"));
+const cat = JSON.parse(fs.readFileSync(process.argv[2], "utf8")).items;
+const tr = JSON.parse(fs.readFileSync(process.argv[3], "utf8")).items
+  .map((x) => ({ id: x.youtube_id, film: x.title, release: x.release_date }));
+const qs = JSON.parse(process.argv[4]);
+const out = {};
+for (const q of qs) out[q] = window.TDM.searchItems(q, cat, tr).map((v) => v.id);
+process.stdout.write(JSON.stringify(out));
+"""
+    res = subprocess.run(
+        ["node", "-e", harness, str(ROOT / "static/js/search.js"), str(ROOT / "data/catalog.json"),
+         str(ROOT / "data/trailers.json"), json.dumps(SEARCH_QUERIES)],
+        capture_output=True, text=True, timeout=60, check=True,
     )
-
-
-def test_search_returns_only_catalog_items_and_escapes_query(client, app):
-    paths = discover_search_paths(app)
-    if not paths:
-        raise AssertionError(
-            "No search endpoint in url_map; cannot verify catalog-only results "
-            "or output escaping. See test_search_endpoint_exists."
-        )
-    ids, titles = _catalog_ids_and_titles()
-    path = paths[0]
-    problems = []
-    for query in SEARCH_QUERIES:
-        resp = _get_search(client, path, query)
-        if resp.status_code != 200:
-            problems.append(f"q={query!r} returned {resp.status_code}")
-            continue
-        ctype = resp.headers.get("Content-Type", "")
-        body = resp.get_data(as_text=True)
-        returned_ids = set()
-        if "json" in ctype:
-            try:
-                payload = resp.get_json(silent=False)
-            except Exception as exc:  # noqa: BLE001
-                problems.append(f"q={query!r} invalid JSON: {type(exc).__name__}")
-                continue
-            items = payload if isinstance(payload, list) else (payload or {}).get("items") or (payload or {}).get("results") or []
-            for item in items:
-                ident = item.get("id") if isinstance(item, dict) else None
-                if ident:
-                    returned_ids.add(ident)
-        else:
-            # HTML: every data-id / youtube id in the result must be in the catalog.
-            returned_ids.update(re.findall(r'data-id="([A-Za-z0-9_-]{11})"', body))
-            # Titles appearing as results must be catalog titles; skip this if the
-            # page is a full shell rather than a result list.
-        extra = returned_ids - ids
-        if extra:
-            problems.append(f"q={query!r} returned {len(extra)} id(s) not in the catalog")
-        if query:
-            # The raw (unescaped) XSS payload must not appear as HTML/JS.
-            if "<script>alert(1)</script>" in query and "<script>alert(1)</script>" in body:
-                problems.append("raw <script> payload was reflected unescaped")
-            if "onerror=alert(1)" in query and "onerror=alert(1)" in body:
-                problems.append("raw onerror= payload was reflected unescaped")
-            if any(tok in query for tok in ("<script", "onerror=", "<svg")):
-                if query in body and "json" not in ctype:
-                    problems.append(f"unsafe query reflected unescaped in HTML")
-                elif "json" in ctype and query in body:
-                    # JSON string encoding is acceptable if quotes are escaped.
-                    if f'"{query}"' in body or f'"{query.replace("\\", "\\\\")}"' in body:
-                        # still check it isn't dropped into an HTML context
-                        pass
-        # Empty query: must not 500; results, if any, still catalog-only (checked above).
-        if query == "" and resp.status_code != 200:
-            problems.append("empty query did not return 200")
-    assert not problems, problems
+    results = json.loads(res.stdout)
+    catalog = json.loads((ROOT / "data/catalog.json").read_text(encoding="utf-8"))["items"]
+    trailers = json.loads((ROOT / "data/trailers.json").read_text(encoding="utf-8"))["items"]
+    known = {v["id"] for v in catalog} | {t["youtube_id"] for t in trailers}
+    for q, ids in results.items():
+        assert set(ids) <= known, f"query {q[:30]!r} returned ids outside the catalog"
+    assert results[""] == []
+    for junk in SEARCH_QUERIES[7:]:
+        assert results[junk] == [], f"junk query {junk[:30]!r} matched titles"
+    assert results["nollywood"], "row names are searchable"
+    assert results["avengers"], "upcoming trailers are searchable"

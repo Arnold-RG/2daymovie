@@ -4,6 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  {% if csp_meta %}<meta http-equiv="Content-Security-Policy" content="{{ csp_meta }}">{% endif %}
   <title>2DayMovie: movies, series, kids, anime and nature, free to stream</title>
   <meta name="description" content="Stream full movies, series, kids' shows, cartoons, AI animation and nature documentaries on 2DayMovie through official YouTube embeds, plus trailers for the biggest upcoming films.">
   <meta name="theme-color" content="#0b0b0f">
@@ -33,6 +34,10 @@
         <a href="#cartoons" data-nav="cartoons">Cartoons</a>
         <a href="#ai" data-nav="ai">AI / Manhwa</a>
         <a href="#wildlife" data-nav="wildlife">Wildlife &amp; Nature</a>
+        <div class="nav__dropdown" id="genreDropdown">
+          <button type="button" class="nav__ddbtn" id="genreToggle" data-nav="genres" aria-expanded="false" aria-controls="genreMenu">Genres <span aria-hidden="true">▾</span></button>
+          <ul class="nav__menu" id="genreMenu" hidden></ul>
+        </div>
       </nav>
       <form class="search" id="searchForm" role="search" autocomplete="off">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 3a7.5 7.5 0 0 1 5.9 12.1l4.2 4.2-1.4 1.4-4.2-4.2A7.5 7.5 0 1 1 10.5 3zm0 2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11z"/></svg>

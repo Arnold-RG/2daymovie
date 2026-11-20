@@ -44,7 +44,7 @@ Stop: `docker compose down`
 ```bash
 # Build & load image into your cluster first, then:
 kubectl create secret generic twodaymovie-secrets \
-  --from-literal=TMDB_API_KEY="$TMDB_API_KEY" \
+  --from-literal=METRICS_TOKEN="$METRICS_TOKEN" \
   --dry-run=client -o yaml | kubectl apply -f -
 kubectl apply -f deploy/k8s/deployment.yaml
 kubectl rollout status deploy/twodaymovie

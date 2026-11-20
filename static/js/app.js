@@ -53,6 +53,21 @@
     return ytReady;
   }
 
+  /* Every player iframe on the site is built here: youtube-nocookie.com only,
+     sandboxed before its src is set, with the IFrame API enabled. */
+  const SANDBOX = "allow-scripts allow-same-origin allow-presentation";
+  function embedFrame(id, params = {}, title = "YouTube video player") {
+    const f = document.createElement("iframe");
+    f.setAttribute("sandbox", SANDBOX);
+    const q = new URLSearchParams({ ...params, enablejsapi: "1", origin: location.origin });
+    f.src = `${NOCOOKIE}/embed/${encodeURIComponent(id)}?${q}`;
+    f.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+    f.allowFullscreen = true;
+    f.title = title;
+    f.referrerPolicy = "strict-origin-when-cross-origin";
+    return f;
+  }
+
   /* ---------------- data ---------------- */
   // Sections in page order; rows inside a section come from each item's first genre.
   const SECTIONS = [
@@ -167,9 +182,49 @@
       }
       root.appendChild(s);
     }
+    renderGenres(root);
     $("#loading").hidden = true;
     const total = catalog.videos.length;
     $("#footerMeta").textContent = `${total} titles and ${trailers.length} upcoming trailers · catalog updated ${catalog.generated || ""}`;
+  }
+
+  /* ---------------- genre rows ---------------- */
+  // genres[0] is the shelf row; genres[1:] are real genres. A genre row appears
+  // only when it has at least GENRE_MIN titles.
+  const GENRES = ["Drama", "Action", "Adventure", "Sci-Fi", "Musical", "Horror", "Comedy", "Romance", "Thriller", "Documentary"];
+  const GENRE_MIN = 6;
+  const genreSlug = (g) => "genre-" + g.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  let genreRows = [];
+
+  function renderGenres(root) {
+    genreRows = GENRES.map((g) => ({
+      genre: g,
+      items: catalog.videos.filter((v) => Array.isArray(v.genres) && v.genres.slice(1).includes(g)),
+    })).filter((r) => r.items.length >= GENRE_MIN);
+    const menu = $("#genreMenu");
+    if (menu) menu.textContent = "";
+    if (!genreRows.length) {
+      const dd = $("#genreDropdown");
+      if (dd) dd.hidden = true;
+      return;
+    }
+    const s = el("section", "section");
+    s.id = "genres";
+    s.appendChild(el("h2", "section__title", "Genres"));
+    for (const r of genreRows) {
+      const rowEl = row(r.genre, r.items);
+      rowEl.id = genreSlug(r.genre);
+      s.appendChild(rowEl);
+      if (menu) {
+        const li = el("li");
+        const a = el("a", "", `${r.genre}`);
+        a.href = `#${genreSlug(r.genre)}`;
+        a.dataset.nav = "genres";
+        li.appendChild(a);
+        menu.appendChild(li);
+      }
+    }
+    root.appendChild(s);
   }
 
   /* ---------------- search / see all ---------------- */
@@ -216,23 +271,16 @@
     history.replaceState(null, "", url);
     const host = $("#playerFrame");
     host.textContent = "";
-    const mount = el("div");
-    host.appendChild(mount);
+    // Our own sandboxed iframe; the IFrame API then attaches to it for error events.
+    const frame = embedFrame(id, { autoplay: 1, rel: 0, playsinline: 1, modestbranding: 1, iv_load_policy: 3 }, v.title);
+    host.textContent = "";
+    host.appendChild(frame);
     loadYT().then((YT) => {
-      if (modal.hidden) return;
-      modalPlayer = new YT.Player(mount, {
-        host: NOCOOKIE, videoId: id, width: "100%", height: "100%",
-        playerVars: { autoplay: 1, rel: 0, playsinline: 1, modestbranding: 1, iv_load_policy: 3, origin: location.origin },
+      if (modal.hidden || !frame.isConnected) return;
+      modalPlayer = new YT.Player(frame, {
         events: { onError: () => { $("#playerError").hidden = false; } },
       });
-    }).catch(() => {
-      const f = el("iframe");
-      f.src = `${NOCOOKIE}/embed/${id}?autoplay=1&rel=0&playsinline=1`;
-      f.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
-      f.allowFullscreen = true;
-      f.title = v.title;
-      host.appendChild(f);
-    });
+    }).catch(() => { /* the plain sandboxed embed keeps playing without the API */ });
     $(".modal__close").focus();
   }
   function closePlayer() {
@@ -267,14 +315,26 @@
       const open = links.classList.toggle("is-open");
       toggle.setAttribute("aria-expanded", String(open));
     });
+    const ddBtn = $("#genreToggle"), ddMenu = $("#genreMenu");
+    const setDD = (open) => {
+      if (!ddBtn) return;
+      ddBtn.setAttribute("aria-expanded", String(open));
+      ddMenu.hidden = !open;
+    };
+    if (ddBtn) {
+      ddBtn.addEventListener("click", (e) => { e.stopPropagation(); setDD(ddMenu.hidden); });
+      document.addEventListener("click", (e) => { if (!e.target.closest("#genreDropdown")) setDD(false); });
+      document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !ddMenu.hidden) { setDD(false); ddBtn.focus(); } });
+    }
     links.addEventListener("click", (e) => {
       if (!e.target.closest("a")) return;
+      setDD(false);
       links.classList.remove("is-open");
       toggle.setAttribute("aria-expanded", "false");
       hideResults();
       $("#searchInput").value = "";
     });
-    const anchors = [...links.querySelectorAll("a")];
+    const anchors = [...links.querySelectorAll("a"), ...(ddBtn ? [ddBtn] : [])];
     const io = new IntersectionObserver((entries) => {
       for (const en of entries) {
         if (!en.isIntersecting) continue;
@@ -282,7 +342,7 @@
         anchors.forEach((a) => a.classList.toggle("is-active", a.dataset.nav === id));
       }
     }, { rootMargin: "-45% 0px -50% 0px" });
-    ["top", "trailers", ...catalog.sections.map((s) => s.id)].forEach((id) => {
+    ["top", "trailers", ...catalog.sections.map((s) => s.id), "genres"].forEach((id) => {
       const n = document.getElementById(id);
       if (n) io.observe(n);
     });
@@ -322,7 +382,7 @@
   // Shared API for hero.js and search.js
   const TDM = (window.TDM = window.TDM || {});
   Object.assign(TDM, {
-    $, el, svg, thumb, fmtDate, fmtDuration, norm, loadYT, openPlayer, showResults, hideResults,
+    $, el, svg, thumb, fmtDate, fmtDuration, norm, loadYT, openPlayer, embedFrame, SANDBOX, showResults, hideResults,
     ICON_PLAY, ICON_INFO, NOCOOKIE, reduceMotion,
   });
   Object.defineProperties(TDM, {

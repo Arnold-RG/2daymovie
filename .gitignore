@@ -29,3 +29,9 @@ scripts/.cache/
 # Catalog refine working logs (not served)
 data/catalog_dropped.json
 data/catalog_review.json
+
+# Internal source data: kept on disk for the builders, never published
+scripts/channels.json
+scripts/channel_resolution.json
+data/catalog_sources.json
+deploy/monitoring/metrics_token

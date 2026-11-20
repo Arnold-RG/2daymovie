@@ -33,11 +33,11 @@ spec:
             - configMapRef:
                 name: twodaymovie-config
           env:
-            - name: TMDB_API_KEY
+            - name: METRICS_TOKEN
               valueFrom:
                 secretKeyRef:
                   name: twodaymovie-secrets
-                  key: TMDB_API_KEY
+                  key: METRICS_TOKEN
                   optional: true
           readinessProbe:
             httpGet:
@@ -91,7 +91,7 @@ metadata:
   name: twodaymovie-secrets
 type: Opaque
 stringData:
-  TMDB_API_KEY: ""
+  METRICS_TOKEN: ""
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
