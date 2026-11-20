@@ -59,3 +59,8 @@ def test_phone_layout_fills_the_screen_and_fits_2_3_posters():
     assert ".hero[data-size] .hero__title { font-size: clamp(30px, 9.6vw, 46px);" in CSS
     assert ".nav__toggle, .nav__links, .nav .search { display: none !important; }" in CSS
     assert "let size = !phoneLayout && SIZES.includes(saved.size)" in HERO and PHONE in HERO
+
+
+def test_neighbour_trailers_wait_for_the_first_one_to_play():
+    assert "const NEIGHBOUR_MS = 8000;" in HERO
+    assert "if (p && p.playing) warmNeighbours();" in HERO and "if (i === cur) warmNeighbours();" in HERO

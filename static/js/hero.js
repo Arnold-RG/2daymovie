@@ -21,6 +21,7 @@
   "use strict";
   const SLIDE_MS = 30000; // default auto-advance when a clip has no start/end
   const STORE_KEY = "tdm.hero.v2"; // v2: Full is the default size; v1 sizes are ignored
+  const NEIGHBOUR_MS = 8000; // load the next/previous trailer after this even if the current one has not started
   const KICK_MS = 1200, KICK_TRIES = 10; // re-ask a stalled player to play for ~12 s, then wait for a gesture
   const REVEAL_MS = 4300; // YouTube auto-hides its centre play/pause button about 4 s after playback starts
   const LEGACY_KEY = "tdm.hero.v1";
@@ -339,6 +340,7 @@
             if (e.data === S.PLAYING) {
               entry.kicks = 0;
               unblocked();
+              if (i === cur) warmNeighbours();
               if (!entry.wantPlay || holds.size) { e.target.mute(); e.target.pauseVideo(); return; } // parked
               applyMute(entry);
               // YouTube draws its own centre play/pause button for ~4 s after every play, even with
@@ -447,9 +449,20 @@
       }
       ensurePlayer(cur);
       playAt(cur);
+      // Neighbours load only once the current trailer plays (or after NEIGHBOUR_MS), so on a
+      // phone the first video gets the whole connection instead of sharing it with two more.
+      clearTimeout(neighbourTimer);
+      const p = players.get(cur);
+      if (p && p.playing) warmNeighbours();
+      else neighbourTimer = setTimeout(warmNeighbours, NEIGHBOUR_MS);
+      if (gestureArmed) tapThrough();
+    }
+    let neighbourTimer = 0;
+    function warmNeighbours() {
+      clearTimeout(neighbourTimer);
+      if (!YTlib || reduceMotion.matches) return;
       ensurePlayer(mod(cur + 1));
       ensurePlayer(mod(cur - 1));
-      if (gestureArmed) tapThrough();
     }
 
     function go(target, dir, manual) {
