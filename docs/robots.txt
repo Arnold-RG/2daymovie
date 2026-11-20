@@ -1,4 +1,20 @@
+# 2DayMovie: a public catalog of YouTube embeds. Search engines and AI crawlers are welcome.
 User-agent: *
 Allow: /
+Disallow: /metrics
+Disallow: /healthz
+Disallow: /readyz
+
+# Named explicitly so no crawler-specific default blocks them.
+User-agent: GPTBot
+User-agent: ClaudeBot
+User-agent: PerplexityBot
+User-agent: Google-Extended
+User-agent: Bingbot
+User-agent: Googlebot
+Allow: /
+Disallow: /metrics
+Disallow: /healthz
+Disallow: /readyz
 
 Sitemap: https://arnold-rg.github.io/2daymovie/sitemap.xml

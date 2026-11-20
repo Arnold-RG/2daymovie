@@ -1,72 +1,59 @@
-# 2DayMovie — Movie Discovery Web App
+# 2DayMovie
 
-**Flask web backend with container deployment** · [GitHub repository](https://github.com/Arnold-RG/2daymovie)
+A Netflix-style streaming site: full movies, series, kids' shows, cartoons, AI animation / manhwa and
+nature documentaries, all played through official YouTube embeds, with a header carousel of official
+trailers for the biggest upcoming films.
 
-## What this project does
+## Layout
 
-Python/Flask movie-oriented web application with server templates, static assets, tests, Docker packaging and deployment configuration. Live external API availability and content rights require verification.
-
-**Primary stack:** Flask, Gunicorn, PostgreSQL adapter, Docker/Compose, Python tests.
-
-> **Project verification:** This README describes observed source structure and release expectations. Not every feature, dependency or target device has been certified. Consult actual CI results and source before making public claims.
-
-## Repository architecture
-
-| File or directory | Purpose |
+| Path | What it is |
 | --- | --- |
-| `app.py` | Flask application entry |
-| `templates/` | Server-rendered views |
-| `static/` | Browser assets |
-| `services/` | Services and external integrations |
-| `tests/` | Automated checks |
-| `Dockerfile` | Container build |
-| `docker-compose.yml` | Local multi-service orchestration |
-| `requirements.txt` | Python dependency pins |
-| `DEVOPS.md` | Operational notes |
+| `templates/index.html` | App shell (navbar, hero, rows, results grid, player modal) |
+| `static/css/app.css` | Dark Netflix-style theme, responsive |
+| `static/js/app.js` | Data loading, category rows, navbar, player modal; exposes `window.TDM` |
+| `static/js/hero.js` | Header trailer carousel (auto-advance, slide / crossfade, swipe, arrows, dots) |
+| `static/js/search.js` | Instant title search |
+| `data/catalog.json` | Public catalog: `{ generated, items: [{ id, title, type, genres, duration, thumbnail }] }` |
+| `data/trailers.json` | Upcoming trailers: `{ generated, items: [{ title, release_date, youtube_id, start, end }] }` |
+| `data/catalog_sources.json` | Internal only (never served by the app): video id to source channel id |
+| `scripts/channels.json` | The source channel list, grouped by content type (private, kept out of git) |
+| `app.py` | Flask: renders the shell, serves `data/`, `/healthz`, `/readyz`, `/metrics` |
 
-## Local development
+`type` is the section (`movies`, `series`, `kids`, `cartoons`, `ai`, `wildlife`); `genres[0]` is the
+row inside that section (for example `Nollywood`, `Rwanda / Kinyarwanda`, `French`, `Asian Dramas`).
+Channel names are never shown on the site.
 
-Install Git and the required language runtime. Use a clean environment and review configuration files for secrets before starting network services.
+## Run locally
 
-```sh
-python -m venv .venv
-# Activate .venv
-python -m pip install -r requirements.txt
-python -m pytest
-# Review .env.example and service requirements before running the app
+```bash
+pip install -r requirements.txt
+python app.py            # http://127.0.0.1:8080
+pytest -q
 ```
 
-**Environment note:** Review configured environment variables and Docker Compose services before launching anything. A local pytest run does not certify production.
+## Refresh the catalog (no API key)
 
-## User experience and core requirements
+```bash
+pip install -r scripts/requirements.txt   # yt-dlp
+python scripts/build_trailers.py          # re-verifies the official upcoming trailers
+python scripts/build_catalog.py           # resolves channels, lists uploads, verifies each video embeds
+python scripts/export_site.py             # regenerates ./index.html and docs/
+```
 
-- Provide responsive search, discovery and meaningful empty/error states.
-- Label metadata, movie details and availability according to the actual provider/source.
-- Secure external API rate limits and service failures without false availability claims.
+Every catalog video is checked individually: public, not live, not age-restricted and
+`playable_in_embed`. Movies must run 40 minutes or more. Results are cached in `scripts/.cache/`.
 
-Build for real customer journeys: clear navigation, accessible controls, responsive layouts, truthful claims, human-readable errors and meaningful loading/empty states.
+## Deploys
 
-## Security, data and privacy
+- Render static site `twodaymovie-site` publishes the repo root from `main` (`index.html` is generated).
+- Render web service `twodaymovie` builds the `Dockerfile` from `main` (gunicorn `app:app`).
+- GitHub Pages serves `main:/docs`.
 
-- Keep database strings and external API tokens in environment-specific secret stores.
-- Implement input validation, escaping, CSRF defenses and session controls where applicable.
-- Only display movie images/metadata with appropriate rights and attribution.
+## License
 
-Review secrets, trust boundaries, external services and permission handling. Use scoped credentials, a private disclosure channel (see `SECURITY.md` if present), and secure dependency updates.
+The code is released under the [MIT License](LICENSE), Copyright (c) 2026 Arnold Rurangwa.
 
-## Quality and operations
-
-| Area | Release acceptance criterion |
-| --- | --- |
-| Implementation | Maintainable code, clear ownership, documented configuration |
-| Testing | Actual unit/integration checks or a documented repeatable smoke test |
-| Security | Input and dependency checks, least privilege and no exposed credentials |
-| Accessibility | Keyboard, contrast, touch and responsive testing for user-facing screens |
-| CI/CD | Reproducible builds, protected release jobs, owner-approved publication |
-| Reliability | Error monitoring; backups/recovery for persisted data; rollback plan |
-
-**These are intended gates, not an assertion of passing tests.** Kubernetes is unnecessary for purely static pages; reassess it only where multi-service infrastructure warrants the complexity.
-
-## Contributions and release policy
-
-Use reviewable branches and pull requests. Don't add unlicensed visual assets, mock client testimonials, private customer data or unverified integrations. Owners approve public releases; note remaining limitations in the release report.
+The license covers this repository's code only. **The videos, trailers, thumbnails, titles and
+artwork shown on the site are not covered by it**: they belong to their owners and are played
+through official YouTube embeds under YouTube's Terms of Service. Nothing is rehosted. Third-party
+components are listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

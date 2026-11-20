@@ -1,15 +1,17 @@
-{% extends "base.html" %}
-
-{% block title %}Not found · {{ site_name }}{% endblock %}
-
-{% block content %}
-<section class="page-band narrow">
-  <p class="detail-kicker">404</p>
-  <h1>Title not found</h1>
-  <p>That movie isn’t in the catalog (or the ID is invalid).</p>
-  <div class="hero-actions">
-    <a class="btn btn-primary" href="{{ url_for('home') }}">Back home</a>
-    <a class="btn btn-ghost" href="{{ url_for('library_home') }}">Open library</a>
-  </div>
-</section>
-{% endblock %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Not found · 2DayMovie</title>
+  <link rel="icon" href="{{ base }}static/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="{{ base }}static/css/404.css">
+</head>
+<body>
+  <main>
+    <h1>This page isn't here</h1>
+    <p>Everything to watch is on the home page.</p>
+    <p><a href="{{ base }}">Go to 2DayMovie</a></p>
+  </main>
+</body>
+</html>

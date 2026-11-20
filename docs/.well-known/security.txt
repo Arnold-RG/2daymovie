@@ -1,0 +1,5 @@
+# 2DayMovie security contact (RFC 9116). Policy: SECURITY.md in the repository.
+Contact: mailto:rurangwaarnold32@gmail.com
+Expires: 2027-11-20T00:00:00.000Z
+Preferred-Languages: en
+Policy: https://github.com/Arnold-RG/2daymovie/blob/main/SECURITY.md

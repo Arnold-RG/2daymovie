@@ -1,21 +1,250 @@
-{% extends "base.html" %}
-{% from "_macros.html" import poster_card %}
-{% block title %}2daymovie — Full Movies & Complete Series From Around the World{% endblock %}
-{% block head %}<style>
-.global-home{max-width:1450px;margin:auto;padding:0 clamp(16px,3.5vw,54px)}.global-hero{position:relative;isolation:isolate;overflow:hidden;background:radial-gradient(ellipse at 85% 15%,#7b1018 0,transparent 42%),linear-gradient(135deg,#171717,#080808);border:1px solid #383838;border-radius:clamp(12px,2vw,24px);margin:clamp(14px,3vw,35px) 0 45px;padding:clamp(30px,7vw,90px) clamp(24px,5vw,75px);min-height:340px;display:flex;align-items:center}.global-hero:after{content:"";position:absolute;z-index:-1;width:45vw;aspect-ratio:1;border:1px solid #e509143f;border-radius:50%;right:-9%;top:-30%;box-shadow:0 0 0 55px #e5091412,0 0 0 110px #e5091408;animation:global-float 9s ease-in-out infinite alternate}.global-eyebrow{color:#ff6670;font-size:.75rem;font-weight:800;letter-spacing:.17em;text-transform:uppercase}.global-hero h1{font-size:clamp(2.7rem,7vw,6.8rem);letter-spacing:-.055em;line-height:1.05;max-width:870px;margin:16px 0}.global-hero h1 em{font-style:normal;color:#ff3541}.global-hero p{max-width:690px;color:#d3d3d3;font-size:clamp(1rem,2vw,1.2rem)}.global-cta{display:inline-flex;align-items:center;justify-content:center;min-height:46px;background:#e50914;border-radius:9px;color:#fff;text-decoration:none;font-weight:800;padding:12px 21px;margin-top:15px}.global-cta:hover{background:#b20710}.global-section{padding:0 0 48px;scroll-margin-top:95px}.global-head{display:flex;align-items:end;justify-content:space-between;flex-wrap:wrap;gap:12px;margin:0 0 18px}.global-head h2{margin:5px 0;font-size:clamp(1.5rem,3vw,2.6rem)}.global-head a{color:#eee;text-decoration:underline;text-decoration-color:#e50914;text-underline-offset:5px}.global-sub{color:#bbb;margin:0 0 18px}.global-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,185px),1fr));gap:clamp(12px,2vw,22px)}.global-feature{display:grid;grid-template-columns:1.5fr 1fr;gap:24px;background:#171717;border:1px solid #333;border-radius:16px;padding:clamp(15px,3vw,28px);margin:0 0 50px}.global-feature-player{aspect-ratio:16/9;border:0;border-radius:12px;width:100%;background:#090909}.global-feature h2{font-size:clamp(1.5rem,3vw,2.8rem);line-height:1.16;margin:10px 0}.global-feature p{color:#bbb}.global-chip-row{display:flex;gap:10px;overflow-x:auto;padding:4px 0 20px;scrollbar-width:thin}.global-chip{flex:0 0 auto;border:1px solid #666;background:#1d1d1d;color:#fff;padding:10px 16px;border-radius:50px;font:inherit;cursor:pointer}.global-chip[aria-pressed="true"],.global-chip:hover{background:#e50914;border-color:#e50914}.global-region-note{padding:20px;background:#171717;border-left:4px solid #e50914;margin-bottom:50px;color:#ccc}.global-empty{color:#aaa}.global-stat{color:#ddd;font-size:.9rem;margin-top:18px}@keyframes global-float{to{transform:translate(-35px,50px)}}@media(max-width:800px){.global-feature{grid-template-columns:1fr}.global-grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,145px),1fr))}.global-hero{min-height:0}}@media(max-width:390px){.global-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.global-home{padding:0 12px}}@media(prefers-reduced-motion:reduce){.global-hero:after{animation:none}}
+<!doctype html>
+{# Rendered by app.py and exported to /index.html and /docs by scripts/export_site.py #}
+<html lang="en" data-base="{{ base }}"{% if page.anchor %} data-start="{{ page.anchor }}"{% endif %}>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  {% if csp_meta %}<meta http-equiv="Content-Security-Policy" content="{{ csp_meta }}">{% endif %}
+  <title>{{ page.title }}</title>
+  <meta name="description" content="{{ page.description }}">
+  <link rel="canonical" href="{{ canonical }}">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="theme-color" content="#0b0b0f">
+  <meta property="og:site_name" content="2DayMovie">
+  <meta property="og:title" content="{{ page.title }}">
+  <meta property="og:description" content="{{ page.description }}">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ canonical }}">
+  {% if og_image %}<meta property="og:image" content="{{ og_image }}">{% endif %}
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ page.title }}">
+  <meta name="twitter:description" content="{{ page.description }}">
+  <link rel="icon" href="{{ base }}static/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://i.ytimg.com">
+  {% if lcp_id and not page.anchor %}<link rel="preload" as="image" href="https://i.ytimg.com/vi/{{ lcp_id }}/maxresdefault.jpg" imagesrcset="https://i.ytimg.com/vi/{{ lcp_id }}/sddefault.jpg 640w, https://i.ytimg.com/vi/{{ lcp_id }}/maxresdefault.jpg 1280w" imagesizes="100vw" fetchpriority="high">{% endif %}
+  <link rel="stylesheet" href="{{ base }}static/css/app.css?v={{ asset_v }}">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
 
-.cinema-toolbar{display:flex;gap:12px;flex-wrap:wrap;margin:0 0 20px}.cinema-search{flex:1 1 240px;min-height:48px;padding:12px 16px;border:1px solid #555;border-radius:10px;background:#141414;color:white;font:inherit}.cinema-tabs{display:flex;gap:8px;flex-wrap:wrap}.cinema-tabs button{border:1px solid #555;border-radius:9px;background:#202020;color:white;padding:10px 14px;font:inherit;cursor:pointer}.cinema-tabs button[aria-pressed=true]{background:#c80819;border-color:#c80819}.cinema-card{display:block;text-align:left;cursor:pointer;color:white;border:1px solid #444;border-radius:14px;background:#191919;padding:0;overflow:hidden;transition:transform .2s,border-color .2s}.cinema-card:hover,.cinema-card:focus-visible{transform:translateY(-4px);border-color:#ef3340}.cinema-card img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}.cinema-card span{display:block;padding:12px}.cinema-card small{display:block;color:#aaa;margin-top:5px}.cinema-empty{padding:20px;color:#aaa;border:1px dashed #555;border-radius:12px}.cinema-feature-label{color:#f78b91;font-size:.85rem;margin:10px 0 0}
-@media(prefers-reduced-motion:reduce){.cinema-card{transition:none}.cinema-card:hover{transform:none}}
-</style>{% endblock %}
-{% block content %}
-{% set fallback = url_for('static', filename='img/poster-fallback.svg') %}
-<div class="global-home"><section class="global-hero"><div><div class="global-eyebrow">Welcome to your worldwide cinema</div><h1>Big stories. <em>Everywhere.</em></h1><p>Discover films and series from across the world. Explore full-length films and complete series that can be watched directly here when authorized by their publishers. No trailers.</p><a class="global-cta" href="#discover">Explore the cinema ↓</a><p class="global-stat">Worldwide full-film and series curation · Verified playback only</p></div></section>
-<section class="global-feature" aria-labelledby="global-feature-heading"><div><iframe class="global-feature-player" id="cinema-player" src="https://www.youtube-nocookie.com/embed/dYq7Hw8jIHs?playsinline=1" title="User-submitted YouTube movie — embedded preview" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div><div><span class="global-eyebrow">The full movie experience</span><h2 id="global-feature-heading">Your cinema, your screen.</h2><p>Start with a user-submitted YouTube movie in the built-in player. Its duration, embedding availability and publisher rights still need verification before it joins the permanent full-movie catalog.</p><p class="cinema-feature-label" id="cinema-now-playing" role="status">Now selected: User-submitted movie · YouTube</p><a class="global-cta" href="#discover">Explore full-length cinema ↓</a></div></section>
-<section class="global-section" id="discover"><div class="global-head"><div><span class="global-eyebrow">Full movies & complete series</span><h2>Curated for real viewing</h2></div></div><p class="global-sub">Only complete films or episodes with verified permission to embed will be displayed here. We are reviewing source channels and availability before publishing any titles.</p><div class="cinema-toolbar"><input id="cinema-search" class="cinema-search" type="search" placeholder="Search movies, series or creators" aria-label="Search full-length titles"><div class="cinema-tabs" role="group" aria-label="Content type"><button type="button" data-cinema-filter="all" aria-pressed="true">All</button><button type="button" data-cinema-filter="movie" aria-pressed="false">Movies</button><button type="button" data-cinema-filter="series" aria-pressed="false">Series</button><button type="button" data-cinema-filter="ai" aria-pressed="false">AI cinema</button></div></div><div id="cinema-results" class="global-grid" aria-live="polite"><button type="button" class="cinema-card" data-cinema-kind="movie" data-cinema-title="User-submitted YouTube movie" data-video-id="dYq7Hw8jIHs"><img src="https://i.ytimg.com/vi/dYq7Hw8jIHs/hqdefault.jpg" alt="YouTube video thumbnail" loading="lazy"><span><strong>User-submitted YouTube movie</strong><small>Movie candidate · Full runtime and embedding not yet verified</small></span></button></div><p class="cinema-empty" id="cinema-empty" hidden>No matching verified entries yet. AI movies and series will appear after source review.</p><p class="global-sub" style="margin-top:16px">Only the user-submitted video is currently listed as a candidate. We have not verified its duration, rights, or availability in every region. No trailer records are loaded into this collection.</p></section>
-<section class="global-section"><div class="global-head"><div><span class="global-eyebrow">AI cinema</span><h2>AI movies & original series</h2></div></div><p class="global-sub">A dedicated home for complete AI-created films and episodic stories. Each entry will identify its creator, AI-production disclosure, runtime and playback source. No AI trailers masquerading as full films.</p></section>
-<section class="global-section"><div class="global-head"><div><span class="global-eyebrow">Explore the world</span><h2>Stories without borders</h2></div></div><p class="global-sub">We are expanding region-by-region. Choose a region to discover what we are curating next.</p><div class="global-chip-row" role="group" aria-label="Regions to explore">{% for region in ['Rwanda','Nigeria','South Korea','United States','Finland','Philippines','India','South Africa','Egypt & Arab cinema','France','Germany','More Europe'] %}<button class="global-chip" type="button" data-region="{{ region }}" aria-pressed="{{ 'true' if loop.first else 'false' }}">{{ region }}</button>{% endfor %}</div><div class="global-region-note" id="global-region-note" role="status">Rwanda: curated regional collections are being verified. Titles are not assigned to countries until their origin is confirmed.</div></section>
-<section class="global-section"><div class="global-head"><div><span class="global-eyebrow">Explore more</span><h2>Find your next favorite</h2></div></div><div class="global-chip-row"><a class="global-cta" href="{{ url_for('reviews_home') }}">Community reviews</a></div><p class="global-sub">2daymovie will show only authorized full-length films and episodes on its streaming pages. Availability depends on publisher permissions and region.</p></section></div>
-<script>document.querySelectorAll('[data-region]').forEach(button=>button.addEventListener('click',()=>{document.querySelectorAll('[data-region]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));document.getElementById('global-region-note').textContent=button.dataset.region+': curated regional collections are being verified. Titles will appear here after their origin and viewing permissions are confirmed.'}));</script><script>
-(()=>{const search=document.getElementById('cinema-search'),buttons=[...document.querySelectorAll('[data-cinema-filter]')],cards=[...document.querySelectorAll('[data-cinema-kind]')],empty=document.getElementById('cinema-empty'),player=document.getElementById('cinema-player'),now=document.getElementById('cinema-now-playing');let filter='all';function refresh(){let count=0;for(const card of cards){const match=(filter==='all'||card.dataset.cinemaKind===filter)&&card.dataset.cinemaTitle.toLowerCase().includes(search.value.trim().toLowerCase());card.hidden=!match;if(match)count++}empty.hidden=count>0}search.addEventListener('input',refresh);for(const button of buttons){button.addEventListener('click',()=>{filter=button.dataset.cinemaFilter;for(const b of buttons)b.setAttribute('aria-pressed',String(b===button));refresh()})}for(const card of cards){card.addEventListener('click',()=>{const id=card.dataset.videoId;if(!/^[A-Za-z0-9_-]{11}$/.test(id))return;player.src='https://www.youtube-nocookie.com/embed/'+encodeURIComponent(id)+'?autoplay=1&playsinline=1';now.textContent='Now selected: '+card.dataset.cinemaTitle+' · YouTube';player.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'center'})})}})();
-</script>
-{% endblock %}
+  <header class="nav" id="nav">
+    <div class="nav__inner">
+      <a class="brand" href="#top" aria-label="2DayMovie home"><span class="brand__mark">2</span>Day<span>Movie</span></a>
+      <button class="nav__toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav__links" id="navLinks" aria-label="Sections">
+        <a href="#top" data-nav="top">Home</a>
+        <a href="#trailers" data-nav="trailers">Upcoming</a>
+        <a href="#movies" data-nav="movies">Movies</a>
+        <a href="#series" data-nav="series">Series</a>
+        <a href="#kids" data-nav="kids">Kids</a>
+        <a href="#cartoons" data-nav="cartoons">Cartoons</a>
+        <a href="#ai" data-nav="ai">AI / Manhwa</a>
+        <a href="#wildlife" data-nav="wildlife">Wildlife &amp; Nature</a>
+        <div class="nav__dropdown" id="genreDropdown">
+          <button type="button" class="nav__ddbtn" id="genreToggle" data-nav="genres" aria-expanded="false" aria-controls="genreMenu">Genres <span aria-hidden="true">▾</span></button>
+          <ul class="nav__menu" id="genreMenu" hidden></ul>
+        </div>
+      </nav>
+      <form class="search" id="searchForm" role="search" autocomplete="off">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 3a7.5 7.5 0 0 1 5.9 12.1l4.2 4.2-1.4 1.4-4.2-4.2A7.5 7.5 0 1 1 10.5 3zm0 2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11z"/></svg>
+        <label class="sr" for="searchInput">Search titles</label>
+        <input id="searchInput" type="search" placeholder="Search titles" enterkeyhint="search">
+      </form>
+    </div>
+  </header>
+
+  <section class="hero" id="top" data-size="full" aria-roledescription="carousel" aria-label="Upcoming movie trailers">
+    <div class="hero__track" id="heroTrack"></div>
+    <div class="hero__shade"></div>
+    <div class="hero__content" id="heroContent" aria-live="polite"></div>
+    <button class="hero__arrow hero__arrow--prev" id="heroPrev" aria-label="Previous trailer"><svg viewBox="0 0 24 24"><path d="M15.4 5.4 14 4l-8 8 8 8 1.4-1.4L8.8 12z"/></svg></button>
+    <button class="hero__arrow hero__arrow--next" id="heroNext" aria-label="Next trailer"><svg viewBox="0 0 24 24"><path d="M8.6 5.4 10 4l8 8-8 8-1.4-1.4 6.6-6.6z"/></svg></button>
+    <div class="hero__dots" id="heroDots" role="tablist" aria-label="Choose trailer"></div>
+    <div class="hero__progress"><span id="heroProgress"></span></div>
+    <div class="hero__bar hero__tools" id="heroBar" role="toolbar" aria-label="Trailer controls" aria-controls="heroTrack">
+      <button class="hbtn hero__playpause" id="heroPause" type="button" aria-pressed="false" aria-label="Pause trailers" aria-keyshortcuts="Space K" data-tip="Pause (Space / K)">
+        <svg class="i-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+        <svg class="i-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+      <div class="hero__group hero__soundgroup" id="heroSoundGroup">
+        <button class="hbtn hero__sound" id="heroMute" type="button" aria-pressed="false" aria-label="Unmute trailer" aria-keyshortcuts="M" data-tip="Unmute (M)">
+          <svg class="i-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.8 8.8 0 0 0 21 12a9 9 0 0 0-7-8.77v2.06A7 7 0 0 1 19 12zM4.27 3 3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06a9 9 0 0 0 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4 9.91 6.09 12 8.18V4z"/></svg>
+          <svg class="i-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05A4.47 4.47 0 0 0 16.5 12zM14 3.23v2.06a7 7 0 0 1 0 13.42v2.06A9 9 0 0 0 14 3.23z"/></svg>
+        </button>
+        <div class="hero__vol" id="heroVolWrap">
+          <label class="sr" for="heroVolume">Trailer volume</label>
+          <input class="hero__range" id="heroVolume" type="range" min="0" max="100" step="5" value="60" aria-valuetext="60%">
+        </div>
+      </div>
+      <span class="hero__sep" aria-hidden="true"></span>
+      <div class="hero__group hero__brightness">
+        <svg class="hero__gicon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 15.31 23.31 12 20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69zM12 18V6c3.31 0 6 2.69 6 6s-2.69 6-6 6z"/></svg>
+        <div class="hero__seg" id="heroBrightPresets" role="radiogroup" aria-label="Brightness">
+          <button type="button" role="radio" aria-checked="false" tabindex="-1" data-level="dim" data-tip="Dim (B cycles)">Dim</button>
+          <button type="button" role="radio" aria-checked="true" tabindex="0" data-level="normal" data-tip="Normal (B cycles)">Normal</button>
+          <button type="button" role="radio" aria-checked="false" tabindex="-1" data-level="bright" data-tip="Bright (B cycles)">Bright</button>
+        </div>
+        <button class="hbtn hbtn--pill hero__cycle" id="heroBrightCycle" type="button" aria-label="Brightness: Normal. Change brightness" aria-keyshortcuts="B" data-tip="Brightness (B)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 15.31 23.31 12 20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69zM12 18V6c3.31 0 6 2.69 6 6s-2.69 6-6 6z"/></svg><span class="hbtn__txt" id="heroBrightLabel">Normal</span>
+        </button>
+        <label class="sr" for="heroBrightness">Fine brightness</label>
+        <input class="hero__range hero__brightness-input" id="heroBrightness" type="range" min="0.4" max="1.6" step="0.05" value="1" aria-valuetext="100%">
+      </div>
+      <span class="hero__sep" aria-hidden="true"></span>
+      <div class="hero__group hero__size">
+        <svg class="hero__gicon" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 6.99h3L12 3 8 6.99h3v10.02H8L12 21l4-3.99h-3z"/></svg>
+        <div class="hero__seg" id="heroSizes" role="radiogroup" aria-label="Video size">
+          <button type="button" role="radio" aria-checked="false" tabindex="-1" data-size="compact" data-tip="Compact (60% height)">Compact</button>
+          <button type="button" role="radio" aria-checked="false" tabindex="-1" data-size="standard" data-tip="Standard (88% height)">Standard</button>
+          <button type="button" role="radio" aria-checked="true" tabindex="0" data-size="full" data-tip="Full display height (default)">Full</button>
+        </div>
+        <button class="hbtn hbtn--pill hero__cycle" id="heroSizeCycle" type="button" aria-label="Video size: Full. Change size" data-tip="Video size">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 6.99h3L12 3 8 6.99h3v10.02H8L12 21l4-3.99h-3z"/></svg><span class="hbtn__txt" id="heroSizeLabel">Full</span>
+        </button>
+      </div>
+      <button class="hbtn hero__fs" id="heroFullscreen" type="button" aria-pressed="false" aria-label="Enter fullscreen" aria-keyshortcuts="F" data-tip="Fullscreen (F)">
+        <svg class="i-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+        <svg class="i-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <main id="main">
+    <div id="browse"></div>
+    <section class="results" id="results" hidden>
+      <div class="results__head">
+        <h2 id="resultsTitle">Results</h2>
+        <button class="btn btn--ghost" id="resultsClose">Back to browse</button>
+      </div>
+      <p class="results__empty" id="resultsEmpty" hidden>Nothing matches that search yet. Try another title.</p>
+      <div class="grid" id="resultsGrid"></div>
+    </section>
+    <p class="loading" id="loading">Loading the catalog…</p>
+  </main>
+
+  <footer class="footer">
+    <p><strong>2DayMovie</strong>. Every title plays through YouTube's official embedded player and stays on its owner's account. All rights belong to their owners.</p>
+    <p class="footer__meta" id="footerMeta"></p>
+    <section class="footer__legal" id="privacy" aria-labelledby="privacyTitle">
+      <h2 id="privacyTitle">Privacy</h2>
+      <p>2DayMovie has no accounts, no sign-up, no ads, no analytics and no tracking cookies of its own: the site itself sets no cookies.
+        Your sound, volume, brightness and size choices for the header video are kept only in your own browser (localStorage, key <code>tdm.hero.v2</code>) and are never sent to us.
+        Titles you save to My List are kept the same way, as a list of video ids under <code>tdm.mylist.v1</code>; clearing your browser data removes them.
+        Videos are YouTube embeds from <code>youtube-nocookie.com</code>, YouTube's privacy-enhanced mode. The trailers in the header play automatically, muted,
+        as a live background, so YouTube's player loads as soon as you open the site. YouTube may set its own cookies and storage when trailers or videos play, under
+        <a href="https://policies.google.com/privacy" rel="noopener noreferrer" target="_blank">Google's Privacy Policy</a>; we do not read or control them.
+        Thumbnails come from YouTube's image server, <code>i.ytimg.com</code>.</p>
+      <h2 id="termsTitle">Videos and rights</h2>
+      <p>Every video is an official YouTube embed. Nothing is downloaded, copied or rehosted here: each video stays on its owner's YouTube account,
+        under its owner's rights and <a href="https://www.youtube.com/t/terms" rel="noopener noreferrer" target="_blank">YouTube's Terms of Service</a>.
+        If an owner removes a video or turns off embedding, it stops playing here.</p>
+    </section>
+  </footer>
+
+  <div class="modal" id="player" role="dialog" aria-modal="true" aria-labelledby="playerTitle" hidden>
+    <div class="modal__backdrop" data-close></div>
+    <div class="modal__box">
+      <button class="modal__close" data-close aria-label="Close player"><svg viewBox="0 0 24 24"><path d="m6.4 5 5.6 5.6L17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6L6.4 19 5 17.6l5.6-5.6L5 6.4z"/></svg></button>
+      <div class="modal__frame"><div id="playerFrame"></div></div>
+      <div class="modal__info">
+        <h2 id="playerTitle"></h2>
+        <p id="playerMeta"></p>
+        <p class="modal__error" id="playerError" hidden>This title can't play here right now. Try another one.</p>
+      </div>
+    </div>
+  </div>
+
+
+  {# Phones and small tablets (900px and narrower): translucent bottom tab bar and its sheets. #}
+  <nav class="tabbar" id="tabbar" aria-label="Quick navigation">
+    <div class="tabbar__inner" id="tabInner">
+      <div class="tabbar__glass" id="tabGlass" aria-hidden="true"></div>
+      <svg class="tabbar__glow" id="tabGlow" aria-hidden="true" focusable="false"><defs><linearGradient id="tabGlowGrad" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#e50914" stop-opacity="0"/><stop offset=".22" stop-color="#ff3d47" stop-opacity=".55"/><stop offset=".5" stop-color="#ff4b54"/><stop offset=".78" stop-color="#ff3d47" stop-opacity=".55"/><stop offset="1" stop-color="#e50914" stop-opacity="0"/></linearGradient></defs><path class="edge" id="tabEdgePath" d=""/><path class="glow" id="tabGlowPath" d=""/></svg>
+      <span class="tabbar__dot" id="tabDot" aria-hidden="true"></span>
+      <div class="tabbar__tabs">
+        <button class="tab" type="button" data-tab="home" aria-current="page" aria-describedby="tabHomeHint">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2.5 11h2.7v9h5.3v-6h3v6h5.3v-9h2.7z"/></svg><span class="tab__label">Home</span>
+        </button>
+        <button class="tab" type="button" data-tab="search" aria-haspopup="dialog" aria-controls="sheetSearch">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 3a7.5 7.5 0 0 1 5.9 12.1l4.2 4.2-1.4 1.4-4.2-4.2A7.5 7.5 0 1 1 10.5 3zm0 2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11z"/></svg><span class="tab__label">Search</span>
+        </button>
+        <button class="tab tab--shuffle" type="button" data-tab="shuffle" aria-label="Shuffle: play a random trailer">
+          <span class="tab__orb"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.6 9.2 5.4 4 4 5.4l5.2 5.2zM14.5 4l2 2L4 18.6 5.4 20 18 7.5l2 2V4zm.3 9.4-1.4 1.4 3.1 3.1-2 2H20v-5.5l-2 2z"/></svg></span><span class="tab__label" aria-hidden="true">Shuffle</span>
+        </button>
+        <button class="tab" type="button" data-tab="genres" aria-haspopup="dialog" aria-controls="sheetGenres">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h7v7H4zm9 0h7v7h-7zM4 13h7v7H4zm9 0h7v7h-7z"/></svg><span class="tab__label">Genres</span>
+        </button>
+        <button class="tab" type="button" data-tab="mylist" aria-haspopup="dialog" aria-controls="sheetList">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.4 10.6 20C5.4 15.4 2 12.3 2 8.5A5.4 5.4 0 0 1 7.5 3c1.7 0 3.4.8 4.5 2.1A6 6 0 0 1 16.5 3 5.4 5.4 0 0 1 22 8.5c0 3.8-3.4 6.9-8.6 11.5z"/></svg><span class="tab__label">My List</span>
+          <span class="tab__badge" id="listBadge" aria-hidden="true" hidden>0</span>
+        </button>
+      </div>
+      <span class="sr" id="tabHomeHint">Press and hold for Upcoming Trailers</span>
+    </div>
+  </nav>
+
+  <div class="sheet sheet--full" id="sheetSearch" role="dialog" aria-modal="true" aria-labelledby="sheetSearchTitle" hidden>
+    <div class="sheet__panel">
+      <div class="sheet__head">
+        <h2 class="sr" id="sheetSearchTitle">Search</h2>
+        <form class="sheet__search" id="sheetSearchForm" role="search" autocomplete="off">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 3a7.5 7.5 0 0 1 5.9 12.1l4.2 4.2-1.4 1.4-4.2-4.2A7.5 7.5 0 1 1 10.5 3zm0 2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11z"/></svg>
+          <label class="sr" for="sheetSearchInput">Search movies, series and trailers</label>
+          <input id="sheetSearchInput" type="search" placeholder="Movies, series, trailers" enterkeyhint="search">
+        </form>
+        <button class="sheet__close" type="button" data-sheet-close>Cancel</button>
+      </div>
+      <div class="sheet__body">
+        <p class="sheet__hint" id="sheetSearchHint">Type at least 2 letters. Try “avengers”, “kids” or “wildlife”.</p>
+        <p class="sheet__count" id="sheetSearchCount" aria-live="polite"></p>
+        <div class="grid sheet__grid" id="sheetSearchGrid"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sheet" id="sheetGenres" role="dialog" aria-modal="true" aria-labelledby="sheetGenresTitle" hidden>
+    <div class="sheet__backdrop" data-sheet-close></div>
+    <div class="sheet__panel">
+      <div class="sheet__grab" aria-hidden="true"></div>
+      <div class="sheet__head">
+        <h2 id="sheetGenresTitle">Browse</h2>
+        <button class="sheet__x" type="button" data-sheet-close aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6.4 5 5.6 5.6L17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6L6.4 19 5 17.6l5.6-5.6L5 6.4z"/></svg></button>
+      </div>
+      <div class="sheet__body">
+        <h3 class="sheet__label">Sections</h3>
+        <div class="chips" id="chipSections"></div>
+        <h3 class="sheet__label">Genres</h3>
+        <div class="chips" id="chipGenres"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sheet" id="sheetList" role="dialog" aria-modal="true" aria-labelledby="sheetListTitle" hidden>
+    <div class="sheet__backdrop" data-sheet-close></div>
+    <div class="sheet__panel sheet__panel--tall">
+      <div class="sheet__grab" aria-hidden="true"></div>
+      <div class="sheet__head">
+        <h2 id="sheetListTitle">My List</h2>
+        <button class="sheet__x" type="button" data-sheet-close aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6.4 5 5.6 5.6L17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6L6.4 19 5 17.6l5.6-5.6L5 6.4z"/></svg></button>
+      </div>
+      <div class="sheet__body">
+        <div class="empty" id="listEmpty">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 3A6 6 0 0 0 12 5.1 6 6 0 0 0 7.5 3 5.4 5.4 0 0 0 2 8.5c0 3.8 3.4 6.9 8.6 11.5l1.4 1.4 1.4-1.4C18.6 15.4 22 12.3 22 8.5A5.4 5.4 0 0 0 16.5 3zm-4.4 15.6-.1.1-.1-.1C7.1 14.3 4 11.5 4 8.5 4 6.5 5.5 5 7.5 5c1.5 0 3 1 3.6 2.4h1.9C13.5 6 15 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 3-3.1 5.8-7.9 10.1z"/></svg>
+          <p class="empty__title">Your list is empty</p>
+          <p class="empty__text">Tap the heart on any poster to save it here. Your list stays in this browser only.</p>
+          <button class="btn btn--play" type="button" data-goto="trailers">Browse trailers</button>
+        </div>
+        <div class="grid sheet__grid" id="listGrid"></div>
+      </div>
+    </div>
+  </div>
+
+  <noscript><p class="loading">2DayMovie needs JavaScript to play videos.</p></noscript>
+  <script src="{{ base }}static/js/hero.js?v={{ asset_v }}" defer></script>
+  <script src="{{ base }}static/js/search.js?v={{ asset_v }}" defer></script>
+  <script src="{{ base }}static/js/app.js?v={{ asset_v }}" defer></script>
+  <script src="{{ base }}static/js/mobile.js?v={{ asset_v }}" defer></script>
+</body>
+</html>

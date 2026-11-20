@@ -13,11 +13,10 @@ Minimal ECS task env:
 ```
 PORT=8080
 FLASK_DEBUG=0
-TMDB_API_KEY=<from Secrets Manager>
-TMDB_WATCH_REGION=US
+METRICS_TOKEN=<from Secrets Manager>
 OFFICIAL_URL=https://your-domain
 ```
 
 Health check: `GET /healthz`  
 Ready check: `GET /readyz`  
-Metrics: scrape `/metrics` with Prometheus on EKS or Amazon Managed Prometheus.
+Metrics: scrape `/metrics` with `Authorization: Bearer $METRICS_TOKEN` (404 when the token is unset).

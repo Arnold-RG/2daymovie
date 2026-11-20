@@ -12,11 +12,36 @@ services:
         value: "3.12.8"
       - key: FLASK_DEBUG
         value: "0"
-      - key: TMDB_API_KEY
+      - key: METRICS_TOKEN
         sync: false
-      - key: TMDB_WATCH_REGION
-        value: US
-      - key: DATABASE_URL
-        sync: false
-      - key: OFFICIAL_DATABASE_URL_FILE
-        sync: false
+  # The live static site (twodaymovie-site.onrender.com) publishes the repo root.
+  # Render reads this only when the repo is synced as a Blueprint; plain pushes do
+  # not change the service. If a Blueprint is ever linked, merging to main applies
+  # these response headers to that site. They mirror SECURITY_HEADERS in app.py.
+  - type: web
+    name: 2daymovie-site
+    runtime: static
+    buildCommand: echo 'No build needed'
+    staticPublishPath: .
+    headers:
+      - path: /*
+        name: Content-Security-Policy
+        value: "default-src 'self'; script-src 'self' https://www.youtube.com; style-src 'self'; img-src 'self' data: https://i.ytimg.com; connect-src 'self'; frame-src https://www.youtube-nocookie.com; media-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+      - path: /*
+        name: Strict-Transport-Security
+        value: "max-age=31536000; includeSubDomains"
+      - path: /*
+        name: Permissions-Policy
+        value: "autoplay=(self \"https://www.youtube-nocookie.com\"), fullscreen=(self \"https://www.youtube-nocookie.com\"), encrypted-media=(self \"https://www.youtube-nocookie.com\"), picture-in-picture=(self \"https://www.youtube-nocookie.com\"), camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+      - path: /*
+        name: X-Frame-Options
+        value: "DENY"
+      - path: /*
+        name: X-Content-Type-Options
+        value: "nosniff"
+      - path: /*
+        name: Referrer-Policy
+        value: "strict-origin-when-cross-origin"
+      - path: /*
+        name: Cross-Origin-Opener-Policy
+        value: "same-origin"

@@ -1,301 +1,137 @@
+"""Tests for the rebuilt 2DayMovie site and its data files."""
+from __future__ import annotations
+
+import json
+import re
 from pathlib import Path
-from app import app
-from services import library
 
-
-def test_home_ok():
-    client = app.test_client()
-    response = client.get("/")
-    assert response.status_code == 200
-    assert b"2daymovie" in response.data
-    assert b"Upcoming" in response.data
-    assert b"data-hero-slider" in response.data or b"hero" in response.data
-
-
-def test_browse_ok():
-    client = app.test_client()
-    response = client.get("/browse")
-    assert response.status_code == 200
-    assert b"Sort by" in response.data
-
-
-def test_movie_details_ok():
-    client = app.test_client()
-    movie = library.get_catalog_movie(27205)
-    assert movie is not None
-    response = client.get("/movie/27205")
-    assert response.status_code == 200
-    assert b"Inception" in response.data
-
-
-def test_movie_not_found():
-    client = app.test_client()
-    response = client.get("/movie/999999999")
-    assert response.status_code == 404
-
-
-def test_search():
-    client = app.test_client()
-    response = client.get("/search?q=inception")
-    assert response.status_code == 200
-    assert b"Inception" in response.data
-
-
-def test_movies_ok():
-    client = app.test_client()
-    response = client.get("/movies")
-    assert response.status_code == 200
-    assert b"Movies" in response.data
-    assert b"2000" in response.data or b"2024" in response.data or b"2026" in response.data
-
-
-def test_categories_ok():
-    client = app.test_client()
-    response = client.get("/categories")
-    assert response.status_code == 200
-    assert b"Categories" in response.data
-    assert b"Action" in response.data or b"Drama" in response.data
-
-
-def test_genre_sort():
-    client = app.test_client()
-    response = client.get("/genre/28?sort=newest")
-    assert response.status_code == 200
-    assert b"Sort by" in response.data
-    assert b"selected" in response.data
-
-
-def test_library_redirects():
-    client = app.test_client()
-    response = client.get("/library")
-    assert response.status_code in (301, 302)
-    assert "/movies" in response.headers.get("Location", "")
-
-
-def test_year_page_ok():
-    client = app.test_client()
-    response = client.get("/year/2010")
-    assert response.status_code == 200
-    assert b"Inception" in response.data
-
-
-def test_upcoming_ok():
-    client = app.test_client()
-    response = client.get("/upcoming")
-    assert response.status_code == 200
-    assert b"Upcoming" in response.data
-
-
-def test_about_ok():
-    client = app.test_client()
-    response = client.get("/about")
-    assert response.status_code == 200
-    assert b"Arnold Rurangwa" in response.data
-    assert b"GitHub" not in response.data
-
-
-def test_robots_and_sitemap():
-    client = app.test_client()
-    robots = client.get("/robots.txt")
-    assert robots.status_code == 200
-    assert b"Sitemap:" in robots.data
-    sitemap = client.get("/sitemap.xml")
-    assert sitemap.status_code == 200
-    assert b"<urlset" in sitemap.data
-    assert b"/about" in sitemap.data
-
-
-def test_healthz():
-    client = app.test_client()
-    response = client.get("/healthz")
-    assert response.status_code == 200
-    assert response.get_json()["status"] == "ok"
-
-
-def test_readyz():
-    client = app.test_client()
-    response = client.get("/readyz")
-    assert response.status_code == 200
-    assert response.get_json()["status"] == "ready"
-
-
-def test_metrics():
-    client = app.test_client()
-    response = client.get("/metrics")
-    assert response.status_code == 200
-    assert b"twodaymovie_http_requests_total" in response.data
-
-
-def test_series_ok():
-    client = app.test_client()
-    response = client.get("/series")
-    assert response.status_code == 200
-    assert b"Series" in response.data
-    response_2002 = client.get("/series?year=2002")
-    assert response_2002.status_code == 200
-    assert b"The Wire" in response_2002.data or b"The Shield" in response_2002.data
-
-
-def test_security_headers():
-    client = app.test_client()
-    response = client.get("/")
-    assert response.headers.get("X-Content-Type-Options") == "nosniff"
-    assert response.headers.get("X-Frame-Options") == "SAMEORIGIN"
-    policy = response.headers.get("Content-Security-Policy", "")
-    assert "object-src 'none'" in policy
-    assert "base-uri 'self'" in policy
-
-
-def test_pretty_catalog_paths():
-    client = app.test_client()
-    movies = client.get("/movies/year/2010")
-    assert movies.status_code == 200
-    assert b"Inception" in movies.data
-    browse = client.get("/browse/sort/newest")
-    assert browse.status_code == 200
-    assert b"Sort by" in browse.data
-    missing = client.get("/browse/sort/not-a-sort")
-    assert missing.status_code == 404
-
-
-def test_year_jump():
-    client = app.test_client()
-    response = client.get("/year?year=2010")
-    assert response.status_code in (301, 302, 308)
-    assert response.headers.get("Location", "").endswith("/year/2010")
-
-
-def test_reviews_local_only_ignores_database(monkeypatch):
-    monkeypatch.setenv("REVIEWS_LOCAL_ONLY", "1")
-    monkeypatch.setenv("DATABASE_URL", "postgresql://example:secret@db.example/app")
-    from services import reviews as reviews_mod
-
-    assert reviews_mod._database_url() == ""
-    assert reviews_mod._is_postgres() is False
-
-
-def test_reviews_live(tmp_path, monkeypatch):
-    reviews_db = tmp_path / "reviews.db"
-    vault = tmp_path / "site_vault.json"
-    monkeypatch.setenv("REVIEWS_SQLITE_PATH", str(reviews_db))
-    monkeypatch.delenv("DATABASE_URL", raising=False)
-    monkeypatch.setenv("OFFICIAL_DATABASE_URL_FILE", str(tmp_path / "missing.url"))
-
-    from services import reviews as reviews_mod
-
-    reviews_mod._RATE.clear()
-    reviews_mod._INITIALIZED = False
-    reviews_mod.SITE_VAULT = vault
-    reviews_mod.OFFICIAL_DB_LINK = tmp_path / "official_database.url"
-    reviews_mod._init_db()
-
-    client = app.test_client()
-    page = client.get("/reviews")
-    assert page.status_code == 200
-    assert b"Live reviews" in page.data
-
-    posted = client.post(
-        "/reviews",
-        data={
-            "name": "Alex",
-            "rating": "5",
-            "message": "Great trailers on this site!",
-            "website": "",
-        },
-        follow_redirects=False,
-    )
-    assert posted.status_code in (301, 302)
-
-    api = client.get("/api/reviews")
-    assert api.status_code == 200
-    payload = api.get_json()
-    assert payload["stats"]["count"] >= 1
-    assert any(r["name"] == "Alex" for r in payload["reviews"])
-    assert vault.exists()
-
-    home = client.get("/")
-    assert home.status_code == 200
-    assert b"Live reviews" in home.data
-    assert b"Alex" in home.data
-    assert b"hero-cinema" in home.data or b"hero-stage" in home.data
-
-
-def test_reviews_official_link_file(tmp_path, monkeypatch):
-    link = tmp_path / "official_database.url"
-    link.write_text(
-        "# comment\npostgresql://example:pass@db.example/app?sslmode=require\n",
-        encoding="utf-8",
-    )
-    monkeypatch.delenv("DATABASE_URL", raising=False)
-    monkeypatch.delenv("OFFICIAL_DATABASE_URL_FILE", raising=False)
-
-    from services import reviews as reviews_mod
-
-    reviews_mod.OFFICIAL_DB_LINK = link
-    assert reviews_mod._database_url().startswith("postgresql://example:")
-    assert reviews_mod._is_postgres() is True
-
-
-def test_reviews_migrate_legacy_json(tmp_path, monkeypatch):
-    legacy = tmp_path / "reviews.json"
-    legacy.write_text(
-        '[{"id":"legacy-1","name":"Sam","rating":4,"message":"Restored review text here","created_at":"2026-09-20T12:00:00+00:00"}]',
-        encoding="utf-8",
-    )
-    db = tmp_path / "reviews.db"
-    vault = tmp_path / "site_vault.json"
-    monkeypatch.setenv("REVIEWS_PATH", str(legacy))
-    monkeypatch.setenv("REVIEWS_SQLITE_PATH", str(db))
-    monkeypatch.delenv("DATABASE_URL", raising=False)
-    monkeypatch.setenv("OFFICIAL_DATABASE_URL_FILE", str(tmp_path / "missing.url"))
-
-    from services import reviews as reviews_mod
-
-    reviews_mod._RATE.clear()
-    reviews_mod._INITIALIZED = False
-    reviews_mod.SITE_VAULT = vault
-    reviews_mod.OFFICIAL_DB_LINK = tmp_path / "official_database.url"
-    reviews_mod._init_db()
-    rows = reviews_mod.list_reviews()
-    assert any(r["name"] == "Sam" and r["id"] == "legacy-1" for r in rows)
-
-
-def test_hero_watch_links_honor_base_path(monkeypatch):
-    """Hero slideshow hrefs must include BASE_PATH so Pages links do not 404."""
-    monkeypatch.setenv("BASE_PATH", "/2daymovie")
-    from app import create_app
-
-    client = create_app().test_client()
-    # Export and the live Flask app request the unprefixed path; the
-    # SCRIPT_NAME middleware makes url_for emit /2daymovie/... links.
-    response = client.get("/")
-    assert response.status_code == 200, response.status_code
-    html = response.data.decode("utf-8")
-    assert "data-hero-slider" in html
-    # Every hero watch link is prefixed; none point at the site root.
-    assert 'data-href="/2daymovie/watch/' in html
-    assert 'href="/2daymovie/watch/' in html
-    assert 'data-href="/watch/' not in html
-    assert 'href="/watch/' not in html
-
-
-def test_hero_watch_links_at_root_have_no_prefix():
-    """The Render app is served at the domain root; unprefixed /watch/ is correct there."""
-    from app import app
-
-    client = app.test_client()
-    response = client.get("/")
-    assert response.status_code == 200
-    html = response.data.decode("utf-8")
-    if "data-hero-slider" in html:
-        assert 'data-href="/watch/' in html
-        assert 'data-href="/2daymovie/watch/' not in html
-
-
-def test_committed_docs_hero_links_are_prefixed():
-    """The legacy Pages tree in docs/ must not ship unprefixed hero watch links."""
-    html = Path(__file__).resolve().parents[1].joinpath("docs/index.html").read_text(encoding="utf-8")
-    assert 'data-href="/2daymovie/watch/' in html
-    assert 'href="/2daymovie/watch/' in html
-    assert 'data-href="/watch/' not in html
-    assert 'href="/watch/' not in html
+import pytest
+
+from app import app as flask_app
+
+ROOT = Path(__file__).resolve().parent.parent
+CATALOG = json.loads((ROOT / "data" / "catalog.json").read_text(encoding="utf-8"))["items"]
+TRAILERS = json.loads((ROOT / "data" / "trailers.json").read_text(encoding="utf-8"))["items"]
+_CH = ROOT / "scripts" / "channels.json"  # local-only, gitignored
+CHANNELS = json.loads(_CH.read_text(encoding="utf-8")) if _CH.exists() else []
+YT_ID = re.compile(r"^[A-Za-z0-9_-]{11}$")
+SECTIONS = {"movies", "series", "kids", "cartoons", "ai", "wildlife"}
+
+
+@pytest.fixture()
+def client():
+    flask_app.config.update(TESTING=True)
+    return flask_app.test_client()
+
+
+def test_health_ready_metrics(client, monkeypatch):
+    assert client.get("/healthz").get_json() == {"status": "ok"}
+    ready = client.get("/readyz").get_json()
+    assert ready["status"] == "ready" and ready["videos"] == len(CATALOG)
+    monkeypatch.delenv("METRICS_TOKEN", raising=False)
+    assert client.get("/metrics").status_code == 404, "metrics are private without a token"
+    weak = "s3cret-token"
+    monkeypatch.setenv("METRICS_TOKEN", weak)
+    assert client.get("/metrics", headers={"Authorization": f"Bearer {weak}"}).status_code == 404, "weak token is refused"
+    strong = "a3f1" * 16  # 64 chars, like `openssl rand -hex 32`
+    monkeypatch.setenv("METRICS_TOKEN", strong)
+    assert client.get("/metrics").status_code == 404
+    assert client.get("/metrics", headers={"Authorization": "Bearer wrong"}).status_code == 404
+    ok = client.get("/metrics", headers={"Authorization": f"Bearer {strong}"})
+    assert ok.status_code == 200 and b"twodaymovie_http_requests_total" in ok.data
+
+
+def test_validate_catalog_script_passes():
+    import subprocess
+    import sys
+    res = subprocess.run([sys.executable, str(ROOT / "scripts" / "validate_catalog.py")],
+                         capture_output=True, text=True, timeout=120)
+    assert res.returncode == 0, res.stdout + res.stderr
+
+
+def test_genre_rows_have_enough_titles():
+    from collections import Counter
+    genres = Counter(g for v in CATALOG for g in v["genres"][1:])
+    shown = [g for g in ("Drama", "Action", "Adventure", "Sci-Fi", "Musical", "Horror", "Comedy",
+                         "Romance", "Thriller", "Documentary") if genres[g] >= 6]
+    assert len(shown) >= 5, f"too few genre rows: {shown}"
+    js = (ROOT / "static" / "js" / "app.js").read_text(encoding="utf-8")
+    assert "GENRE_MIN = 6" in js and 'id="genreMenu"' in (ROOT / "templates" / "index.html").read_text()
+
+
+def test_render_yaml_static_headers_match_app():
+    from app import SECURITY_HEADERS
+    text = (ROOT / "render.yaml").read_text(encoding="utf-8")
+    assert "runtime: static" in text, "render.yaml should describe the static site headers"
+    block = text.split("runtime: static", 1)[1]
+    pairs = re.findall(r'- path: /\*\n\s+name: (.+)\n\s+value: "((?:[^"\\]|\\.)*)"', block)
+    got = {name.strip(): value.replace('\\"', '"') for name, value in pairs}
+    assert got == SECURITY_HEADERS
+
+
+def test_home_page_has_navigation_hero_search_and_player(client):
+    html = client.get("/").get_data(as_text=True)
+    for anchor in ("#trailers", "#movies", "#series", "#kids", "#cartoons", "#ai", "#wildlife"):
+        assert f'href="{anchor}"' in html
+    for element_id in ("heroTrack", "heroPrev", "heroNext", "heroDots", "searchInput", "player"):
+        assert f'id="{element_id}"' in html
+    for asset in ("static/js/app.js", "static/js/hero.js", "static/js/search.js", "static/css/app.css"):
+        assert asset in html
+
+
+def test_static_assets_and_public_data_served(client):
+    for asset in ("js/app.js", "js/hero.js", "js/search.js", "css/app.css"):
+        assert client.get(f"/static/{asset}").status_code == 200
+    assert client.get("/data/catalog.json").status_code == 200
+    assert client.get("/data/trailers.json").status_code == 200
+    assert client.get("/data/catalog_sources.json").status_code == 404
+
+
+def test_legacy_urls_redirect_home(client):
+    for path in ("/library", "/movies", "/watch/123", "/series/watch/9", "/upcoming"):
+        resp = client.get(path)
+        assert resp.status_code == 301 and resp.headers["Location"].endswith("/")
+    assert client.get("/nope-not-here").status_code == 404
+
+
+def test_catalog_schema_and_ids():
+    ids = [v["id"] for v in CATALOG]
+    assert len(ids) == len(set(ids)), "duplicate videos"
+    for v in CATALOG:
+        assert set(v) == {"id", "title", "type", "genres", "duration", "thumbnail"}, "public schema only"
+        assert YT_ID.match(v["id"]) and v["type"] in SECTIONS and v["title"].strip()
+        assert v["genres"] and all(isinstance(g, str) and g for g in v["genres"])
+        assert isinstance(v["duration"], int) and v["duration"] > 0
+        assert v["thumbnail"].startswith("https://i.ytimg.com/vi/" + v["id"])
+
+
+def test_long_form_rules():
+    for v in CATALOG:
+        if v["type"] == "movies":
+            assert v["duration"] >= 40 * 60, v
+        if v["type"] == "wildlife":
+            assert v["duration"] >= 20 * 60, v
+
+
+def test_sections_present():
+    assert {v["type"] for v in CATALOG} >= {"movies", "series", "wildlife", "ai"}
+
+
+def test_no_channel_names_shown_to_users(client):
+    public = client.get("/").get_data(as_text=True) + json.dumps(CATALOG, ensure_ascii=False)
+    for js in ("app.js", "hero.js", "search.js"):
+        public += (ROOT / "static" / "js" / js).read_text(encoding="utf-8")
+    labels = {g for v in CATALOG for g in v["genres"]}
+    for ch in CHANNELS:
+        assert ch["name"].split(" — ")[0] not in labels, f"row named after a channel: {ch['name']}"
+    assert "youtube.com/@" not in public and "/channel/UC" not in public
+
+
+def test_trailers_upcoming_and_include_avengers_doomsday():
+    assert TRAILERS, "hero needs trailers"
+    assert TRAILERS[0]["title"] == "Avengers: Doomsday"
+    for t in TRAILERS:
+        assert set(t) == {"title", "release_date", "youtube_id", "start", "end"}
+        assert YT_ID.match(t["youtube_id"]) and t["release_date"] >= "2026-01-01"
+        assert 0 <= t["start"] < t["end"]
+        assert t["youtube_id"] not in {v["id"] for v in CATALOG}

@@ -1,16 +1,25 @@
-.PHONY: help install test run docker-up docker-down k8s-apply metrics-smoke
+.PHONY: help install test run catalog export docker-up docker-down k8s-apply metrics-smoke
 
 help:
-	@echo "Targets: install test run docker-up docker-down k8s-apply metrics-smoke"
+	@echo "Targets: install test run catalog export docker-up docker-down k8s-apply metrics-smoke"
 
 install:
-	python -m pip install -r requirements.txt
+	python -m pip install -r requirements-dev.txt
 
 test:
 	pytest -q
 
 run:
 	FLASK_DEBUG=1 python app.py
+
+catalog:
+	python -m pip install -r scripts/requirements.txt
+	python scripts/build_trailers.py
+	python scripts/build_catalog.py
+	python scripts/export_site.py --out docs
+
+export:
+	python scripts/export_site.py --out docs
 
 docker-up:
 	docker compose up --build -d

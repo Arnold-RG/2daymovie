@@ -7,7 +7,6 @@ metadata:
 data:
   PORT: "8080"
   FLASK_DEBUG: "0"
-  TMDB_WATCH_REGION: "US"
   OFFICIAL_URL: "https://twodaymovie.onrender.com/"
   WEB_CONCURRENCY: "2"
   WEB_THREADS: "4"

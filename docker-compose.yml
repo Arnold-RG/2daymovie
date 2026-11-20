@@ -8,8 +8,7 @@ services:
       PORT: "8080"
       FLASK_DEBUG: "0"
       OFFICIAL_URL: "https://twodaymovie.onrender.com/"
-      TMDB_API_KEY: "${TMDB_API_KEY:-}"
-      TMDB_WATCH_REGION: "${TMDB_WATCH_REGION:-US}"
+      METRICS_TOKEN: "${METRICS_TOKEN:-}"
     expose:
       - "8080"
     healthcheck:
@@ -41,6 +40,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./deploy/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./deploy/monitoring/metrics_token:/etc/prometheus/metrics_token:ro
     ports:
       - "9090:9090"
     networks:
@@ -53,8 +53,8 @@ services:
     depends_on:
       - prometheus
     environment:
-      GF_SECURITY_ADMIN_USER: admin
-      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_SECURITY_ADMIN_USER: "${GRAFANA_ADMIN_USER:-admin}"
+      GF_SECURITY_ADMIN_PASSWORD: "${GRAFANA_ADMIN_PASSWORD:?set GRAFANA_ADMIN_PASSWORD in .env}"
       GF_USERS_ALLOW_SIGN_UP: "false"
     ports:
       - "3000:3000"
