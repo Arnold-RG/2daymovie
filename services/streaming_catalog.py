@@ -51,6 +51,18 @@ CANDIDATES = [
         title="User-submitted full movie candidate",
         kind="movie",
         creator="Uploader verification pending",
+    ),
+    Stream(
+        video_id="UPerb922QGM",
+        title="Stalker (1979)",
+        kind="movie",
+        creator="Mosfilm",
+    ),
+    Stream(
+        video_id="NTWA_7-ld_U",
+        title="Moscow Does Not Believe in Tears (1979)",
+        kind="movie",
+        creator="Mosfilm",
     )
 ]
 
