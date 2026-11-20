@@ -54,11 +54,13 @@ def test_site_sets_no_cookies(client):
 
 
 def test_local_storage_holds_only_ui_preferences():
-    js = "".join((ROOT / "static/js" / f).read_text() for f in ("app.js", "hero.js", "search.js"))
+    js = "".join((ROOT / "static/js" / f).read_text() for f in ("app.js", "hero.js", "search.js", "mobile.js"))
     assert "document.cookie" not in js and "sessionStorage" not in js
-    keys = set(re.findall(r'(?:STORE|LEGACY)_KEY = "([^"]+)"', js))
-    assert keys == {"tdm.hero.v2", "tdm.hero.v1"}
-    assert set(re.findall(r"localStorage\.\w+\(([^,)]+)", js)) == {"STORE_KEY", "LEGACY_KEY"}
+    keys = set(re.findall(r'(?:STORE|LEGACY|LIST)_KEY = "([^"]+)"', js))
+    assert keys == {"tdm.hero.v2", "tdm.hero.v1", "tdm.mylist.v1"}
+    assert set(re.findall(r"localStorage\.\w+\(([^,)]+)", js)) == {"STORE_KEY", "LEGACY_KEY", "LIST_KEY"}
+    # My List stores only catalog ids that exist, capped, as a JSON array
+    assert "localStorage.setItem(LIST_KEY, JSON.stringify(ids))" in js and "byId.has(id)" in js and "LIST_MAX" in js
     assert "localStorage.removeItem(LEGACY_KEY)" in js, "old v1 preferences are dropped"
     saved = set(re.findall(r"prefs\.save\(\{\s*(\w+)", js))
     assert saved <= {"sound", "volume", "brightness", "size"}, saved
@@ -68,7 +70,7 @@ def test_third_party_notices_cover_bundled_icons():
     text = (ROOT / "THIRD_PARTY_NOTICES.md").read_text()
     assert "Material Design Icons" in text and "Apache License 2.0" in text
     static = [p for p in (ROOT / "static").rglob("*") if p.suffix in {".js", ".css"}]
-    assert sorted(p.name for p in static) == ["404.css", "app.css", "app.js", "hero.js", "search.js"], \
+    assert sorted(p.name for p in static) == ["404.css", "app.css", "app.js", "hero.js", "mobile.js", "search.js"], \
         "new static JS/CSS must be listed in THIRD_PARTY_NOTICES.md if third-party"
 
 

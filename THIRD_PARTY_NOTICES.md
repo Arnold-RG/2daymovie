@@ -12,7 +12,7 @@ under YouTube's Terms of Service. Nothing is downloaded or rehosted.
 
 | Component | Where | License |
 |---|---|---|
-| Material Design Icons (path data for play, pause, volume, brightness, height, fullscreen, arrows, close, info, search icons) | inline `<svg>` in `templates/index.html`, `static/js/app.js` | Apache License 2.0, © Google LLC. https://github.com/google/material-design-icons/blob/master/LICENSE |
+| Material Design Icons (path data for play, pause, volume, brightness, height, fullscreen, arrows, close, info, search, home, movie, grid, heart, shuffle icons) | inline `<svg>` in `templates/index.html`, `static/js/app.js` | Apache License 2.0, © Google LLC. https://github.com/google/material-design-icons/blob/master/LICENSE |
 
 ## Loaded at runtime (not redistributed)
 

@@ -73,7 +73,9 @@
     let soundWanted = saved.sound === true;    // re-enabled on the first user gesture
     let volume = Number.isFinite(saved.volume) ? Math.min(100, Math.max(0, saved.volume)) : 60;
     let brightness = Number.isFinite(saved.brightness) ? Math.min(1.6, Math.max(0.4, saved.brightness)) : 1;
-    let size = SIZES.includes(saved.size) ? saved.size : "full";
+    // Phones always open at the full display height (the size switch is a desktop control).
+    const phoneLayout = window.matchMedia("(max-width: 900px), (max-width: 1000px) and (max-height: 500px)").matches;
+    let size = !phoneLayout && SIZES.includes(saved.size) ? saved.size : "full";
 
     const ui = {};
 

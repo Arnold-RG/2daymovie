@@ -21,7 +21,8 @@ Of the five standing areas, three apply and two do not.
 - **Privacy:** a Privacy section is in the site footer (`#privacy`). It says there are no accounts, no
   analytics and no tracking cookies of our own; the site sets no cookies (tested); videos come from
   `youtube-nocookie.com`; `localStorage` key `tdm.hero.v2` holds only the header
-  video's sound, volume, brightness and size choices (tested).
+  video's sound, volume, brightness and size choices, and `tdm.mylist.v1` holds only the
+  My List video ids (existing catalog ids, capped at 200) (tested).
 - **YouTube cookies (measured):** a headless load of the home page ends with
   YouTube's own cookies on `.youtube.com` (`YSC`, `VISITOR_INFO1_LIVE`,
   `VISITOR_PRIVACY_METADATA`, `__Secure-YNID`, `__Secure-ROLLOUT_TOKEN`), because the

@@ -112,7 +112,7 @@
     img.alt = "";
     // Right-sized thumbnails: 320px for most screens, 480px for wide or dense ones.
     img.srcset = `${thumb(v.id, "mqdefault")} 320w, ${thumb(v.id, "hqdefault")} 480w`;
-    img.sizes = opts.trailer ? "(max-width: 520px) 78vw, (max-width: 1460px) 26vw, 380px" : "(max-width: 520px) 64vw, (max-width: 1430px) 21vw, 300px";
+    img.sizes = opts.trailer ? "(max-width: 900px) 58vw, (max-width: 1460px) 26vw, 380px" : "(max-width: 900px) 42vw, (max-width: 1430px) 21vw, 300px";
     img.src = thumb(v.id, "mqdefault");
     img.addEventListener("error", () => { img.style.visibility = "hidden"; }, { once: true });
     th.appendChild(img);
@@ -126,6 +126,56 @@
     const meta = opts.trailer ? "Official trailer" : [opts.rowLabel || v.row, v.year].filter(Boolean).join(" · ");
     b.appendChild(el("p", "card__meta", meta));
     return b;
+  }
+
+  /* ---------------- My List (favourites) ---------------- */
+  // Saved ids live only in this browser (localStorage); nothing is sent anywhere.
+  const LIST_KEY = "tdm.mylist.v1";
+  const LIST_MAX = 200;
+  const ICON_HEART = "M12 21.4 10.6 20C5.4 15.4 2 12.3 2 8.5A5.4 5.4 0 0 1 7.5 3c1.7 0 3.4.8 4.5 2.1A6 6 0 0 1 16.5 3 5.4 5.4 0 0 1 22 8.5c0 3.8-3.4 6.9-8.6 11.5z";
+  const myList = {
+    ids() {
+      try {
+        const v = JSON.parse(localStorage.getItem(LIST_KEY));
+        return Array.isArray(v) ? v.filter((id) => typeof id === "string" && byId.has(id)).slice(0, LIST_MAX) : [];
+      } catch (_) { return []; }
+    },
+    has(id) { return this.ids().includes(id); },
+    toggle(id) {
+      if (!byId.has(id)) return false;
+      let ids = this.ids();
+      const on = !ids.includes(id);
+      ids = on ? [id, ...ids].slice(0, LIST_MAX) : ids.filter((x) => x !== id);
+      try { localStorage.setItem(LIST_KEY, JSON.stringify(ids)); } catch (_) { /* private mode */ }
+      syncHearts(id, on);
+      document.dispatchEvent(new CustomEvent("tdm:list", { detail: { id, on, count: ids.length } }));
+      return on;
+    },
+  };
+  function heartLabel(v, on) {
+    const name = v.trailer || v.film ? v.film || v.title : v.title;
+    return on ? `Remove ${name} from My List` : `Add ${name} to My List`;
+  }
+  function syncHearts(id, on) {
+    const v = byId.get(id);
+    document.querySelectorAll(`.heart[data-fav="${CSS.escape(id)}"]`).forEach((h) => {
+      h.setAttribute("aria-pressed", String(on));
+      h.setAttribute("aria-label", heartLabel(v, on));
+    });
+  }
+  // A card plus its heart. The heart is a sibling button, never nested inside the card button.
+  function tile(v, opts = {}) {
+    const w = el("div", "tile" + (opts.trailer ? " tile--trailer" : ""));
+    w.appendChild(card(v, opts));
+    const h = el("button", "heart");
+    h.type = "button";
+    h.dataset.fav = v.id;
+    const on = opts.saved != null ? opts.saved : myList.has(v.id);
+    h.setAttribute("aria-pressed", String(on));
+    h.setAttribute("aria-label", heartLabel(v.trailer || opts.trailer ? { ...v, trailer: true } : v, on));
+    h.appendChild(svg(ICON_HEART));
+    w.appendChild(h);
+    return w;
   }
 
   function row(title, items, opts = {}) {
@@ -144,7 +194,8 @@
     const sc = el("div", "row__scroller");
     sc.setAttribute("role", "group");
     sc.setAttribute("aria-label", title);
-    for (const v of items.slice(0, ROW_LIMIT)) sc.appendChild(card(v, opts));
+    const saved = new Set(myList.ids());
+    for (const v of items.slice(0, ROW_LIMIT)) sc.appendChild(tile(v, { ...opts, saved: saved.has(v.id) }));
     const prev = el("button", "row__btn row__btn--prev");
     prev.appendChild(svg("M15.4 5.4 14 4l-8 8 8 8 1.4-1.4L8.8 12z"));
     prev.setAttribute("aria-label", `Scroll ${title} left`);
@@ -241,7 +292,7 @@
     const grid = $("#resultsGrid");
     grid.textContent = "";
     const frag = document.createDocumentFragment();
-    for (const v of items) frag.appendChild(card(v, { trailer: !!v.trailer || !!v.film }));
+    for (const v of items) frag.appendChild(tile(v, { trailer: !!v.trailer || !!v.film }));
     grid.appendChild(frag);
     $("#resultsEmpty").hidden = items.length > 0;
     window.scrollTo(0, 0);
@@ -354,6 +405,14 @@
 
   function bindGlobal() {
     document.addEventListener("click", (e) => {
+      const fav = e.target.closest(".heart[data-fav]");
+      if (fav) {
+        const on = myList.toggle(fav.dataset.fav);
+        fav.classList.remove("is-pop");
+        void fav.offsetWidth; // restart the pop animation
+        if (on) fav.classList.add("is-pop");
+        return;
+      }
       const c = e.target.closest(".card");
       if (c) { openPlayer(c.dataset.id); return; }
       if (e.target.closest("[data-close]")) closePlayer();
@@ -391,11 +450,13 @@
   const TDM = (window.TDM = window.TDM || {});
   Object.assign(TDM, {
     $, el, svg, thumb, fmtDate, fmtDuration, norm, loadYT, openPlayer, embedFrame, SANDBOX, showResults, hideResults,
-    ICON_PLAY, ICON_INFO, NOCOOKIE, reduceMotion,
+    ICON_PLAY, ICON_INFO, NOCOOKIE, reduceMotion, tile, myList, LIST_KEY,
   });
   Object.defineProperties(TDM, {
     catalog: { get: () => catalog, configurable: true },
     trailers: { get: () => trailers, configurable: true },
+    byId: { get: () => byId, configurable: true },
+    genreRows: { get: () => genreRows.map((r) => ({ genre: r.genre, id: genreSlug(r.genre), count: r.items.length })), configurable: true },
   });
 
   init();
