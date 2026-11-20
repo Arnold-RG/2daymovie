@@ -325,16 +325,17 @@ Sitemap: {base}/sitemap.xml
             spotlight_year=spotlight_year,
             spotlight=spotlight,
             series_spotlight=series_spotlight,
+            release_window=_release_window_cards(up),
             upcoming_movies=up["movies"][:8],
             upcoming_movies_2027=up["movies_2027"][:8],
             upcoming_series=up["series"][:8],
             latest_reviews=latest_reviews,
             review_stats=review_stats,
             series_stats=series_stats,
-            meta_title="2daymovie — Official HD Movie & TV Trailers",
+            meta_title="2daymovie — World Cinema, Full-Length Discovery & Official Trailers",
             meta_description=(
-                "Discover movies and TV shows on 2daymovie through official HD trailers. "
-                "Browse by year, genre and title."
+                "Explore world cinema, movie and TV series catalogs, on-site official trailers, "
+                "and scheduled upcoming releases. Full films require publisher-authorized embeds."
             ),
         )
 
