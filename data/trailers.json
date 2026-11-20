@@ -5,64 +5,162 @@
    "title": "Avengers: Doomsday",
    "release_date": "2026-12-18",
    "youtube_id": "irVNGjRFZGk",
-   "start": 6,
-   "end": 38
-  },
-  {
-   "title": "Hexed",
-   "release_date": "2026-11-25",
-   "youtube_id": "KXO21xZdUaM",
-   "start": 6,
-   "end": 38
+   "start": 30,
+   "end": 62
   },
   {
    "title": "Violent Night 2",
    "release_date": "2026-12-04",
    "youtube_id": "FmM2giDwLAE",
-   "start": 6,
-   "end": 38
+   "start": 52,
+   "end": 82
+  },
+  {
+   "title": "Behemoth!",
+   "release_date": "2026-12-04",
+   "youtube_id": "I6tMFYT9s7E",
+   "start": 26,
+   "end": 56
+  },
+  {
+   "title": "Killing Castro",
+   "release_date": "2026-12-11",
+   "youtube_id": "cal1RfsmHUI",
+   "start": 62,
+   "end": 86
   },
   {
    "title": "Dune: Part Three",
    "release_date": "2026-12-18",
    "youtube_id": "uJqaGLmZpGo",
-   "start": 6,
-   "end": 38
+   "start": 24,
+   "end": 56
   },
   {
    "title": "The Angry Birds Movie 3",
    "release_date": "2026-12-23",
    "youtube_id": "FjYzudbOzlY",
-   "start": 6,
-   "end": 38
+   "start": 14,
+   "end": 46
   },
   {
    "title": "Jumanji: Open World",
    "release_date": "2026-12-25",
    "youtube_id": "nIw1O3zvOfE",
-   "start": 6,
-   "end": 38
+   "start": 26,
+   "end": 58
+  },
+  {
+   "title": "Mr. Irrelevant",
+   "release_date": "2026-12-25",
+   "youtube_id": "cwVE1qf6Ixs",
+   "start": 16,
+   "end": 48
+  },
+  {
+   "title": "Werwulf",
+   "release_date": "2026-12-25",
+   "youtube_id": "CL1EFACsWag",
+   "start": 18,
+   "end": 44
+  },
+  {
+   "title": "Artificial",
+   "release_date": "2026-12-25",
+   "youtube_id": "ufeJbTNq-BI",
+   "start": 16,
+   "end": 46
+  },
+  {
+   "title": "Children of Blood and Bone",
+   "release_date": "2027-01-15",
+   "youtube_id": "a20LtkPALYM",
+   "start": 54,
+   "end": 88
+  },
+  {
+   "title": "River",
+   "release_date": "2027-01-15",
+   "youtube_id": "ox8lEnsxDag",
+   "start": 5,
+   "end": 35
+  },
+  {
+   "title": "The Rescue",
+   "release_date": "2027-01-29",
+   "youtube_id": "nzNYomSd5Ls",
+   "start": 20,
+   "end": 50
+  },
+  {
+   "title": "Slayground",
+   "release_date": "2027-01-29",
+   "youtube_id": "XsReYk7AqPg",
+   "start": 42,
+   "end": 68
   },
   {
    "title": "Ice Age: Boiling Point",
    "release_date": "2027-02-05",
    "youtube_id": "e67Qtn_3hkc",
+   "start": 8,
+   "end": 40
+  },
+  {
+   "title": "Remain",
+   "release_date": "2027-02-05",
+   "youtube_id": "Fso81Ypg9T4",
+   "start": 33,
+   "end": 63
+  },
+  {
+   "title": "The Comeback King",
+   "release_date": "2027-02-05",
+   "youtube_id": "dlpxXcC8nPk",
    "start": 6,
-   "end": 38
+   "end": 34
   },
   {
    "title": "Narnia: The Magician's Nephew",
    "release_date": "2027-02-12",
    "youtube_id": "gDJ-ini7fF0",
-   "start": 6,
-   "end": 38
+   "start": 16,
+   "end": 42
   },
   {
    "title": "Gatto",
    "release_date": "2027-03-05",
    "youtube_id": "fq7Q-dtIZeM",
-   "start": 6,
-   "end": 38
+   "start": 33,
+   "end": 63
+  },
+  {
+   "title": "The Thomas Crown Affair",
+   "release_date": "2027-03-05",
+   "youtube_id": "A643rogutGM",
+   "start": 20,
+   "end": 50
+  },
+  {
+   "title": "The Exorcist: Martyrs",
+   "release_date": "2027-03-12",
+   "youtube_id": "iIEYfH-jg1Y",
+   "start": 42,
+   "end": 72
+  },
+  {
+   "title": "The Nightingale",
+   "release_date": "2027-03-19",
+   "youtube_id": "gNHr2-JjKRM",
+   "start": 67,
+   "end": 97
+  },
+  {
+   "title": "Day Drinker",
+   "release_date": "2027-03-26",
+   "youtube_id": "bhKKR5He_Fo",
+   "start": 53,
+   "end": 74
   }
  ]
 }
