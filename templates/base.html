@@ -7,19 +7,19 @@
   <meta name="color-scheme" content="dark" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; img-src 'self' data: https://image.tmdb.org https://media.themoviedb.org https://i.ytimg.com; font-src 'self' https://fonts.gstatic.com data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' 'unsafe-inline' https://www.youtube.com https://www.youtube-nocookie.com; frame-src https://www.youtube.com https://www.youtube-nocookie.com; connect-src 'self' https://www.youtube.com https://www.youtube-nocookie.com; form-action 'self'" />
-  <title>{% block title %}{{ meta_title|default('2daymovie — Official HD Movie & TV Trailers') }}{% endblock %}</title>
+  <title>{% block title %}{{ meta_title|default('2daymovie — Worldwide Film & Series Discoverys') }}{% endblock %}</title>
   <meta name="description" content="{{ meta_description|default(page_description) }}" />
   <link rel="canonical" href="{{ official_url.rstrip('/') }}{{ request.path }}" />
   <meta property="og:locale" content="en_US" />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="{{ meta_title|default('2daymovie — Official HD Trailers') }}" />
+  <meta property="og:title" content="{{ meta_title|default('2daymovie — Worldwide Film & Series Discoverys') }}" />
   <meta property="og:description" content="{{ meta_description|default(page_description) }}" />
   <meta property="og:url" content="{{ official_url.rstrip('/') }}{{ request.path }}" />
   <meta property="og:site_name" content="2daymovie" />
   <meta property="og:image" content="{{ official_url.rstrip('/') }}/static/img/og-image.svg" />
-  <meta property="og:image:alt" content="2daymovie, official HD movie and television trailers" />
+  <meta property="og:image:alt" content="2daymovie, worldwide movie and series discoverys" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="{{ meta_title|default('2daymovie — Official HD Trailers') }}" />
+  <meta name="twitter:title" content="{{ meta_title|default('2daymovie — Worldwide Film & Series Discoverys') }}" />
   <meta name="twitter:description" content="{{ meta_description|default(page_description) }}" />
   <meta name="twitter:image" content="{{ official_url.rstrip('/') }}/static/img/og-image.svg" />
   <link rel="icon" href="{{ url_for('static', filename='img/favicon.svg') }}" type="image/svg+xml" />
@@ -35,7 +35,7 @@
     "@type": "WebSite",
     "name": "2daymovie",
     "url": {{ official_url|tojson }},
-    "description": "Official HD movie and TV trailer discovery.",
+    "description": "Worldwide movie and series discovery discovery.",
     "creator": {
       "@type": "Person",
       "name": "Arnold Rurangwa"
@@ -69,8 +69,8 @@
 
       <nav class="site-nav" id="site-nav" aria-label="Primary" data-site-nav>
         <a href="{{ url_for('browse') }}" {% if ep in ['browse', 'browse_paged', 'browse_sorted', 'browse_sorted_page', 'categories_home', 'genre', 'genre_paged', 'genre_sorted', 'genre_sorted_page'] %}aria-current="page"{% endif %}>Browse</a>
-        <a href="{{ url_for('home') }}#trailers" {% if ep in ['upcoming_home', 'watch_page', 'series_watch'] %}aria-current="page"{% endif %}>Trailers</a>
-        <a href="{{ url_for('home') }}#where" {% if ep in ['movie_details'] %}aria-current="page"{% endif %}>Where to watch</a>
+        <a href="{{ url_for('home') }}#discover">Discover</a>
+        <a href="{{ url_for('home') }}#discover">World cinema</a>
         <a href="{{ url_for('movies_home') }}" {% if ep in ['movies_home', 'movies_year', 'year_page'] %}aria-current="page"{% endif %}>Movies</a>
         <a href="{{ url_for('series_home') }}" {% if ep in ['series_home', 'series_year'] %}aria-current="page"{% endif %}>Series</a>
         <a href="{{ url_for('reviews_home') }}" {% if ep == 'reviews_home' %}aria-current="page"{% endif %}>Reviews</a>
@@ -93,12 +93,12 @@
     <div class="footer-inner">
       <div>
         <div class="footer-brand">2daymovie</div>
-        <p>Legal HD trailers and where-to-watch discovery. Nothing on this site is a full film.</p>
+        <p>Discover films and series worldwide. Full-length viewing will be enabled only for verified, authorized content.</p>
       </div>
       <nav class="footer-nav" aria-label="Footer">
         <a href="{{ url_for('browse') }}">Browse</a>
-        <a href="{{ url_for('home') }}#trailers">Trailers</a>
-        <a href="{{ url_for('home') }}#where">Where to watch</a>
+        <a href="{{ url_for('home') }}#discover">Discover</a>
+        <a href="{{ url_for('home') }}#discover">World cinema</a>
         <a href="{{ url_for('movies_home') }}">Movies</a>
         <a href="{{ url_for('series_home') }}">Series</a>
         <a href="{{ url_for('about') }}">About</a>
