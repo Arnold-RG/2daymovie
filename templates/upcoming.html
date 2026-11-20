@@ -9,14 +9,16 @@
     <p class="detail-kicker">Coming soon</p>
     <h1>Upcoming movies &amp; series</h1>
     <p>
-      2025–2027 titles from the curated list.
+      New releases from December 2026 through March 2027, followed by the broader catalog.
       Trailers open in a watch room on this site when available; otherwise they stay listed as coming soon.
     </p>
   </header>
 
+  {% include "_release_spotlight.html" %}
+
   <section class="home-block">
     <div class="row-head">
-      <h2>Movies · 2025</h2>
+      <h2>Earlier releases · 2025</h2>
       <span class="muted">{{ movies_2025|length }} titles</span>
     </div>
     <div class="poster-grid shelf-grid">
@@ -50,7 +52,7 @@
 
   <section class="home-block">
     <div class="row-head">
-      <h2>Movies · 2026</h2>
+      <h2>Other movie listings · 2026</h2>
       <span class="muted">{{ movies|length }} titles</span>
     </div>
     <div class="poster-grid shelf-grid">
@@ -84,7 +86,7 @@
 
   <section class="home-block">
     <div class="row-head">
-      <h2>Movies · 2027</h2>
+      <h2>Other movie listings · 2027</h2>
       <span class="muted">{{ movies_2027|length }} titles</span>
     </div>
     <div class="poster-grid shelf-grid">
