@@ -21,6 +21,7 @@
   <meta name="twitter:description" content="{{ page.description }}">
   <link rel="icon" href="{{ base }}static/img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://i.ytimg.com">
+  {% if lcp_id and not page.anchor %}<link rel="preload" as="image" href="https://i.ytimg.com/vi/{{ lcp_id }}/maxresdefault.jpg" imagesrcset="https://i.ytimg.com/vi/{{ lcp_id }}/sddefault.jpg 640w, https://i.ytimg.com/vi/{{ lcp_id }}/maxresdefault.jpg 1280w" imagesizes="100vw" fetchpriority="high">{% endif %}
   <link rel="stylesheet" href="{{ base }}static/css/app.css">
 </head>
 <body>

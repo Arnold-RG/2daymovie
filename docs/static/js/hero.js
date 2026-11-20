@@ -82,8 +82,12 @@
         s.setAttribute("aria-hidden", i === 0 ? "false" : "true");
         const poster = el("img", "slide__poster");
         poster.alt = "";
+        // 640px poster for phones, 1280px for larger screens; hqdefault if a size is missing.
+        poster.srcset = `${thumb(t.id, "sddefault")} 640w, ${thumb(t.id, "maxresdefault")} 1280w`;
+        poster.sizes = "100vw";
         poster.src = thumb(t.id, "maxresdefault");
-        poster.addEventListener("error", () => { poster.src = thumb(t.id, "hqdefault"); }, { once: true });
+        poster.addEventListener("error", () => { poster.srcset = ""; poster.src = thumb(t.id, "hqdefault"); }, { once: true });
+        if (i === 0) poster.fetchPriority = "high";
         if (i > 1) poster.loading = "lazy";
         const vid = el("div", "slide__video");
         vid.appendChild(el("div"));
@@ -172,6 +176,11 @@
         d.setAttribute("aria-selected", String(i === cur));
         d.style.setProperty("--p", i === cur && reduceMotion.matches ? "1" : "0");
       });
+      // On phones the dots are one scrollable line: keep the current one in view.
+      const cd = dots.children[cur];
+      if (cd && dots.scrollWidth > dots.clientWidth) {
+        dots.scrollLeft = Math.max(0, cd.offsetLeft - dots.clientWidth / 2 + cd.offsetWidth / 2);
+      }
       slides.forEach((s, i) => s.setAttribute("aria-hidden", String(i !== cur)));
     }
 

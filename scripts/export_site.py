@@ -18,7 +18,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 import seo  # noqa: E402
-from app import CSP_META, _og_image, app, load_catalog  # noqa: E402
+from app import CSP_META, _og_image, app, first_trailer_id, load_catalog  # noqa: E402
 
 DATA = ["catalog.json", "trailers.json"]
 
@@ -47,7 +47,8 @@ def write_pages(target: Path, error_base: str = "/") -> None:
         dest = target / rel / "index.html"
         dest.parent.mkdir(parents=True, exist_ok=True)
         dest.write_text(render("index.html", base=base, csp_meta=CSP_META, page=p,
-                               canonical=seo.SITE_URL + rel, og_image=og), encoding="utf-8")
+                               canonical=seo.SITE_URL + rel, og_image=og,
+                               lcp_id=first_trailer_id()), encoding="utf-8")
     (target / "404.html").write_text(render("404.html", base=error_base), encoding="utf-8")
     # sitemap and robots describe the host that serves this copy
     site = seo.PAGES_URL if error_base == PAGES_BASE else seo.SITE_URL

@@ -124,12 +124,16 @@
     const b = el("button", "card" + (opts.trailer ? " card--trailer" : ""));
     b.type = "button";
     b.dataset.id = v.id;
+    b.appendChild(el("span", "sr", "Play "));  // the name comes from the visible text, prefixed with the action
     const th = el("div", "card__thumb");
     const img = el("img");
     img.loading = "lazy";
     img.decoding = "async";
     img.alt = "";
-    img.src = (!opts.trailer && v.thumbnail) || thumb(v.id, opts.trailer ? "hqdefault" : "mqdefault");
+    // Right-sized thumbnails: 320px for most screens, 480px for wide or dense ones.
+    img.srcset = `${thumb(v.id, "mqdefault")} 320w, ${thumb(v.id, "hqdefault")} 480w`;
+    img.sizes = opts.trailer ? "(max-width: 520px) 78vw, (max-width: 1460px) 26vw, 380px" : "(max-width: 520px) 64vw, (max-width: 1430px) 21vw, 300px";
+    img.src = thumb(v.id, "mqdefault");
     img.addEventListener("error", () => { img.style.visibility = "hidden"; }, { once: true });
     th.appendChild(img);
     const play = el("span", "card__play");
@@ -141,7 +145,6 @@
     b.appendChild(el("p", "card__title", opts.trailer ? v.film : v.title));
     const meta = opts.trailer ? "Official trailer" : [opts.rowLabel || v.row, v.year].filter(Boolean).join(" · ");
     b.appendChild(el("p", "card__meta", meta));
-    b.setAttribute("aria-label", `Play ${opts.trailer ? v.film + " trailer" : v.title}`);
     return b;
   }
 
@@ -159,7 +162,8 @@
     }
     wrap.appendChild(head);
     const sc = el("div", "row__scroller");
-    sc.setAttribute("role", "list");
+    sc.setAttribute("role", "group");
+    sc.setAttribute("aria-label", title);
     for (const v of items.slice(0, ROW_LIMIT)) sc.appendChild(card(v, opts));
     const prev = el("button", "row__btn row__btn--prev");
     prev.appendChild(svg("M15.4 5.4 14 4l-8 8 8 8 1.4-1.4L8.8 12z"));

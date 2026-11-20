@@ -80,12 +80,16 @@ def load_trailers() -> dict:
     return json.loads((ROOT / "data" / "trailers.json").read_text(encoding="utf-8"))
 
 
-def _og_image() -> str:
+def first_trailer_id() -> str:
     try:
-        first = _items(load_trailers())[0]
-        return f"https://i.ytimg.com/vi/{first['youtube_id']}/hqdefault.jpg"
+        return str(_items(load_trailers())[0]["youtube_id"])
     except (OSError, ValueError, KeyError, IndexError):
         return ""
+
+
+def _og_image() -> str:
+    tid = first_trailer_id()
+    return f"https://i.ytimg.com/vi/{tid}/hqdefault.jpg" if tid else ""
 
 
 def create_app() -> Flask:
@@ -138,7 +142,8 @@ def create_app() -> Flask:
         if found is None:
             abort(404)
         return render_template("index.html", base=base, csp_meta=CSP_META, page=found,
-                               canonical=seo.SITE_URL + seo.page_path(found), og_image=_og_image())
+                               canonical=seo.SITE_URL + seo.page_path(found), og_image=_og_image(),
+                               lcp_id=first_trailer_id())
 
     @app.get("/")
     def index():
