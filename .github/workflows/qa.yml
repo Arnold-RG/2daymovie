@@ -1,0 +1,56 @@
+# Sentinel QA workflow. Does not replace ci.yml on main.
+# Action SHAs resolved 2026-11-20 via the GitHub API:
+#   actions/checkout@v7.0.1        3d3c42e5aac5ba805825da76410c181273ba90b1
+#   actions/setup-python@v7.1.0    6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
+name: QA
+
+on:
+  push:
+    branches-ignore: [main]
+  pull_request:
+    branches: [main, "**"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: qa-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pytest:
+    name: Pytest
+    runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: ${{ github.workspace }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0  # v7.1.0
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run tests
+        run: pytest -q
+        # CHANNELS_DENYLIST is intentionally unset in CI so the denylist
+        # file is not committed. test_denylist_* skip if it is missing;
+        # the generic youtube.com/@ link test still runs.
+
+  video-check:
+    name: Video embed check
+    runs-on: ubuntu-latest
+    needs: pytest
+    continue-on-error: true  # network job; non-blocking
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0  # v7.1.0
+        with:
+          python-version: "3.12"
+
+      - name: Check catalog and trailer video ids
+        run: python scripts/check_videos.py --delay 0.2 --workers 4
