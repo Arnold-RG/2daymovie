@@ -103,8 +103,24 @@
       bind();
       buildTools();
       if (reduceMotion.matches) return; // static thumbnails only: no autoplay, no auto-advance
-      loadYT().then((YT) => { YTlib = YT; warm(); }).catch(() => {}); // posters stay up if the API fails
       startTimer(durationOf(trailers[0]));
+      if (TDM.ytConsent()) startVideo();
+      else {
+        // Click-to-load: posters (with Ken Burns) until the visitor presses "Play trailer".
+        heroEl.classList.add("is-gated");
+        document.addEventListener("tdm:yt-consent", onConsent, { once: true });
+      }
+    }
+
+    function startVideo() {
+      loadYT().then((YT) => { YTlib = YT; warm(); }).catch(() => {}); // posters stay up if the API fails
+    }
+    function onConsent() {
+      const hadFocus = content.contains(document.activeElement);
+      heroEl.classList.remove("is-gated");
+      paint();
+      if (hadFocus) { const w = content.querySelector(".btn--play"); if (w) w.focus(); }
+      if (!reduceMotion.matches) startVideo();
     }
 
     function paint() {
@@ -130,15 +146,28 @@
       if (days > 0 && days <= 365) date.appendChild(el("span", "hero__date-count", days === 1 ? "Tomorrow" : `in ${days} days`));
       content.appendChild(date);
       const actions = el("div", "hero__actions");
+      const gated = !TDM.ytConsent() && !reduceMotion.matches;
       const play = el("button", "btn btn--play");
       play.type = "button";
-      play.append(svg(ICON_PLAY), document.createTextNode("Watch trailer"));
-      play.addEventListener("click", () => openPlayer(t.id));
+      if (gated) {
+        play.id = "heroConsent";
+        play.setAttribute("aria-describedby", "heroConsentNote");
+        play.append(svg(ICON_PLAY), document.createTextNode("Play trailer"));
+        play.addEventListener("click", () => TDM.grantYTConsent());
+      } else {
+        play.append(svg(ICON_PLAY), document.createTextNode("Watch trailer"));
+        play.addEventListener("click", () => openPlayer(t.id));
+      }
       const more = el("a", "btn btn--ghost");
       more.href = "#trailers";
       more.append(svg(ICON_INFO), document.createTextNode("All trailers"));
       actions.append(play, more);
       content.appendChild(actions);
+      if (gated) {
+        const note = el("p", "consent-note hero__consent-note", "Video by YouTube, loads YouTube cookies");
+        note.id = "heroConsentNote";
+        content.appendChild(note);
+      }
       [...dots.children].forEach((d, i) => {
         d.setAttribute("aria-selected", String(i === cur));
         d.style.setProperty("--p", i === cur && reduceMotion.matches ? "1" : "0");

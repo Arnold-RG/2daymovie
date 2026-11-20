@@ -27,8 +27,13 @@ Of the five standing areas, three apply and two do not.
   `VISITOR_PRIVACY_METADATA`, `__Secure-YNID`, `__Secure-ROLLOUT_TOKEN`), because the
   header autoplays and the IFrame API script loads from `www.youtube.com`.
   `youtube-nocookie` reduces tracking but does not stop this. The privacy note says so
-  plainly. Stopping it entirely would need a click-to-load or consent gate before any
-  YouTube request, which is a product decision for the owner.
+  plainly. **Fixed with click-to-load:** with no stored consent the hero shows posters and a
+  "Play trailer" button with the line "Video by YouTube, loads YouTube cookies", and nothing
+  is requested from `youtube.com` or `youtube-nocookie.com` (headless check: zero requests,
+  zero YouTube cookies before the click). The first click or tap on Play trailer or on any
+  video stores `yt_consent` = `1` in localStorage, and later visits autoplay as before.
+  A shared `?v=` link opens the player with a "Play video" button instead of the embed.
+  Thumbnails still load from `i.ytimg.com`, which sets no cookies.
 - **Content rights:** the footer says every video is an official YouTube embed,
   nothing is rehosted, and each video stays under its owner's rights and YouTube's terms.
 - **Third-party licenses:** no vendored JS or CSS. Icon path data is Material

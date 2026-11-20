@@ -35,9 +35,29 @@
   const fmtDate = (iso) => new Date(iso + "T12:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
   const norm = (s) => s.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
+  /* ---------------- YouTube consent (click-to-load) ----------------
+     No request goes to youtube.com or youtube-nocookie.com until the visitor
+     clicks or taps something that plays a video. That first click is stored
+     as consent (localStorage "yt_consent" = "1"); later visits autoplay. */
+  const CONSENT_KEY = "yt_consent";
+  let consentMemo = null;
+  function ytConsent() {
+    if (consentMemo === null) {
+      try { consentMemo = localStorage.getItem(CONSENT_KEY) === "1"; } catch (_) { consentMemo = false; }
+    }
+    return consentMemo;
+  }
+  function grantYTConsent() {
+    if (ytConsent()) return;
+    consentMemo = true;
+    try { localStorage.setItem(CONSENT_KEY, "1"); } catch (_) { /* private mode: consent lasts for this page */ }
+    document.dispatchEvent(new CustomEvent("tdm:yt-consent"));
+  }
+
   /* ---------------- YouTube IFrame API ---------------- */
   let ytReady = null;
   function loadYT() {
+    if (!ytConsent()) return Promise.reject(new Error("YouTube not loaded: no consent yet"));
     if (ytReady) return ytReady;
     ytReady = new Promise((resolve, reject) => {
       if (window.YT && window.YT.Player) return resolve(window.YT);
@@ -253,11 +273,13 @@
   /* ---------------- modal player ---------------- */
   let modalPlayer = null;
   let lastFocus = null;
-  function openPlayer(id) {
+  // userAction: a click or tap on a card / button. That counts as consent to load YouTube.
+  function openPlayer(id, userAction = true) {
     const v = byId.get(id);
     if (!v) return;
-    lastFocus = document.activeElement;
+    if (userAction) grantYTConsent();
     const modal = $("#player");
+    if (modal.hidden) lastFocus = document.activeElement;
     modal.hidden = false;
     document.body.classList.add("modal-open");
     $("#playerTitle").textContent = v.trailer ? `${v.film}: official trailer` : v.title;
@@ -271,6 +293,22 @@
     history.replaceState(null, "", url);
     const host = $("#playerFrame");
     host.textContent = "";
+    if (!ytConsent()) {
+      // Opened from a shared ?v= link: ask before contacting YouTube.
+      const gate = el("div", "modal__gate");
+      const img = el("img", "modal__gate-img");
+      img.alt = "";
+      img.src = thumb(id, "hqdefault");
+      const btn = el("button", "btn btn--play modal__gate-btn");
+      btn.type = "button";
+      btn.append(svg(ICON_PLAY), document.createTextNode("Play video"));
+      btn.addEventListener("click", () => openPlayer(id, true));
+      const note = el("p", "consent-note", "Video by YouTube, loads YouTube cookies");
+      gate.append(img, btn, note);
+      host.appendChild(gate);
+      btn.focus();
+      return;
+    }
     // Our own sandboxed iframe; the IFrame API then attaches to it for error events.
     const frame = embedFrame(id, { autoplay: 1, rel: 0, playsinline: 1, modestbranding: 1, iv_load_policy: 3 }, v.title);
     host.textContent = "";
@@ -376,14 +414,14 @@
     bindNav();
     document.dispatchEvent(new CustomEvent("tdm:ready"));
     const v = new URL(location.href).searchParams.get("v");
-    if (v && byId.has(v)) openPlayer(v);
+    if (v && byId.has(v)) openPlayer(v, false);
   }
 
   // Shared API for hero.js and search.js
   const TDM = (window.TDM = window.TDM || {});
   Object.assign(TDM, {
     $, el, svg, thumb, fmtDate, fmtDuration, norm, loadYT, openPlayer, embedFrame, SANDBOX, showResults, hideResults,
-    ICON_PLAY, ICON_INFO, NOCOOKIE, reduceMotion,
+    ICON_PLAY, ICON_INFO, NOCOOKIE, reduceMotion, ytConsent, grantYTConsent,
   });
   Object.defineProperties(TDM, {
     catalog: { get: () => catalog, configurable: true },

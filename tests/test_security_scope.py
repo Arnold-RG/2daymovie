@@ -56,9 +56,9 @@ def test_site_sets_no_cookies(client):
 def test_local_storage_holds_only_ui_preferences():
     js = "".join((ROOT / "static/js" / f).read_text() for f in ("app.js", "hero.js", "search.js"))
     assert "document.cookie" not in js and "sessionStorage" not in js
-    keys = set(re.findall(r'STORE_KEY = "([^"]+)"', js))
-    assert keys == {"tdm.hero.v1"}
-    assert re.findall(r"localStorage\.\w+\(([^,)]+)", js) == ["STORE_KEY", "STORE_KEY"]
+    keys = set(re.findall(r'(?:STORE|CONSENT)_KEY = "([^"]+)"', js))
+    assert keys == {"tdm.hero.v1", "yt_consent"}
+    assert set(re.findall(r"localStorage\.\w+\(([^,)]+)", js)) == {"STORE_KEY", "CONSENT_KEY"}
     saved = set(re.findall(r"prefs\.save\(\{\s*(\w+)", js))
     assert saved <= {"sound", "volume", "brightness", "size"}, saved
 

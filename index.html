@@ -12,7 +12,6 @@
   <meta property="og:description" content="Full movies, series, kids, cartoons, AI animation and nature documentaries, plus upcoming trailers.">
   <meta property="og:type" content="website">
   <link rel="icon" href="static/img/favicon.svg" type="image/svg+xml">
-  <link rel="preconnect" href="https://www.youtube-nocookie.com">
   <link rel="preconnect" href="https://i.ytimg.com">
   <link rel="stylesheet" href="static/css/app.css">
 </head>
@@ -123,9 +122,12 @@
       <h2 id="privacyTitle">Privacy</h2>
       <p>2DayMovie has no accounts, no sign-up, no ads, no analytics and no tracking cookies of its own: the site itself sets no cookies.
         Your sound, volume, brightness and size choices for the header video are kept only in your own browser (localStorage, key <code>tdm.hero.v1</code>) and are never sent to us.
-        Videos are YouTube embeds from <code>youtube-nocookie.com</code>, YouTube's privacy-enhanced mode. YouTube still sets its own cookies and storage
-        when the header trailers or a player load, under
-        <a href="https://policies.google.com/privacy" rel="noopener noreferrer" target="_blank">Google's Privacy Policy</a>; we do not read or control them.</p>
+        Videos are YouTube embeds from <code>youtube-nocookie.com</code>, YouTube's privacy-enhanced mode, and they are click-to-load:
+        nothing is requested from YouTube's player until you press <strong>Play trailer</strong> or open a video (thumbnails come from YouTube's cookie-free image server, <code>i.ytimg.com</code>).
+        After that first click, YouTube still sets its own cookies and storage, under
+        <a href="https://policies.google.com/privacy" rel="noopener noreferrer" target="_blank">Google's Privacy Policy</a>; we do not read or control them.
+        We remember that you agreed in localStorage (key <code>yt_consent</code>) so the header trailers autoplay on later visits;
+        clear this site's data in your browser to undo it.</p>
       <h2 id="termsTitle">Videos and rights</h2>
       <p>Every video is an official YouTube embed. Nothing is downloaded, copied or rehosted here: each video stays on its owner's YouTube account,
         under its owner's rights and <a href="https://www.youtube.com/t/terms" rel="noopener noreferrer" target="_blank">YouTube's Terms of Service</a>.
