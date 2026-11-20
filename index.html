@@ -3,61 +3,105 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>2DayMovie</title>
+<title>2DayMovie — Worldwide Cinema</title>
 <style>
-body { margin:0; background:#0f0f0f; color:#fff; font-family:system-ui,sans-serif; }
-header { padding:16px 4%; background:#141414; display:flex; justify-content:space-between; align-items:center; }
-.logo { color:#e50914; font-weight:800; font-size:24px; }
-input { background:#222; border:1px solid #444; color:#fff; padding:8px 12px; border-radius:4px; width:180px; }
-.hero { padding:20px 4% 10px; background:#1a1a1a; }
-.hero h1 { margin:0; font-size:22px; font-weight:600; }
-.section { padding:20px 4%; }
-.section h2 { margin:0 0 12px; font-size:20px; }
-.grid { display:flex; gap:12px; overflow-x:auto; padding-bottom:8px; }
-.card { flex:0 0 200px; background:#1a1a1a; border-radius:6px; overflow:hidden; cursor:pointer; }
-.card img { width:100%; height:112px; object-fit:cover; background:#333; display:block; }
-.card .info { padding:8px 10px; }
-.card h3 { margin:0 0 4px; font-size:13px; }
-.card small { color:#888; font-size:11px; }
-.player { position:fixed; inset:0; background:#000; z-index:100; display:none; flex-direction:column; }
-.player.show { display:flex; }
-.player header { background:#111; }
-.player .screen { flex:1; display:flex; align-items:center; justify-content:center; padding:20px; }
-.fallback { text-align:center; max-width:400px; }
-.fallback a { display:inline-block; margin-top:16px; background:#e50914; color:#fff; padding:12px 24px; border-radius:4px; text-decoration:none; font-weight:600; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0a0a0a; color: #fff; font-family: system-ui, -apple-system, sans-serif; }
+header { background: #000; padding: 16px 4%; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #222; }
+.logo { font-size: 28px; font-weight: 700; }
+.logo span { color: #e50914; font-style: italic; font-family: Georgia, serif; }
+.search-bar { display: flex; gap: 8px; max-width: 400px; flex: 1; margin: 0 20px; }
+.search-bar input { flex: 1; background: #1a1a1a; border: 1px solid #e50914; color: #fff; padding: 10px 14px; border-radius: 4px; }
+.search-bar button { background: #e50914; color: #fff; border: none; padding: 10px 18px; border-radius: 4px; font-weight: 600; cursor: pointer; }
+.hero { background: linear-gradient(135deg, #1a0000 0%, #4a0000 50%, #1a0000 100%); padding: 60px 4%; text-align: left; position: relative; }
+.hero .tag { color: #ff6b6b; font-size: 13px; letter-spacing: 2px; margin-bottom: 12px; }
+.hero h1 { font-size: clamp(36px, 6vw, 56px); font-weight: 800; line-height: 1.1; margin-bottom: 16px; }
+.hero h1 span { color: #e50914; }
+.hero p { max-width: 520px; color: #ccc; line-height: 1.6; margin-bottom: 24px; }
+.hero .btn { background: #e50914; color: #fff; padding: 14px 28px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; font-size: 16px; }
+.hero .sub { margin-top: 20px; font-size: 13px; color: #888; }
+.section { padding: 30px 4%; }
+.section h2 { font-size: 22px; margin-bottom: 16px; font-weight: 700; }
+.grid { display: flex; gap: 14px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: thin; }
+.card { flex: 0 0 220px; background: #161616; border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform .2s; }
+.card:hover { transform: scale(1.04); }
+.card img { width: 100%; height: 124px; object-fit: cover; background: #222; display: block; }
+.card .info { padding: 10px 12px 14px; }
+.card h3 { font-size: 14px; margin-bottom: 4px; }
+.card small { color: #888; font-size: 12px; }
+.player { position: fixed; inset: 0; background: rgba(0,0,0,.96); z-index: 200; display: none; flex-direction: column; }
+.player.show { display: flex; }
+.player header { background: #111; padding: 12px 4%; display: flex; justify-content: space-between; align-items: center; }
+.player button { background: none; border: none; color: #fff; font-size: 28px; cursor: pointer; }
+.player .screen { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; }
+.fallback { text-align: center; max-width: 420px; }
+.fallback a { display: inline-block; margin-top: 18px; background: #e50914; color: #fff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 600; }
+@media (max-width: 640px) { .search-bar { margin: 0; max-width: 160px; } .search-bar button { padding: 10px 12px; } }
 </style>
 </head>
 <body>
 <header>
-  <div class="logo">2DAYMOVIE</div>
-  <input type="search" id="search" placeholder="Search titles...">
+  <div class="logo"><span>2day</span> movie</div>
+  <div class="search-bar">
+    <input type="search" id="search" placeholder="Search titles">
+    <button onclick="document.getElementById('search').dispatchEvent(new Event('input'))">SEARCH</button>
+  </div>
 </header>
+
 <div class="hero">
-  <h1>Movies Playing</h1>
+  <div class="tag">WELCOME TO YOUR WORLDWIDE CINEMA</div>
+  <h1>Big stories.<br><span>Everywhere.</span></h1>
+  <p>Discover films and series from across the world. Explore full-length films and complete series that can be watched directly here when authorized by their publishers. No trailers.</p>
+  <button class="btn" onclick="document.getElementById('content').scrollIntoView({behavior:'smooth'})">Explore the cinema ↓</button>
+  <div class="sub">Worldwide full-film and series curation · Verified playback only</div>
 </div>
+
 <div id="content"></div>
+
 <div class="player" id="player">
   <header>
     <strong id="ptitle">Now Playing</strong>
-    <button onclick="closePlayer()" style="background:none;border:none;color:#fff;font-size:24px;cursor:pointer;">✕</button>
+    <button onclick="closePlayer()">✕</button>
   </header>
   <div class="screen" id="pscreen"></div>
 </div>
+
 <script>
 const records = [
   {id:'mi4gQMDgB_g', title:'Office Romance', creator:'Mosfilm', type:'Romantic'},
   {id:'4GskjSBw9lA', title:'The Girls', creator:'Mosfilm', type:'Romantic'},
   {id:'CLjLLHDUiiA', title:'Love and Doves', creator:'Mosfilm', type:'Romantic'},
+  {id:'eXaYYMvmNZ4', title:'The Most Charming and Attractive', creator:'Mosfilm', type:'Romantic'},
+  {id:'ms5Ga6kNvHM', title:'The Irony of Fate (Part 1)', creator:'Mosfilm', type:'Romantic'},
   {id:'NTWA_7-ld_U', title:'Moscow Does Not Believe in Tears', creator:'Mosfilm', type:'Drama'},
   {id:'Q3hBLv-HLEc', title:'Stalker', creator:'Mosfilm', type:'Drama'},
+  {id:'Z8ZhQPaw4rE', title:'Solaris', creator:'Mosfilm', type:'Drama'},
+  {id:'a-RLbCXVvwI', title:'The Red Snowball Tree', creator:'Mosfilm', type:'Drama'},
   {id:'GgFLr2bjUNM', title:'Mimino', creator:'Mosfilm', type:'Comedy'},
   {id:'m3n4LptYWNo', title:'Operation Y and Shurik\'s Other Adventures', creator:'Mosfilm', type:'Comedy'},
   {id:'MkHiu9fD820', title:'The Diamond Arm', creator:'Mosfilm', type:'Comedy'},
+  {id:'XukcyHljlCE', title:'Gentlemen of Fortune', creator:'Mosfilm', type:'Comedy'},
+  {id:'8KYUSLtXJyo', title:'Kidnapping, Caucasian Style', creator:'Mosfilm', type:'Comedy'},
+  {id:'l7eIIIPBNUc', title:'Ivan Vasilievich Changes Profession', creator:'Mosfilm', type:'Comedy'},
   {id:'tSAKzVP2IGk', title:'Wild Kratts - Stuck on Sharks', creator:'PBS KIDS', type:'Series'},
   {id:'F1z5E5gzlLA', title:'Wild Kratts - Creature Power Challenge', creator:'PBS KIDS', type:'Series'},
+  {id:'KX2HzjI0XO4', title:'Wild Kratts - Secrets of the Spider\'s Web', creator:'PBS KIDS', type:'Series'},
+  {id:'PfgJJ2Sst6A', title:'SUPER WHY! - Three Little Pigs', creator:'PBS KIDS', type:'Kids'},
+  {id:'DOuRjoRYby8', title:'SUPER WHY! - Cinderella', creator:'PBS KIDS', type:'Kids'},
+  {id:'QjWhDynv-SQ', title:'Sid the Science Kid - The Big Sneeze', creator:'PBS KIDS', type:'Kids'},
+  {id:'wkk_fPp_ZMs', title:'Gulliver\'s Travels (1939)', creator:'Classic', type:'Cartoon Movies'},
+  {id:'IMsAbVzkbao', title:'Betty Boop Cartoons', creator:'Public Domain', type:'Cartoon Movies'},
+  {id:'9kncDIPfWr8', title:'Booba Compilation', creator:'Booba', type:'Cartoon Series'},
+  {id:'7tuAFeTkBAU', title:'Booba All Episodes', creator:'Booba', type:'Cartoon Series'},
+  {id:'Vsnius8Ka_I', title:'Ballad of a Soldier', creator:'Mosfilm', type:'War'},
+  {id:'2rINnJat-5k', title:'The Cranes Are Flying', creator:'Mosfilm', type:'War'},
+  {id:'S-XKsnQCLoE', title:'Night of the Living Dead (1968)', creator:'Public Domain', type:'Horror'},
   {id:'EYHv8eJrW2Y', title:'Kin-Dza-Dza!', creator:'Mosfilm', type:'Sci-Fi'},
-  {id:'S-XKsnQCLoE', title:'Night of the Living Dead (1968)', creator:'Public Domain', type:'Horror'}
+  {id:'t43KXauHJZg', title:'Plan 9 from Outer Space', creator:'Public Domain', type:'Sci-Fi'},
+  {id:'vDtxO70AQZ4', title:'Hussar Ballad', creator:'Mosfilm', type:'Musical'},
+  {id:'Pw6YzbxYAQY', title:'White Sun of the Desert', creator:'Mosfilm', type:'Adventure'}
 ];
+
 function render(filter='') {
   const q = filter.toLowerCase();
   const groups = {};
@@ -70,15 +114,17 @@ function render(filter='') {
   Object.keys(groups).forEach(type => {
     html += `<div class="section"><h2>${type}</h2><div class="grid">`;
     groups[type].forEach(r => {
-      html += `<div class="card" onclick="play('${r.id}','${r.title.replace(/'/g,"\\'")}')">
+      const safe = r.title.replace(/'/g, "\\'");
+      html += `<div class="card" onclick="play('${r.id}','${safe}')">
         <img src="https://i.ytimg.com/vi/${r.id}/hqdefault.jpg" alt="">
         <div class="info"><h3>${r.title}</h3><small>${r.creator}</small></div>
       </div>`;
     });
     html += '</div></div>';
   });
-  document.getElementById('content').innerHTML = html || '<p style="padding:20px">No titles found.</p>';
+  document.getElementById('content').innerHTML = html || '<p style="padding:20px 4%">No titles found.</p>';
 }
+
 function play(id, title) {
   document.getElementById('ptitle').textContent = title;
   document.getElementById('pscreen').innerHTML = `
@@ -88,10 +134,12 @@ function play(id, title) {
     </div>`;
   document.getElementById('player').classList.add('show');
 }
+
 function closePlayer() {
   document.getElementById('player').classList.remove('show');
   document.getElementById('pscreen').innerHTML = '';
 }
+
 document.getElementById('search').oninput = e => render(e.target.value);
 render();
 </script>
