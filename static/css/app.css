@@ -96,6 +96,16 @@ body.modal-open { overflow: hidden; }
 .hero__dot[aria-selected="true"] { background: #fff; transform: scale(1.25); }
 .hero__progress { position: absolute; z-index: 5; left: 0; right: 0; bottom: 0; height: 3px; background: rgba(255,255,255,.08); }
 .hero__progress span { display: block; height: 100%; width: 0; background: var(--accent); }
+.hero__tools { position: absolute; z-index: 5; right: var(--pad); bottom: calc(22% - 56px); display: flex; align-items: center; gap: 12px; padding: 6px 10px; border-radius: 999px; background: rgba(0,0,0,.45); border: 1px solid rgba(255,255,255,.18); backdrop-filter: blur(6px); }
+.hero__sound { width: 38px; height: 38px; border-radius: 50%; border: 1px solid rgba(255,255,255,.35); background: transparent; color: #fff; display: grid; place-items: center; cursor: pointer; transition: background-color .2s, border-color .2s; }
+.hero__sound:hover { background: rgba(255,255,255,.12); }
+.hero__sound[aria-pressed="true"] { background: rgba(255,255,255,.18); border-color: #fff; }
+.hero__sound svg { width: 20px; height: 20px; }
+.hero__brightness { display: flex; align-items: center; gap: 8px; color: #e4e4ea; font-size: 12px; }
+.hero__brightness-label { white-space: nowrap; }
+.hero__brightness-input { width: 96px; accent-color: var(--accent); cursor: pointer; }
+.hero__sound:focus-visible, .hero__brightness-input:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+@media (max-width: 640px) { .hero__tools { bottom: 12px; right: 12px; gap: 8px; padding: 4px 8px; } .hero__brightness-label { display: none; } .hero__brightness-input { width: 72px; } }
 
 /* ---------- rows ---------- */
 main { position: relative; z-index: 6; margin-top: 0; padding-bottom: 40px; }
