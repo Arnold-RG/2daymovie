@@ -6,6 +6,7 @@ official API metadata, and only verified, embeddable titles can be shown.
 from __future__ import annotations
 
 from datetime import datetime, timezone
+import re
 from typing import Any
 
 COLLECTIONS = ("movies", "series", "ai_animation", "kids_movies", "kids_series")
@@ -22,7 +23,7 @@ def eligible(item: dict[str, Any]) -> bool:
         and not isinstance(item.get("views"), bool)
         and item["views"] >= 0
         and isinstance(item.get("video_id"), str)
-        and len(item["video_id"]) == 11
+        and re.fullmatch(r"[A-Za-z0-9_-]{11}", item["video_id"]) is not None
     )
 
 
@@ -37,9 +38,10 @@ def most_viewed(items: list[dict[str, Any]], collection: str, limit: int = 20) -
 
 
 def most_viewed_by_country(items: list[dict[str, Any]], collection: str, country: str, limit: int = 20) -> list[dict[str, Any]]:
-    if not country.strip():
+    if not isinstance(country, str) or not country.strip():
         raise ValueError("Country is required")
-    return [item for item in most_viewed(items, collection, 100) if item.get("country", "").casefold() == country.casefold()][:limit]
+    country_items = [item for item in items if isinstance(item.get("country"), str) and item["country"].strip().casefold() == country.strip().casefold()]
+    return most_viewed(country_items, collection, limit)
 
 
 def refresh_video_metadata(video: dict[str, Any]) -> dict[str, Any]:
