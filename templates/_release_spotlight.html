@@ -1,0 +1,28 @@
+<section class="release-spotlight" aria-labelledby="release-spotlight-title">
+  <div class="release-spotlight-heading">
+    <div>
+      <p class="release-eyebrow">Next on the big screen</p>
+      <h2 id="release-spotlight-title">The release radar <span>2026 / 2027</span></h2>
+      <p>Confirmed North American release-calendar listings from December to March. Dates vary by country and may change.</p>
+    </div>
+    <span class="release-updated">Checked 20 Nov 2026</span>
+  </div>
+  <div class="release-spotlight-grid">
+  {% for release in release_window %}
+    <article class="release-tile">
+      <div class="release-tile-header">
+        <time datetime="{{ release.date }}">{{ release.date[5:7] }}/{{ release.date[8:10] }} <span>{{ release.date[:4] }}</span></time>
+        <span class="release-genre">{{ release.genre }}</span>
+      </div>
+      <h3>{{ release.title }}</h3>
+      <p>{{ release.studio }} · Scheduled cinema release</p>
+      {% if release.watch_id %}
+      <a href="{{ url_for('watch_page', movie_id=release.watch_id) }}" aria-label="View available catalog trailer for {{ release.title }}">View trailer <span aria-hidden="true">↗</span></a>
+      {% else %}
+      <span class="release-no-trailer">Trailer not independently verified</span>
+      {% endif %}
+    </article>
+  {% endfor %}
+  </div>
+  <p class="release-source">Calendar: <a href="https://cinemaunited.org/release-calendar/" target="_blank" rel="noopener noreferrer">Cinema United</a>. A release date does not mean the film is available to watch online. Catalog trailer matches may be withdrawn or geo-blocked.</p>
+</section>
