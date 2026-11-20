@@ -21,6 +21,9 @@ Usage:
   python scripts/build_catalog.py --per-channel 6 --workers 6
   python scripts/build_catalog.py --refine   # verify the existing catalog, drop
                                              # failures, and fill thin kids/cartoons rows
+  python scripts/build_catalog.py --enrich-genres
+                                             # append real genres to movies/series that
+                                             # only have a row name, using yt-dlp metadata
 Intermediate results are cached in scripts/.cache/ so reruns resume.
 """
 from __future__ import annotations
@@ -753,6 +756,209 @@ def fill_kids_cartoons(args, channels: list[dict], already: list[dict]):
     return added, skipped, sources, channel_ids
 
 
+
+# ---------- enrich genres from YouTube metadata (never guess) ----------
+# Explicit genre labels in EN/FR/ES/ZH, used on titles, tags and plot text.
+# Weaker English words (mission, journey, family, …) stay title-only so a
+# channel blurb cannot stamp every film with the same genres.
+STRONG_GENRE_RULES = [
+    ("Sci-Fi", re.compile(r"\b(sci[-\s]?fi|science fiction|science-fiction|ciencia ficci[oó]n)\b|科幻", re.I)),
+    ("Horror", re.compile(r"\b(horror|horreur|terror)\b|恐怖|haunted|zombie|exorcism", re.I)),
+    ("Musical", re.compile(r"\b(musical|nursery rhyme|sing[- ]?along|lullaby|karaoke|comédie musicale)\b|歌舞", re.I)),
+    ("Romance", re.compile(r"\b(romance|romantic|love story|film d['’]amour)\b|爱情|愛情", re.I)),
+    ("Comedy", re.compile(r"\b(comedy|comédie|comedie|comedia|hilarious|slapstick)\b|喜剧|喜劇", re.I)),
+    ("Crime", re.compile(r"\b(crime|heist|mafia|gangster|assassin|policier)\b|犯罪", re.I)),
+    ("Mystery", re.compile(r"\b(mystery|mystère|misterio|detective|whodunnit|whodunit)\b|悬疑|懸疑", re.I)),
+    ("Thriller", re.compile(r"\b(thriller|suspense|suspenso)\b|惊悚|驚悚", re.I)),
+    ("Action", re.compile(r"\b(action|acción|accion|kung[\s-]?fu|wuxia|martial arts)\b|动作|動作|武侠|武俠|战争|戰爭", re.I)),
+    ("Adventure", re.compile(r"\b(adventure|aventure|aventura)\b|冒险|冒險", re.I)),
+    ("Fantasy", re.compile(r"\b(fantasy|fantastique|fantas[ií]a|wizard|enchanted)\b|奇幻|魔幻", re.I)),
+    ("History", re.compile(r"\b(historical|historique|hist[oó]rico|historical drama)\b|历史|歷史", re.I)),
+    ("Documentary", re.compile(r"\b(documentary|documentaire|documental|documentaries)\b|纪录片|紀錄片", re.I)),
+    ("Nature", re.compile(r"\b(wildlife|planet earth|rainforest|safari)\b", re.I)),
+    ("Animation", re.compile(r"\b(animation|animated|cartoon|anime|animación|dessin anim[ée])\b|动画|動畫", re.I)),
+    ("Family", re.compile(r"\b(family|famille|familiar|preschool)\b|家庭", re.I)),
+    ("Drama", re.compile(r"\b(drama|drame|melodrama|war drama|c[- ]?drama)\b|剧情|劇情", re.I)),
+]
+
+# YouTube's official category is only trusted when it is itself a genre name.
+CATEGORY_GENRE = {"Comedy": "Comedy"}
+SPAM_TAG_MARKERS = {"disney", "dreamworks", "amazon", "netflix", "hbo", "pixar", "paramount"}
+TITLE_ONLY_RULES = [
+    ("Action", re.compile(r"kungfu|kung-fu", re.I)),
+    ("History", re.compile(r"\b(history|ancient|empire|kingdom|medieval)\b", re.I)),
+    ("Comedy", re.compile(r"\bfunny\b", re.I)),
+    ("Romance", re.compile(r"\b(wedding|marriage|husband|wife)\b", re.I)),
+    ("Horror", re.compile(r"\b(ghost|demon|vampire|nightmare)\b", re.I)),
+    ("Fantasy", re.compile(r"\b(magical|dragon|ghibli|manhwa|isekai)\b", re.I)),
+    ("Documentary", re.compile(r"\btrue story\b", re.I)),
+    ("Family", re.compile(r"\b(children|kids)\b", re.I)),
+    ("Adventure", re.compile(r"\b(quest|expedition|road trip)\b", re.I)),
+]
+
+
+def plot_text(description: str) -> str:
+    """Keep the plot synopsis; drop links, CTAs and channel genre dumps."""
+    text = description or ""
+    text = re.split(
+        r"https?://|\bclick here\b|\bwatch more\b|\bsubscribe\b|\bjoin membership\b|\byoutube\.com/",
+        text, maxsplit=1, flags=re.I,
+    )[0]
+    text = re.split(r"\n\s*genre\s*:", text, maxsplit=1, flags=re.I)[0]
+    return text.strip()[:800]
+
+
+def tags_are_spam(tags: list) -> bool:
+    """Channel-wide SEO dumps list many genres on every video; ignore them."""
+    if not tags:
+        return False
+    lowered = [str(t).lower() for t in tags]
+    if sum(1 for m in SPAM_TAG_MARKERS if any(m in t for t in lowered)) >= 2:
+        return True
+    hits = {genre for genre, pat in STRONG_GENRE_RULES if any(pat.search(str(t)) for t in tags)}
+    return len(hits) >= 5
+
+
+def genres_from_evidence(title: str, description: str = "", tags: list | None = None,
+                         categories: list | None = None, title_only: bool = False) -> list[str]:
+    """Return real genres supported by the given text. Never invent a default."""
+    found: list[str] = []
+
+    def add_from(text: str, rules) -> None:
+        if not text:
+            return
+        for genre, pat in rules:
+            if genre not in found and pat.search(text):
+                found.append(genre)
+
+    add_from(title or "", STRONG_GENRE_RULES + TITLE_ONLY_RULES)
+    if not title_only:
+        add_from(plot_text(description), STRONG_GENRE_RULES)
+        if tags and not tags_are_spam(tags):
+            add_from(" | ".join(str(t) for t in tags), STRONG_GENRE_RULES)
+        for cat in categories or []:
+            genre = CATEGORY_GENRE.get(str(cat))
+            if genre and genre not in found:
+                found.append(genre)
+    return [g for g in found if g in REAL_GENRES]
+
+
+def fetch_meta(vid: str) -> dict:
+    """yt-dlp description, tags and categories, cached in scripts/.cache/meta/."""
+    cached = cache_get("meta", vid)
+    if cached and cached.get("retried") and not cached.get("transient"):
+        return cached
+    url = f"https://www.youtube.com/watch?v={vid}"
+    d = _yt_metadata(url, embedded=False)
+    used_embedded = False
+    err = " ".join(d.get("_error") or [])
+    if "not a bot" in err.lower():
+        return {"ok": False, "bot": True, "reason": err[:200], "retried": False, "transient": True}
+    if "_error" in d and "not available" in err:
+        d = _yt_metadata(url, embedded=True)
+        used_embedded = True
+        err = " ".join(d.get("_error") or [])
+        if "not a bot" in err.lower():
+            return {"ok": False, "bot": True, "reason": err[:200], "retried": False, "transient": True}
+    if "_error" in d:
+        transient = "retries exhausted" in err or "timed out" in err.lower() or not err
+        res = {"ok": False, "reason": err[:200] or "unavailable", "retried": not transient,
+               "transient": transient, "embedded_tried": used_embedded}
+        cache_put("meta", vid, res)
+        return res
+    res = {
+        "ok": True,
+        "title": d.get("title") or "",
+        "description": d.get("description") or "",
+        "tags": d.get("tags") or [],
+        "categories": d.get("categories") or [],
+        "retried": True,
+        "transient": False,
+        "embedded_tried": used_embedded,
+    }
+    cache_put("meta", vid, res)
+    return res
+
+
+def _save_catalog(catalog: dict) -> None:
+    catalog["generated"] = now_iso()
+    OUT.write_text(json.dumps(catalog, indent=1, ensure_ascii=False) + "\n")
+
+
+def enrich_genres(args) -> int:
+    """Append real genres to movies/series that only have their row name.
+
+    Requests are sequential and spaced, so a YouTube bot check can stop the
+    run and keep whatever has already been tagged.
+    """
+    catalog = json.loads(OUT.read_text(encoding="utf-8"))
+    items = catalog["items"]
+    targets = [it for it in items if it.get("type") in {"movies", "series"} and len(it.get("genres") or []) <= 1]
+    before = len(targets)
+    print(f"enrich: {before} movies/series have only a row name", file=sys.stderr)
+
+    titled = 0
+    for it in targets:
+        extras = [g for g in genres_from_evidence(it["title"], title_only=True) if g != it["genres"][0]]
+        if extras:
+            it["genres"] = [it["genres"][0]] + extras
+            titled += 1
+    print(f"enrich: {titled} tagged from the title alone", file=sys.stderr)
+
+    remaining = [it for it in items if it.get("type") in {"movies", "series"} and len(it.get("genres") or []) <= 1]
+    print(f"enrich: fetching metadata for {len(remaining)} titles (1.2s spacing, cache reused)", file=sys.stderr)
+
+    fetched = cached_hits = tagged = 0
+    bot_blocked = False
+    last_call = 0.0
+    min_interval = 1.2
+
+    for i, it in enumerate(remaining, 1):
+        cached = cache_get("meta", it["id"])
+        from_cache = bool(cached and cached.get("retried") and not cached.get("transient"))
+        if from_cache:
+            meta = cached
+            cached_hits += 1
+        else:
+            wait = min_interval - (time.monotonic() - last_call)
+            if wait > 0:
+                time.sleep(wait)
+            last_call = time.monotonic()
+            meta = fetch_meta(it["id"])
+            fetched += 1
+            if fetched % 20 == 0:
+                _save_catalog(catalog)
+                print(f"enrich: fetched {fetched}, {i}/{len(remaining)} considered, saved progress", file=sys.stderr)
+        if meta.get("bot"):
+            bot_blocked = True
+            print("enrich: YouTube bot check; stopping and saving progress", file=sys.stderr)
+            break
+        if meta.get("ok"):
+            extras = [g for g in genres_from_evidence(
+                meta.get("title") or it["title"],
+                meta.get("description") or "",
+                meta.get("tags") or [],
+                meta.get("categories") or [],
+            ) if g != it["genres"][0]]
+            if extras:
+                it["genres"] = [it["genres"][0]] + extras
+                tagged += 1
+
+    _save_catalog(catalog)
+    after = sum(1 for it in items if it.get("type") in {"movies", "series"} and len(it.get("genres") or []) <= 1)
+    print(json.dumps({
+        "before_only_row": before,
+        "tagged_from_title": titled,
+        "fetched": fetched,
+        "cache_hits": cached_hits,
+        "tagged_from_metadata": tagged,
+        "after_only_row": after,
+        "bot_blocked": bot_blocked,
+        "generated": catalog["generated"],
+    }), file=sys.stderr)
+    return 2 if bot_blocked else 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--per-channel", type=int, default=8)
@@ -762,10 +968,14 @@ def main() -> int:
                     help="verify the existing catalog, drop failures, and fill kids/cartoons")
     ap.add_argument("--target", type=int, default=48,
                     help="with --refine, aim for this many kids and this many cartoons (never pad)")
+    ap.add_argument("--enrich-genres", action="store_true",
+                    help="append real genres to movies/series that only have a row name")
     args = ap.parse_args()
 
     if args.refine:
         return refine(args)
+    if args.enrich_genres:
+        return enrich_genres(args)
 
     channels = json.loads(CHANNELS.read_text())
     with cf.ThreadPoolExecutor(args.workers) as ex:
