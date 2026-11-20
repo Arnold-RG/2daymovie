@@ -86,7 +86,7 @@ def test_control_bar_is_a_labelled_toolbar_inside_the_hero(tree):
     assert bar["attrs"].get("aria-controls") == "heroTrack"
     assert "top" in bar["ancestors"], "control bar must live inside the hero section"
     hero = tree.by_id("top")
-    assert hero["attrs"].get("data-size") == "standard"
+    assert hero["attrs"].get("data-size") == "full", "Full display height is the default"
 
 
 @pytest.mark.parametrize("bid,pressed,label,keys", [
@@ -127,7 +127,7 @@ def test_sliders_are_labelled_ranges(client, tree):
 
 @pytest.mark.parametrize("group,values,checked,attr", [
     ("heroBrightPresets", ["dim", "normal", "bright"], "normal", "data-level"),
-    ("heroSizes", ["compact", "standard", "full"], "standard", "data-size"),
+    ("heroSizes", ["compact", "standard", "full"], "full", "data-size"),
 ])
 def test_segmented_controls_are_radiogroups(tree, group, values, checked, attr):
     g = tree.by_id(group)

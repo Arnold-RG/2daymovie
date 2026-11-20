@@ -43,7 +43,7 @@ def test_privacy_and_rights_notes_are_on_the_page(client):
     html = client.get("/").get_data(as_text=True)
     assert 'id="privacy"' in html
     for phrase in ("no accounts", "no tracking cookies of its own", "sets no cookies", "youtube-nocookie.com",
-                   "YouTube still sets its own cookies", "localStorage", "tdm.hero.v1",
+                   "play automatically, muted", "YouTube may set its own cookies", "localStorage", "tdm.hero.v2",
                    "rehosted", "YouTube's Terms of Service"):
         assert phrase in html, phrase
 
@@ -56,9 +56,10 @@ def test_site_sets_no_cookies(client):
 def test_local_storage_holds_only_ui_preferences():
     js = "".join((ROOT / "static/js" / f).read_text() for f in ("app.js", "hero.js", "search.js"))
     assert "document.cookie" not in js and "sessionStorage" not in js
-    keys = set(re.findall(r'(?:STORE|CONSENT)_KEY = "([^"]+)"', js))
-    assert keys == {"tdm.hero.v1", "yt_consent"}
-    assert set(re.findall(r"localStorage\.\w+\(([^,)]+)", js)) == {"STORE_KEY", "CONSENT_KEY"}
+    keys = set(re.findall(r'(?:STORE|LEGACY)_KEY = "([^"]+)"', js))
+    assert keys == {"tdm.hero.v2", "tdm.hero.v1"}
+    assert set(re.findall(r"localStorage\.\w+\(([^,)]+)", js)) == {"STORE_KEY", "LEGACY_KEY"}
+    assert "localStorage.removeItem(LEGACY_KEY)" in js, "old v1 preferences are dropped"
     saved = set(re.findall(r"prefs\.save\(\{\s*(\w+)", js))
     assert saved <= {"sound", "volume", "brightness", "size"}, saved
 

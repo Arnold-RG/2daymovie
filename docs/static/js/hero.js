@@ -20,7 +20,8 @@
 (() => {
   "use strict";
   const SLIDE_MS = 30000; // default auto-advance when a clip has no start/end
-  const STORE_KEY = "tdm.hero.v1";
+  const STORE_KEY = "tdm.hero.v2"; // v2: Full is the default size; v1 sizes are ignored
+  const LEGACY_KEY = "tdm.hero.v1";
   const FADE_MS = 650;    // sound fade in / out
   const BRIGHT = { dim: 0.65, normal: 1, bright: 1.3 };
   const BRIGHT_ORDER = ["dim", "normal", "bright"];
@@ -40,6 +41,7 @@
 
   const prefs = {
     load() {
+      try { localStorage.removeItem(LEGACY_KEY); } catch (_) { /* private mode */ }
       try { return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; } catch (_) { return {}; }
     },
     save(patch) {
@@ -69,7 +71,7 @@
     let soundWanted = saved.sound === true;    // re-enabled on the first user gesture
     let volume = Number.isFinite(saved.volume) ? Math.min(100, Math.max(0, saved.volume)) : 60;
     let brightness = Number.isFinite(saved.brightness) ? Math.min(1.6, Math.max(0.4, saved.brightness)) : 1;
-    let size = SIZES.includes(saved.size) ? saved.size : "standard";
+    let size = SIZES.includes(saved.size) ? saved.size : "full";
 
     const ui = {};
 
@@ -108,23 +110,8 @@
       buildTools();
       if (reduceMotion.matches) return; // static thumbnails only: no autoplay, no auto-advance
       startTimer(durationOf(trailers[0]));
-      if (TDM.ytConsent()) startVideo();
-      else {
-        // Click-to-load: posters (with Ken Burns) until the visitor presses "Play trailer".
-        heroEl.classList.add("is-gated");
-        document.addEventListener("tdm:yt-consent", onConsent, { once: true });
-      }
-    }
-
-    function startVideo() {
+      // Live background: muted trailers start on load, no click needed.
       loadYT().then((YT) => { YTlib = YT; warm(); }).catch(() => {}); // posters stay up if the API fails
-    }
-    function onConsent() {
-      const hadFocus = content.contains(document.activeElement);
-      heroEl.classList.remove("is-gated");
-      paint();
-      if (hadFocus) { const w = content.querySelector(".btn--play"); if (w) w.focus(); }
-      if (!reduceMotion.matches) startVideo();
     }
 
     function paint() {
@@ -150,28 +137,15 @@
       if (days > 0 && days <= 365) date.appendChild(el("span", "hero__date-count", days === 1 ? "Tomorrow" : `in ${days} days`));
       content.appendChild(date);
       const actions = el("div", "hero__actions");
-      const gated = !TDM.ytConsent() && !reduceMotion.matches;
       const play = el("button", "btn btn--play");
       play.type = "button";
-      if (gated) {
-        play.id = "heroConsent";
-        play.setAttribute("aria-describedby", "heroConsentNote");
-        play.append(svg(ICON_PLAY), document.createTextNode("Play trailer"));
-        play.addEventListener("click", () => TDM.grantYTConsent());
-      } else {
-        play.append(svg(ICON_PLAY), document.createTextNode("Watch trailer"));
-        play.addEventListener("click", () => openPlayer(t.id));
-      }
+      play.append(svg(ICON_PLAY), document.createTextNode("Watch trailer"));
+      play.addEventListener("click", () => openPlayer(t.id));
       const more = el("a", "btn btn--ghost");
       more.href = "#trailers";
       more.append(svg(ICON_INFO), document.createTextNode("All trailers"));
       actions.append(play, more);
       content.appendChild(actions);
-      if (gated) {
-        const note = el("p", "consent-note hero__consent-note", "Video by YouTube, loads YouTube cookies");
-        note.id = "heroConsentNote";
-        content.appendChild(note);
-      }
       [...dots.children].forEach((d, i) => {
         d.setAttribute("aria-selected", String(i === cur));
         d.style.setProperty("--p", i === cur && reduceMotion.matches ? "1" : "0");
@@ -274,7 +248,7 @@
 
     /* ---------- size + fullscreen ---------- */
     function setSize(next, save = true) {
-      size = SIZES.includes(next) ? next : "standard";
+      size = SIZES.includes(next) ? next : "full";
       heroEl.dataset.size = size;
       selectRadio(ui.sizeRadios, size);
       ui.sizeLabel.textContent = SIZE_NAMES[size];
@@ -339,7 +313,7 @@
       // Build the sandboxed nocookie iframe ourselves, then let the IFrame API attach to it.
       const frame = embedFrame(t.id, {
         // no YouTube chrome in the header: our control bar is the only control surface
-        autoplay: 0, mute: 1, controls: 0, disablekb: 1, fs: 0, rel: 0, playsinline: 1,
+        autoplay: i === cur ? 1 : 0, mute: 1, controls: 0, disablekb: 1, fs: 0, rel: 0, playsinline: 1,
         modestbranding: 1, iv_load_policy: 3, cc_load_policy: 0, showinfo: 0, start, end,
       }, `${t.film} trailer clip`);
       frame.tabIndex = -1;
@@ -636,10 +610,15 @@
     // Read-only snapshot for QA: proves the IFrame API calls reach the sandboxed player.
     function state() {
       const e = players.get(cur);
-      let muted = null, vol = null;
-      if (e && e.ready) { try { muted = e.player.isMuted(); vol = e.player.getVolume(); } catch (_) { /* */ } }
+      let muted = null, vol = null, playerState = null, currentTime = null;
+      if (e && e.ready) {
+        try {
+          muted = e.player.isMuted(); vol = e.player.getVolume();
+          playerState = e.player.getPlayerState(); currentTime = e.player.getCurrentTime();
+        } catch (_) { /* */ }
+      }
       return { index: cur, soundOn, volume, brightness, size, paused: holds.has("user"),
-        fullscreen: fsElement() === heroEl, playerMuted: muted, playerVolume: vol };
+        fullscreen: fsElement() === heroEl, playerMuted: muted, playerVolume: vol, playerState, currentTime };
     }
 
     return { build, pause, resume, state };

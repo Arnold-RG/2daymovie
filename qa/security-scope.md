@@ -20,20 +20,18 @@ Of the five standing areas, three apply and two do not.
   covered by it.
 - **Privacy:** a Privacy section is in the site footer (`#privacy`). It says there are no accounts, no
   analytics and no tracking cookies of our own; the site sets no cookies (tested); videos come from
-  `youtube-nocookie.com`; `localStorage` key `tdm.hero.v1` holds only the header
+  `youtube-nocookie.com`; `localStorage` key `tdm.hero.v2` holds only the header
   video's sound, volume, brightness and size choices (tested).
 - **YouTube cookies (measured):** a headless load of the home page ends with
   YouTube's own cookies on `.youtube.com` (`YSC`, `VISITOR_INFO1_LIVE`,
   `VISITOR_PRIVACY_METADATA`, `__Secure-YNID`, `__Secure-ROLLOUT_TOKEN`), because the
   header autoplays and the IFrame API script loads from `www.youtube.com`.
   `youtube-nocookie` reduces tracking but does not stop this. The privacy note says so
-  plainly. **Fixed with click-to-load:** with no stored consent the hero shows posters and a
-  "Play trailer" button with the line "Video by YouTube, loads YouTube cookies", and nothing
-  is requested from `youtube.com` or `youtube-nocookie.com` (headless check: zero requests,
-  zero YouTube cookies before the click). The first click or tap on Play trailer or on any
-  video stores `yt_consent` = `1` in localStorage, and later visits autoplay as before.
-  A shared `?v=` link opens the player with a "Play video" button instead of the embed.
-  Thumbnails still load from `i.ytimg.com`, which sets no cookies.
+  plainly. A click-to-load gate was tried and then removed at the owner's request: the
+  header is a live, muted trailer background that starts on first visit. The privacy
+  note therefore says YouTube's player loads when the site opens and that YouTube may set
+  cookies when trailers or videos play. Players stay on `youtube-nocookie.com`, sandboxed,
+  under the same CSP.
 - **Content rights:** the footer says every video is an official YouTube embed,
   nothing is rehosted, and each video stays under its owner's rights and YouTube's terms.
 - **Third-party licenses:** no vendored JS or CSS. Icon path data is Material
