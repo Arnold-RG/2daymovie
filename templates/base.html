@@ -35,10 +35,10 @@
     "@type": "WebSite",
     "name": "2daymovie",
     "url": {{ official_url|tojson }},
-    "description": "Official HD movie and TV trailer discovery.",
+    "description": "Worldwide film, series and official trailer discovery.",
     "creator": {
-      "@type": "Person",
-      "name": "Arnold Rurangwa"
+      "@type": "Organization",
+      "name": "ArnovaGroup"
     },
     "potentialAction": {
       "@type": "SearchAction",
@@ -69,8 +69,8 @@
 
       <nav class="site-nav" id="site-nav" aria-label="Primary" data-site-nav>
         <a href="{{ url_for('browse') }}" {% if ep in ['browse', 'browse_paged', 'browse_sorted', 'browse_sorted_page', 'categories_home', 'genre', 'genre_paged', 'genre_sorted', 'genre_sorted_page'] %}aria-current="page"{% endif %}>Browse</a>
-        <a href="{{ url_for('home') }}#trailers" {% if ep in ['upcoming_home', 'watch_page', 'series_watch'] %}aria-current="page"{% endif %}>Trailers</a>
-        <a href="{{ url_for('home') }}#where" {% if ep in ['movie_details'] %}aria-current="page"{% endif %}>Where to watch</a>
+        <a href="{{ url_for('upcoming_home') }}" {% if ep in ['upcoming_home', 'watch_page', 'series_watch'] %}aria-current="page"{% endif %}>Upcoming</a>
+        <a href="{{ url_for('movies_home') }}" {% if ep in ['movie_details'] %}aria-current="page"{% endif %}>Discover</a>
         <a href="{{ url_for('movies_home') }}" {% if ep in ['movies_home', 'movies_year', 'year_page'] %}aria-current="page"{% endif %}>Movies</a>
         <a href="{{ url_for('series_home') }}" {% if ep in ['series_home', 'series_year'] %}aria-current="page"{% endif %}>Series</a>
         <a href="{{ url_for('reviews_home') }}" {% if ep == 'reviews_home' %}aria-current="page"{% endif %}>Reviews</a>
@@ -93,18 +93,18 @@
     <div class="footer-inner">
       <div>
         <div class="footer-brand">2daymovie</div>
-        <p>Legal HD trailers and where-to-watch discovery. Nothing on this site is a full film.</p>
+        <p>World cinema, official previews and upcoming releases. Full-length viewing is offered only where authorized and available.</p>
       </div>
       <nav class="footer-nav" aria-label="Footer">
         <a href="{{ url_for('browse') }}">Browse</a>
-        <a href="{{ url_for('home') }}#trailers">Trailers</a>
-        <a href="{{ url_for('home') }}#where">Where to watch</a>
+        <a href="{{ url_for('upcoming_home') }}">Trailers</a>
+        <a href="{{ url_for('movies_home') }}">Where to watch</a>
         <a href="{{ url_for('movies_home') }}">Movies</a>
         <a href="{{ url_for('series_home') }}">Series</a>
         <a href="{{ url_for('about') }}">About</a>
       </nav>
       <p class="footer-credit">
-        Created by <strong>Arnold Rurangwa</strong>, computer engineer at Vira in Kigali.
+        A curated cinema discovery experience.
       </p>
     </div>
   </footer>
