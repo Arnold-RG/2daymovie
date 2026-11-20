@@ -169,8 +169,8 @@ def create_app() -> Flask:
             "static_export": app.config["STATIC_EXPORT"],
             "catalog_url": catalog_url,
             "page_description": (
-                "Discover movies and TV shows on 2daymovie through official HD trailers. "
-                "Browse by year, genre and title. We do not host or stream full films."
+                "Discover full movies, complete series, and AI cinema on 2daymovie. "
+                "Watch eligible YouTube videos in the on-site embedded player."
             ),
         }
 
@@ -303,7 +303,14 @@ Sitemap: {base}/sitemap.xml
     # authorized full-length sources and rights checks are implemented.
     @app.before_request
     def enforce_full_length_only():
-        if request.endpoint in {"watch_page", "series_watch", "upcoming_home"}:
+        if request.endpoint in {
+            "watch_page", "series_watch", "upcoming_home",
+            "categories_home", "movies_home", "movies_year", "library_home",
+            "series_home", "series_year", "year_jump", "year_page",
+            "browse", "browse_paged", "browse_sorted", "browse_sorted_page",
+            "search", "genre", "genre_paged", "genre_sorted",
+            "genre_sorted_page", "movie_details",
+        }:
             return redirect(url_for("home"), code=302)
 
     @app.route("/")
