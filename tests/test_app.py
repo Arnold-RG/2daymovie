@@ -217,7 +217,7 @@ def test_reviews_live(tmp_path, monkeypatch):
     assert home.status_code == 200
     assert b"Live reviews" in home.data
     assert b"Alex" in home.data
-    assert b"hero-cinema" in home.data or b"hero-stage" in home.data
+    assert b"tm-hero" in home.data
 
 
 def test_reviews_official_link_file(tmp_path, monkeypatch):
@@ -260,36 +260,30 @@ def test_reviews_migrate_legacy_json(tmp_path, monkeypatch):
     assert any(r["name"] == "Sam" and r["id"] == "legacy-1" for r in rows)
 
 
-def test_hero_watch_links_honor_base_path(monkeypatch):
-    """Hero slideshow hrefs must include BASE_PATH so Pages links do not 404."""
+def test_cinema_links_honor_base_path(monkeypatch):
+    """The new cinema navigation and cards must support GitHub Pages subpaths."""
     monkeypatch.setenv("BASE_PATH", "/2daymovie")
     from app import create_app
 
-    client = create_app().test_client()
-    # Export and the live Flask app request the unprefixed path; the
-    # SCRIPT_NAME middleware makes url_for emit /2daymovie/... links.
-    response = client.get("/")
-    assert response.status_code == 200, response.status_code
+    response = create_app().test_client().get("/")
+    assert response.status_code == 200
     html = response.data.decode("utf-8")
-    assert "data-hero-slider" in html
-    # Every hero watch link is prefixed; none point at the site root.
-    assert 'data-href="/2daymovie/watch/' in html
-    assert 'href="/2daymovie/watch/' in html
-    assert 'data-href="/watch/' not in html
+    assert 'href="/2daymovie/upcoming"' in html
+    assert 'href="/2daymovie/movies"' in html
+    assert 'href="/movies"' not in html
+    assert 'href="/upcoming"' not in html
     assert 'href="/watch/' not in html
 
 
-def test_hero_watch_links_at_root_have_no_prefix():
-    """The Render app is served at the domain root; unprefixed /watch/ is correct there."""
+def test_cinema_links_at_root_have_no_prefix():
+    """Render uses unprefixed paths while Pages uses /2daymovie."""
     from app import app
 
-    client = app.test_client()
-    response = client.get("/")
+    response = app.test_client().get("/")
     assert response.status_code == 200
     html = response.data.decode("utf-8")
-    if "data-hero-slider" in html:
-        assert 'data-href="/watch/' in html
-        assert 'data-href="/2daymovie/watch/' not in html
+    assert 'href="/upcoming"' in html
+    assert 'href="/2daymovie/upcoming"' not in html
 
 
 def test_committed_docs_hero_links_are_prefixed():
