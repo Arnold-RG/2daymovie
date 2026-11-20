@@ -324,8 +324,10 @@
   Object.assign(TDM, {
     $, el, svg, thumb, fmtDate, fmtDuration, norm, loadYT, openPlayer, showResults, hideResults,
     ICON_PLAY, ICON_INFO, NOCOOKIE, reduceMotion,
-    get catalog() { return catalog; },
-    get trailers() { return trailers; },
+  });
+  Object.defineProperties(TDM, {
+    catalog: { get: () => catalog, configurable: true },
+    trailers: { get: () => trailers, configurable: true },
   });
 
   init();

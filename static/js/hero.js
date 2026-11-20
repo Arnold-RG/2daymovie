@@ -8,7 +8,7 @@
   let $, el, svg, thumb, fmtDate, loadYT, openPlayer, ICON_PLAY, ICON_INFO, NOCOOKIE, reduceMotion, trailers;
 
   /* ---------------- hero carousel ---------------- */
-  const hero = (() => {
+  function makeHero() {
     const track = $("#heroTrack");
     const content = $("#heroContent");
     const dots = $("#heroDots");
@@ -239,12 +239,13 @@
     }
 
     return { build, pause, resume };
-  })();
+  }
 
-  TDM.hero = hero;
   document.addEventListener("tdm:ready", () => {
     ({ $, el, svg, thumb, fmtDate, loadYT, openPlayer, ICON_PLAY, ICON_INFO, NOCOOKIE, reduceMotion } = TDM);
     trailers = TDM.trailers;
+    const hero = makeHero();
+    TDM.hero = hero;
     hero.build();
   });
 })();

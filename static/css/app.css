@@ -98,7 +98,7 @@ body.modal-open { overflow: hidden; }
 .hero__progress span { display: block; height: 100%; width: 0; background: var(--accent); }
 
 /* ---------- rows ---------- */
-main { position: relative; z-index: 6; margin-top: -9vh; padding-bottom: 40px; }
+main { position: relative; z-index: 6; margin-top: 0; padding-bottom: 40px; }
 .section { padding: 18px 0 8px; }
 .section__title { font-size: clamp(20px, 2.2vw, 28px); margin: 0 var(--pad) 4px; font-weight: 800; }
 .row { position: relative; margin: 10px 0 18px; }
@@ -173,7 +173,7 @@ body.is-results main { margin-top: 0; }
   .hero__dots { left: var(--pad); right: auto; bottom: 7%; }
   .hero__arrow { width: 40px; height: 40px; }
   .row__btn { display: none; }
-  main { margin-top: -4vh; }
+  main { margin-top: 0; }
 }
 @media (max-width: 520px) {
   :root { --nav-h: 56px; }
