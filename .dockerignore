@@ -12,3 +12,11 @@ scripts/scraped_meta.json
 .vscode
 .idea
 scripts/.cache
+tests
+qa
+.github
+requirements-dev.txt
+deploy/monitoring/metrics_token
+scripts/channels.json
+scripts/channel_resolution.json
+data/catalog_sources.json

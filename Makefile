@@ -4,7 +4,7 @@ help:
 	@echo "Targets: install test run catalog export docker-up docker-down k8s-apply metrics-smoke"
 
 install:
-	python -m pip install -r requirements.txt
+	python -m pip install -r requirements-dev.txt
 
 test:
 	pytest -q

@@ -9,21 +9,20 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends curl \
-    && rm -rf /var/lib/apt/lists/* \
-    && useradd --create-home --uid 10001 --shell /usr/sbin/nologin appuser
+# No extra OS packages: the health check below uses the Python stdlib.
+RUN useradd --no-create-home --uid 10001 --shell /usr/sbin/nologin appuser
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY --chown=appuser:appuser . .
+# Code stays root-owned and read-only for the app user.
+COPY . .
 
 USER appuser
 EXPOSE 8080
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
-  CMD curl -fsS "http://127.0.0.1:${PORT}/healthz" || exit 1
+  CMD python -c "import os,urllib.request; urllib.request.urlopen('http://127.0.0.1:%s/healthz' % os.environ.get('PORT','8080'), timeout=4)" || exit 1
 
 CMD gunicorn app:app \
   --bind 0.0.0.0:${PORT} \

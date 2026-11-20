@@ -1,3 +1,6 @@
+# 2DayMovie: a public catalog of YouTube embeds. Nothing private is served.
 User-agent: *
 Allow: /
-Disallow: /scripts/
+Disallow: /metrics
+Disallow: /healthz
+Disallow: /readyz

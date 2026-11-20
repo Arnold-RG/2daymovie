@@ -48,6 +48,8 @@ def export(out: Path, error_base: str = "/") -> None:
     for f in DATA:
         shutil.copy2(ROOT / "data" / f, out / "data" / f)
     shutil.copy2(ROOT / "robots.txt", out / "robots.txt")
+    (out / ".well-known").mkdir()
+    shutil.copy2(ROOT / ".well-known" / "security.txt", out / ".well-known" / "security.txt")
     (out / ".nojekyll").write_text("")
 
 

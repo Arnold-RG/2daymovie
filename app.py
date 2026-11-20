@@ -46,6 +46,9 @@ CSP = "; ".join(f"{k} {v}" for k, v in CSP_DIRECTIVES.items())
 # <meta> CSP for hosts that cannot send headers (GitHub Pages); frame-ancestors is header-only.
 CSP_META = "; ".join(f"{k} {v}" for k, v in CSP_DIRECTIVES.items() if k != "frame-ancestors")
 _YT = f'(self "{YT_NOCOOKIE}")'
+# /metrics stays disabled unless METRICS_TOKEN is at least this long (e.g. `openssl rand -hex 32`).
+METRICS_TOKEN_MIN = 32
+
 SECURITY_HEADERS = {
     "Content-Security-Policy": CSP,
     "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
@@ -108,8 +111,10 @@ def create_app() -> Flask:
     @app.get("/metrics")
     def metrics():
         # Private: only answers with "Authorization: Bearer <METRICS_TOKEN>".
-        # With no token configured the endpoint does not exist.
+        # With no token, or a weak one (< METRICS_TOKEN_MIN chars), the endpoint does not exist.
         token = os.getenv("METRICS_TOKEN", "")
+        if len(token) < METRICS_TOKEN_MIN:
+            token = ""
         sent = request.headers.get("Authorization", "").removeprefix("Bearer ").strip()
         if not token or not hmac.compare_digest(sent.encode(), token.encode()):
             abort(404)
@@ -130,6 +135,10 @@ def create_app() -> Flask:
     @app.get("/robots.txt")
     def robots():
         return send_from_directory(ROOT, "robots.txt", mimetype="text/plain")
+
+    @app.get("/.well-known/security.txt")
+    def security_txt():
+        return send_from_directory(ROOT / ".well-known", "security.txt", mimetype="text/plain")
 
 
     @app.errorhandler(404)

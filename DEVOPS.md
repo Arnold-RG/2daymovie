@@ -35,7 +35,7 @@ docker compose up --build -d
 
 - App via Nginx: http://localhost:8080/
 - Prometheus: http://localhost:9090/
-- Grafana: http://localhost:3000/ (admin / admin — change in prod)
+- Grafana: http://localhost:3000/ (user `GRAFANA_ADMIN_USER`, password `GRAFANA_ADMIN_PASSWORD` from `.env`; compose refuses to start without a password)
 
 Stop: `docker compose down`
 

@@ -30,10 +30,14 @@ def test_health_ready_metrics(client, monkeypatch):
     assert ready["status"] == "ready" and ready["videos"] == len(CATALOG)
     monkeypatch.delenv("METRICS_TOKEN", raising=False)
     assert client.get("/metrics").status_code == 404, "metrics are private without a token"
-    monkeypatch.setenv("METRICS_TOKEN", "s3cret-token")
+    weak = "s3cret-token"
+    monkeypatch.setenv("METRICS_TOKEN", weak)
+    assert client.get("/metrics", headers={"Authorization": f"Bearer {weak}"}).status_code == 404, "weak token is refused"
+    strong = "a3f1" * 16  # 64 chars, like `openssl rand -hex 32`
+    monkeypatch.setenv("METRICS_TOKEN", strong)
     assert client.get("/metrics").status_code == 404
     assert client.get("/metrics", headers={"Authorization": "Bearer wrong"}).status_code == 404
-    ok = client.get("/metrics", headers={"Authorization": "Bearer s3cret-token"})
+    ok = client.get("/metrics", headers={"Authorization": f"Bearer {strong}"})
     assert ok.status_code == 200 and b"twodaymovie_http_requests_total" in ok.data
 
 

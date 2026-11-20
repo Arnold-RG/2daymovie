@@ -263,6 +263,10 @@ body.is-results main { margin-top: 0; }
 
 .footer { padding: 30px var(--pad) 50px; color: var(--muted); font-size: 13px; border-top: 1px solid rgba(255,255,255,.06); }
 .footer p { margin: 0 0 6px; max-width: 900px; }
+.footer__legal { margin-top: 18px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,.06); max-width: 900px; }
+.footer__legal h2 { font-size: 13px; color: #d6d6dd; margin: 12px 0 4px; letter-spacing: .02em; }
+.footer__legal code { font-size: 12px; color: #d6d6dd; }
+.footer__legal a { color: #d6d6dd; }
 
 /* ---------- responsive ---------- */
 @media (max-width: 1100px) { .nav__links { gap: 12px; } .nav__links a { font-size: 13px; } .search input { width: 170px; } .search input:focus { width: 200px; } }
