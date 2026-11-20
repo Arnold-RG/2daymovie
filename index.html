@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2DayMovie</title>
+<style>
+body { margin:0; background:#0f0f0f; color:#fff; font-family:system-ui,sans-serif; }
+header { padding:16px 4%; background:#141414; display:flex; justify-content:space-between; align-items:center; }
+.logo { color:#e50914; font-weight:800; font-size:24px; }
+input { background:#222; border:1px solid #444; color:#fff; padding:8px 12px; border-radius:4px; width:180px; }
+.hero { padding:40px 4%; background:#1a1a1a; }
+.hero h1 { margin:0 0 8px; font-size:32px; }
+.hero p { color:#aaa; margin:0; }
+.section { padding:20px 4%; }
+.section h2 { margin:0 0 12px; font-size:20px; }
+.grid { display:flex; gap:12px; overflow-x:auto; padding-bottom:8px; }
+.card { flex:0 0 200px; background:#1a1a1a; border-radius:6px; overflow:hidden; cursor:pointer; }
+.card img { width:100%; height:112px; object-fit:cover; background:#333; display:block; }
+.card .info { padding:8px 10px; }
+.card h3 { margin:0 0 4px; font-size:13px; }
+.card small { color:#888; font-size:11px; }
+.player { position:fixed; inset:0; background:#000; z-index:100; display:none; flex-direction:column; }
+.player.show { display:flex; }
+.player header { background:#111; }
+.player .screen { flex:1; display:flex; align-items:center; justify-content:center; padding:20px; }
+.fallback { text-align:center; max-width:400px; }
+.fallback a { display:inline-block; margin-top:16px; background:#e50914; color:#fff; padding:12px 24px; border-radius:4px; text-decoration:none; font-weight:600; }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">2DAYMOVIE</div>
+  <input type="search" id="search" placeholder="Search titles...">
+</header>
+<div class="hero">
+  <h1>Office Romance</h1>
+  <p>Click any title below. Most open a YouTube button because embedding is disabled.</p>
+</div>
+<div id="content"></div>
+<div class="player" id="player">
+  <header>
+    <strong id="ptitle">Now Playing</strong>
+    <button onclick="closePlayer()" style="background:none;border:none;color:#fff;font-size:24px;cursor:pointer;">✕</button>
+  </header>
+  <div class="screen" id="pscreen"></div>
+</div>
+<script>
+const records = [
+  {id:'mi4gQMDgB_g', title:'Office Romance', creator:'Mosfilm', type:'Romantic'},
+  {id:'4GskjSBw9lA', title:'The Girls', creator:'Mosfilm', type:'Romantic'},
+  {id:'CLjLLHDUiiA', title:'Love and Doves', creator:'Mosfilm', type:'Romantic'},
+  {id:'NTWA_7-ld_U', title:'Moscow Does Not Believe in Tears', creator:'Mosfilm', type:'Drama'},
+  {id:'Q3hBLv-HLEc', title:'Stalker', creator:'Mosfilm', type:'Drama'},
+  {id:'GgFLr2bjUNM', title:'Mimino', creator:'Mosfilm', type:'Comedy'},
+  {id:'m3n4LptYWNo', title:'Operation Y and Shurik\'s Other Adventures', creator:'Mosfilm', type:'Comedy'},
+  {id:'MkHiu9fD820', title:'The Diamond Arm', creator:'Mosfilm', type:'Comedy'},
+  {id:'tSAKzVP2IGk', title:'Wild Kratts - Stuck on Sharks', creator:'PBS KIDS', type:'Series'},
+  {id:'F1z5E5gzlLA', title:'Wild Kratts - Creature Power Challenge', creator:'PBS KIDS', type:'Series'},
+  {id:'EYHv8eJrW2Y', title:'Kin-Dza-Dza!', creator:'Mosfilm', type:'Sci-Fi'},
+  {id:'S-XKsnQCLoE', title:'Night of the Living Dead (1968)', creator:'Public Domain', type:'Horror'}
+];
+function render(filter='') {
+  const q = filter.toLowerCase();
+  const groups = {};
+  records.forEach(r => {
+    if (!r.title.toLowerCase().includes(q)) return;
+    if (!groups[r.type]) groups[r.type] = [];
+    groups[r.type].push(r);
+  });
+  let html = '';
+  Object.keys(groups).forEach(type => {
+    html += `<div class="section"><h2>${type}</h2><div class="grid">`;
+    groups[type].forEach(r => {
+      html += `<div class="card" onclick="play('${r.id}','${r.title.replace(/'/g,"\\'")}')">
+        <img src="https://i.ytimg.com/vi/${r.id}/hqdefault.jpg" alt="">
+        <div class="info"><h3>${r.title}</h3><small>${r.creator}</small></div>
+      </div>`;
+    });
+    html += '</div></div>';
+  });
+  document.getElementById('content').innerHTML = html || '<p style="padding:20px">No titles found.</p>';
+}
+function play(id, title) {
+  document.getElementById('ptitle').textContent = title;
+  document.getElementById('pscreen').innerHTML = `
+    <div class="fallback">
+      <p>This video cannot be played here because the owner has disabled embedding.</p>
+      <a href="https://www.youtube.com/watch?v=${id}" target="_blank">Watch on YouTube</a>
+    </div>`;
+  document.getElementById('player').classList.add('show');
+}
+function closePlayer() {
+  document.getElementById('player').classList.remove('show');
+  document.getElementById('pscreen').innerHTML = '';
+}
+document.getElementById('search').oninput = e => render(e.target.value);
+render();
+</script>
+</body>
+</html>
