@@ -298,6 +298,14 @@ Sitemap: {base}/sitemap.xml
         xml.append("</urlset>")
         return Response("\n".join(xml), mimetype="application/xml")
 
+    # Full-length-only release policy: legacy trailer playback endpoints must
+    # never masquerade as complete movies. Re-enable playback only after
+    # authorized full-length sources and rights checks are implemented.
+    @app.before_request
+    def enforce_full_length_only():
+        if request.endpoint in {"watch_page", "series_watch", "upcoming_home"}:
+            return redirect(url_for("home"), code=302)
+
     @app.route("/")
     def home():
         stats = library.library_stats()
