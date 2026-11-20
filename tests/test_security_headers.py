@@ -16,7 +16,7 @@ def test_referrer_policy_is_set(client):
     assert "origin" in value.lower() or value.lower() in {"no-referrer", "same-origin"}
 
 
-@pytest.mark.xfail(reason="Forge has not added Content-Security-Policy yet (see docs/security-review.md)", strict=False)
+@pytest.mark.xfail(reason="Forge has not added Content-Security-Policy yet (see qa/security-review.md)", strict=False)
 def test_content_security_policy_present(client):
     resp = client.get("/")
     csp = resp.headers.get("Content-Security-Policy", "")
@@ -30,7 +30,7 @@ def test_content_security_policy_present(client):
     assert "unsafe-inline" not in csp
 
 
-@pytest.mark.xfail(reason="Forge has not added Strict-Transport-Security yet (see docs/security-review.md)", strict=False)
+@pytest.mark.xfail(reason="Forge has not added Strict-Transport-Security yet (see qa/security-review.md)", strict=False)
 def test_hsts_present(client):
     resp = client.get("/")
     hsts = resp.headers.get("Strict-Transport-Security", "")
@@ -38,14 +38,14 @@ def test_hsts_present(client):
     assert "max-age=" in hsts.lower()
 
 
-@pytest.mark.xfail(reason="Forge has not added Permissions-Policy yet (see docs/security-review.md)", strict=False)
+@pytest.mark.xfail(reason="Forge has not added Permissions-Policy yet (see qa/security-review.md)", strict=False)
 def test_permissions_policy_present(client):
     resp = client.get("/")
     value = resp.headers.get("Permissions-Policy", "")
     assert value, "Permissions-Policy is missing"
 
 
-@pytest.mark.xfail(reason="Forge has not added frame-ancestors / X-Frame-Options yet (see docs/security-review.md)", strict=False)
+@pytest.mark.xfail(reason="Forge has not added frame-ancestors / X-Frame-Options yet (see qa/security-review.md)", strict=False)
 def test_clickjacking_protection_present(client):
     resp = client.get("/")
     csp = resp.headers.get("Content-Security-Policy", "")

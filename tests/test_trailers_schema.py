@@ -1,10 +1,16 @@
-"""data/trailers.json public schema."""
+"""Extra trailers contract checks not already in tests/test_app.py.
+
+Item keys, youtube_id shape, start < end, and uniqueness versus the
+catalog are asserted by test_trailers_upcoming_and_include_avengers_doomsday
+in test_app.py. This module only adds ISO-date validation and the
+top-level document shape from the QA spec.
+"""
 from __future__ import annotations
 
 import json
 from datetime import date, datetime
 
-from tests.helpers import ROOT, YT_ID
+from tests.helpers import ROOT
 
 
 def _load():
@@ -19,33 +25,16 @@ def test_trailers_top_level_shape():
     assert isinstance(doc["items"], list) and doc["items"], "trailers.items must be a non-empty list"
 
 
-def test_trailers_item_schema():
+def test_trailers_release_dates_are_iso():
     items = _load()["items"]
-    required = {"title", "release_date", "youtube_id", "start", "end"}
     problems = []
     for i, item in enumerate(items):
-        if not isinstance(item, dict):
-            problems.append(f"item[{i}] is not an object")
-            continue
-        missing = required - set(item)
-        if missing:
-            problems.append(f"item[{i}] missing keys {sorted(missing)}")
-            continue
-        if not isinstance(item["title"], str) or not item["title"].strip():
-            problems.append(f"item[{i}] title is empty")
-        if not isinstance(item["youtube_id"], str) or not YT_ID.match(item["youtube_id"]):
-            problems.append(f"item[{i}] youtube_id is not an 11-char YouTube id")
-        raw_date = item["release_date"]
+        raw = item.get("release_date")
         try:
-            if isinstance(raw_date, datetime):
-                date.fromisoformat(raw_date.date().isoformat())
+            if isinstance(raw, datetime):
+                date.fromisoformat(raw.date().isoformat())
             else:
-                date.fromisoformat(str(raw_date))
-        except ValueError:
+                date.fromisoformat(str(raw))
+        except (TypeError, ValueError):
             problems.append(f"item[{i}] release_date is not an ISO date")
-        start, end = item["start"], item["end"]
-        if type(start) is not int or type(end) is not int:
-            problems.append(f"item[{i}] start/end must be ints")
-        elif not end > start:
-            problems.append(f"item[{i}] end must be greater than start")
-    assert not problems, f"{len(problems)} trailer schema problem(s): {problems[:20]}"
+    assert not problems, problems

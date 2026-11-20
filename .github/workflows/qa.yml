@@ -1,4 +1,6 @@
-# Sentinel QA workflow. Does not replace ci.yml on main.
+# Sentinel QA workflow for non-main branches. ci.yml owns pushes and PRs
+# to main (pytest, export_site vs docs/, smoke, docker). Do not overlap
+# those events so the two workflows do not both run on the same main PR.
 # Action SHAs resolved 2026-11-20 via the GitHub API:
 #   actions/checkout@v7.0.1        3d3c42e5aac5ba805825da76410c181273ba90b1
 #   actions/setup-python@v7.1.0    6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
@@ -8,7 +10,7 @@ on:
   push:
     branches-ignore: [main]
   pull_request:
-    branches: [main, "**"]
+    branches-ignore: [main]
 
 permissions:
   contents: read

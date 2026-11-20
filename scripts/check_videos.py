@@ -15,7 +15,7 @@ if any id is bad.
 
 Usage:
   python scripts/check_videos.py
-  python scripts/check_videos.py --json docs/video-check-results.json
+  python scripts/check_videos.py --json qa/video-check-results.json
 """
 from __future__ import annotations
 

@@ -32,6 +32,6 @@ def test_unknown_path_returns_404(client):
     assert "not" in body.lower() or "found" in body.lower() or "2DayMovie" in body
 
 
-def test_internal_data_file_is_not_public(client):
-    assert client.get("/data/catalog_sources.json").status_code == 404
+def test_unknown_public_data_file_returns_404(client):
+    """Non-allowlisted /data/* names 404. catalog_sources is in test_exposure.py."""
     assert client.get("/data/does-not-exist.json").status_code == 404

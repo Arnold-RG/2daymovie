@@ -1,4 +1,8 @@
-"""Shared fixtures for the Sentinel QA suite."""
+"""Shared fixtures for the Sentinel QA suite.
+
+tests/test_app.py (Forge) keeps its own client fixture; this module
+does not replace or wrap it.
+"""
 from __future__ import annotations
 
 from pathlib import Path
