@@ -22,7 +22,8 @@
   <link rel="icon" href="../../static/img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://i.ytimg.com">
   
-  <link rel="stylesheet" href="../../static/css/app.css?v=8e6a77b6f4">
+  
+  <link rel="stylesheet" href="../../static/css/app.css?v=0f25fc4a0d">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -56,13 +57,7 @@
   </header>
 
   <section class="hero" id="top" data-size="full" aria-roledescription="carousel" aria-label="Upcoming movie trailers">
-    <div class="hero__track" id="heroTrack"></div>
-    <div class="hero__shade"></div>
-    <div class="hero__content" id="heroContent" aria-live="polite"></div>
-    <button class="hero__arrow hero__arrow--prev" id="heroPrev" aria-label="Previous trailer"><svg viewBox="0 0 24 24"><path d="M15.4 5.4 14 4l-8 8 8 8 1.4-1.4L8.8 12z"/></svg></button>
-    <button class="hero__arrow hero__arrow--next" id="heroNext" aria-label="Next trailer"><svg viewBox="0 0 24 24"><path d="M8.6 5.4 10 4l8 8-8 8-1.4-1.4 6.6-6.6z"/></svg></button>
-    <div class="hero__dots" id="heroDots" role="tablist" aria-label="Choose trailer"></div>
-    <div class="hero__progress"><span id="heroProgress"></span></div>
+    
     <div class="hero__bar hero__tools" id="heroBar" role="toolbar" aria-label="Trailer controls" aria-controls="heroTrack">
       <button class="hbtn hero__playpause" id="heroPause" type="button" aria-pressed="false" aria-label="Pause trailers" aria-keyshortcuts="Space K" data-tip="Pause (Space / K)">
         <svg class="i-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
@@ -109,6 +104,19 @@
         <svg class="i-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/></svg>
       </button>
     </div>
+    <div class="hero__track" id="heroTrack"></div>
+    <div class="hero__shade"></div>
+    <div class="hero__content is-ssr" id="heroContent" aria-live="polite" data-ssr="irVNGjRFZGk">
+      <span class="hero__tag">Upcoming trailer</span>
+      <h1 class="hero__title hero__logo"><span class="hero__logo-main">Avengers</span><span class="sr">: </span><span class="hero__logo-sub">Doomsday</span></h1>
+      <p class="hero__date"><span class="hero__date-label">In cinemas</span><time class="hero__date-value" datetime="2026-12-18">18 Dec 2026</time></p>
+      <div class="hero__actions"><button class="btn btn--play" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>Watch trailer</button><a class="btn btn--ghost" href="#trailers"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z"/></svg>All trailers</a></div>
+    </div>
+    <button class="hero__arrow hero__arrow--prev" id="heroPrev" aria-label="Previous trailer"><svg viewBox="0 0 24 24"><path d="M15.4 5.4 14 4l-8 8 8 8 1.4-1.4L8.8 12z"/></svg></button>
+    <button class="hero__arrow hero__arrow--next" id="heroNext" aria-label="Next trailer"><svg viewBox="0 0 24 24"><path d="M8.6 5.4 10 4l8 8-8 8-1.4-1.4 6.6-6.6z"/></svg></button>
+    <div class="hero__dots" id="heroDots" role="tablist" aria-label="Choose trailer"></div>
+    <div class="hero__progress"><span id="heroProgress"></span></div>
+    <a class="hero__cue" href="#trailers" id="heroCue"><span>More to watch</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.4 8.6 12 13.2l4.6-4.6L18 10l-6 6-6-6z"/></svg></a>
   </section>
 
   <main id="main">
@@ -167,14 +175,14 @@
         <button class="tab" type="button" data-tab="home" aria-current="page" aria-describedby="tabHomeHint">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2.5 11h2.7v9h5.3v-6h3v6h5.3v-9h2.7z"/></svg><span class="tab__label">Home</span>
         </button>
-        <button class="tab" type="button" data-tab="search" aria-haspopup="dialog" aria-controls="sheetSearch">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 3a7.5 7.5 0 0 1 5.9 12.1l4.2 4.2-1.4 1.4-4.2-4.2A7.5 7.5 0 1 1 10.5 3zm0 2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11z"/></svg><span class="tab__label">Search</span>
+        <button class="tab" type="button" data-tab="browse" aria-haspopup="dialog" aria-controls="sheetGenres">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h7v7H4zm9 0h7v7h-7zM4 13h7v7H4zm9 0h7v7h-7z"/></svg><span class="tab__label">Browse</span>
         </button>
-        <button class="tab tab--shuffle" type="button" data-tab="shuffle" aria-label="Shuffle: play a random trailer">
-          <span class="tab__orb"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.6 9.2 5.4 4 4 5.4l5.2 5.2zM14.5 4l2 2L4 18.6 5.4 20 18 7.5l2 2V4zm.3 9.4-1.4 1.4 3.1 3.1-2 2H20v-5.5l-2 2z"/></svg></span><span class="tab__label" aria-hidden="true">Shuffle</span>
+        <button class="tab tab--center" type="button" data-tab="search" aria-label="Search" aria-haspopup="dialog" aria-controls="sheetSearch">
+          <span class="tab__orb"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 3a7.5 7.5 0 0 1 5.9 12.1l4.2 4.2-1.4 1.4-4.2-4.2A7.5 7.5 0 1 1 10.5 3zm0 2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11z"/></svg></span><span class="tab__label" aria-hidden="true">Search</span>
         </button>
-        <button class="tab" type="button" data-tab="genres" aria-haspopup="dialog" aria-controls="sheetGenres">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h7v7H4zm9 0h7v7h-7zM4 13h7v7H4zm9 0h7v7h-7z"/></svg><span class="tab__label">Genres</span>
+        <button class="tab" type="button" data-tab="kids">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20zm0 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16zM8.5 9a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm7 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zM7.8 14h8.4a4.6 4.6 0 0 1-8.4 0z"/></svg><span class="tab__label">Kids</span>
         </button>
         <button class="tab" type="button" data-tab="mylist" aria-haspopup="dialog" aria-controls="sheetList">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.4 10.6 20C5.4 15.4 2 12.3 2 8.5A5.4 5.4 0 0 1 7.5 3c1.7 0 3.4.8 4.5 2.1A6 6 0 0 1 16.5 3 5.4 5.4 0 0 1 22 8.5c0 3.8-3.4 6.9-8.6 11.5z"/></svg><span class="tab__label">My List</span>
@@ -213,6 +221,7 @@
         <button class="sheet__x" type="button" data-sheet-close aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6.4 5 5.6 5.6L17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6L6.4 19 5 17.6l5.6-5.6L5 6.4z"/></svg></button>
       </div>
       <div class="sheet__body">
+        <button class="shuffle-btn" type="button" data-shuffle><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.6 9.2 5.4 4 4 5.4l5.2 5.2zM14.5 4l2 2L4 18.6 5.4 20 18 7.5l2 2V4zm.3 9.4-1.4 1.4 3.1 3.1-2 2H20v-5.5l-2 2z"/></svg><span>Shuffle: play a random trailer</span></button>
         <h3 class="sheet__label">Sections</h3>
         <div class="chips" id="chipSections"></div>
         <h3 class="sheet__label">Genres</h3>
@@ -242,9 +251,9 @@
   </div>
 
   <noscript><p class="loading">2DayMovie needs JavaScript to play videos.</p></noscript>
-  <script src="../../static/js/hero.js?v=8e6a77b6f4" defer></script>
-  <script src="../../static/js/search.js?v=8e6a77b6f4" defer></script>
-  <script src="../../static/js/app.js?v=8e6a77b6f4" defer></script>
-  <script src="../../static/js/mobile.js?v=8e6a77b6f4" defer></script>
+  <script src="../../static/js/hero.js?v=0f25fc4a0d" defer></script>
+  <script src="../../static/js/search.js?v=0f25fc4a0d" defer></script>
+  <script src="../../static/js/app.js?v=0f25fc4a0d" defer></script>
+  <script src="../../static/js/mobile.js?v=0f25fc4a0d" defer></script>
 </body>
 </html>

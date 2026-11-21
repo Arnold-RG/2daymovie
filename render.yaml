@@ -23,6 +23,14 @@ services:
     runtime: static
     buildCommand: echo 'No build needed'
     staticPublishPath: .
+    routes:
+      # /explore/ has no section of its own (explore/index.html is the fallback for other hosts)
+      - type: redirect
+        source: /explore
+        destination: /explore/movies/
+      - type: redirect
+        source: /explore/
+        destination: /explore/movies/
     headers:
       - path: /*
         name: Content-Security-Policy

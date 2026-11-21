@@ -8,6 +8,7 @@ redirects every legacy URL from the old site to the new home page.
 """
 from __future__ import annotations
 
+import datetime
 import hashlib
 import hmac
 import json
@@ -88,6 +89,20 @@ def first_trailer_id() -> str:
         return ""
 
 
+def hero_first() -> dict:
+    """First hero slide, pre-rendered in the HTML so the title paints before any JS runs (LCP)."""
+    try:
+        t = _items(load_trailers())[0]
+        film, rel = str(t["title"]), str(t["release_date"])
+        d = datetime.date.fromisoformat(rel)
+    except (OSError, ValueError, KeyError, IndexError, TypeError):
+        return {}
+    main, _, sub = film.partition(": ")
+    poster = t.get("poster") if t.get("poster") in ("sddefault", "hqdefault") else "maxresdefault"
+    return {"id": str(t["youtube_id"]), "film": film, "main": main, "sub": sub, "release": rel,
+            "release_fmt": f"{d.day} {d.strftime('%b')} {d.year}", "poster": poster}
+
+
 def _og_image() -> str:
     tid = first_trailer_id()
     return f"https://i.ytimg.com/vi/{tid}/hqdefault.jpg" if tid else ""
@@ -106,6 +121,7 @@ def asset_version() -> str:
 def create_app() -> Flask:
     app = Flask(__name__, static_folder="static", template_folder="templates")
     app.jinja_env.globals["asset_v"] = asset_version()
+    app.jinja_env.globals["hero_first"] = hero_first
 
     @app.before_request
     def _start_timer():
@@ -160,6 +176,10 @@ def create_app() -> Flask:
     @app.get("/")
     def index():
         return _page("", "")
+
+    @app.get("/explore/")
+    def explore_index():
+        return redirect("/explore/movies/", code=301)
 
     @app.get("/explore/<slug>/")
     def explore(slug: str):

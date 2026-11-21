@@ -131,7 +131,8 @@ def test_trailers_upcoming_and_include_avengers_doomsday():
     assert TRAILERS, "hero needs trailers"
     assert TRAILERS[0]["title"] == "Avengers: Doomsday"
     for t in TRAILERS:
-        assert set(t) == {"title", "release_date", "youtube_id", "start", "end"}
+        assert set(t) - {"poster"} == {"title", "release_date", "youtube_id", "start", "end"}
+        assert t.get("poster", "sddefault") in {"sddefault", "hqdefault"}  # optional: set when maxresdefault is missing
         assert YT_ID.match(t["youtube_id"]) and t["release_date"] >= "2026-01-01"
         assert 0 <= t["start"] < t["end"]
         assert t["youtube_id"] not in {v["id"] for v in CATALOG}

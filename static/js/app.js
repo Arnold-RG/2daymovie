@@ -93,7 +93,7 @@
       id, title, rows: [...new Set(catalog.videos.filter((v) => v.section === id).map((v) => v.row))],
     }));
     trailers = (Array.isArray(t) ? t : t.items || []).map((x) => ({
-      id: x.youtube_id, film: x.title, release: x.release_date, clip_start: x.start, clip_end: x.end,
+      id: x.youtube_id, film: x.title, release: x.release_date, clip_start: x.start, clip_end: x.end, poster: x.poster,
     }));
     for (const v of catalog.videos) byId.set(v.id, v);
     for (const tr of trailers) byId.set(tr.id, { ...tr, title: tr.film, trailer: true });
@@ -178,6 +178,19 @@
     return w;
   }
 
+  const EAGER_ROWS = 2;
+  let rowCount = 0;
+  const lazyFill = new WeakMap();
+  const rowObserver = "IntersectionObserver" in window ? new IntersectionObserver((entries) => {
+    for (const en of entries) {
+      if (!en.isIntersecting) continue;
+      rowObserver.unobserve(en.target);
+      const f = lazyFill.get(en.target);
+      if (f) f();
+      en.target.classList.remove("is-lazy");
+    }
+  }, { rootMargin: "900px 0px" }) : null;
+
   function row(title, items, opts = {}) {
     const wrap = el("div", "row");
     const head = el("div", "row__head");
@@ -194,8 +207,17 @@
     const sc = el("div", "row__scroller");
     sc.setAttribute("role", "group");
     sc.setAttribute("aria-label", title);
-    const saved = new Set(myList.ids());
-    for (const v of items.slice(0, ROW_LIMIT)) sc.appendChild(tile(v, { ...opts, saved: saved.has(v.id) }));
+    // Rows below the first screen get their cards only when they come near the viewport;
+    // the scroller keeps its height meanwhile (CSS min-height), so nothing shifts.
+    const fill = () => {
+      if (sc.dataset.filled) return;
+      sc.dataset.filled = "1";
+      const saved = new Set(myList.ids());
+      const frag = document.createDocumentFragment();
+      for (const v of items.slice(0, ROW_LIMIT)) frag.appendChild(tile(v, { ...opts, saved: saved.has(v.id) }));
+      sc.appendChild(frag);
+      requestAnimationFrame(sync);
+    };
     const prev = el("button", "row__btn row__btn--prev");
     prev.appendChild(svg("M15.4 5.4 14 4l-8 8 8 8 1.4-1.4L8.8 12z"));
     prev.setAttribute("aria-label", `Scroll ${title} left`);
@@ -211,6 +233,8 @@
     };
     sc.addEventListener("scroll", sync, { passive: true });
     requestAnimationFrame(sync);
+    if (rowCount++ < EAGER_ROWS || !rowObserver) fill();
+    else { sc.classList.add("is-lazy"); lazyFill.set(sc, fill); rowObserver.observe(sc); }
     wrap.append(prev, sc, next);
     return wrap;
   }

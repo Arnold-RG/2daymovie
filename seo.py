@@ -77,6 +77,17 @@ def pages(catalog: dict) -> list[dict]:
     return out
 
 
+def explore_links(catalog: dict) -> list[dict]:
+    """Every /explore/<slug>/ page with a short label, for the /explore/ index."""
+    out = []
+    for p in pages(catalog)[1:]:
+        label = p["title"].split(" | ")[0]
+        if label.startswith("Watch ") and label.endswith(" Movies and Series Free"):
+            label = label[len("Watch "):-len(" Movies and Series Free")]
+        out.append({"slug": p["slug"], "label": label})
+    return out
+
+
 def page_path(p: dict) -> str:
     return f"explore/{p['slug']}/" if p["slug"] else ""
 

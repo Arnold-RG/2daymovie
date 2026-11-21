@@ -11,12 +11,15 @@ HERO = (ROOT / "static/js/hero.js").read_text(encoding="utf-8")
 PHONE = "(max-width: 900px), (max-width: 1000px) and (max-height: 500px)"
 
 
-def test_tab_bar_is_a_labelled_nav_with_five_slots_and_a_centre_shuffle():
+def test_tab_bar_is_a_labelled_nav_with_five_slots_and_a_centre_search():
     nav = HTML[HTML.index('<nav class="tabbar"'):HTML.index("</nav>", HTML.index('<nav class="tabbar"'))]
     assert 'aria-label="Quick navigation"' in nav
     tabs = re.findall(r'data-tab="(\w+)"', nav)
-    assert tabs == ["home", "search", "shuffle", "genres", "mylist"]
-    assert 'aria-label="Shuffle: play a random trailer"' in nav
+    assert tabs == ["home", "browse", "search", "kids", "mylist"]
+    assert 'class="tab tab--center" type="button" data-tab="search" aria-label="Search"' in nav
+    # Shuffle moved into the Browse sheet; Kids falls back to Upcoming Trailers if the section is missing
+    assert 'data-shuffle' in HTML and '[data-shuffle]' in MOB
+    assert 'k.dataset.tab = "trailers"' in MOB
     assert 'aria-current="page"' in nav and 'id="listBadge"' in nav
 
 
@@ -28,9 +31,10 @@ def test_tab_bar_floats_as_glass_with_a_red_glow_and_safe_areas():
     assert "function barShape(" in MOB and "glass.style.clipPath" in MOB
 
 
-def test_targets_are_at_least_44px_and_reduced_motion_is_respected():
-    assert re.search(r"\.tab \{[^}]*min-width: 44px; min-height: 44px;", CSS)
-    assert ".chip { display: inline-flex; align-items: center; gap: 8px; min-height: 44px;" in CSS
+def test_targets_are_at_least_48px_and_reduced_motion_is_respected():
+    assert re.search(r"\.tab \{[^}]*min-width: 48px; min-height: 48px;", CSS)
+    assert ".shuffle-btn {" in CSS and "min-height: 48px" in CSS
+    assert ".chip { display: inline-flex; align-items: center; gap: 8px; min-height: 48px;" in CSS
     rm = CSS[CSS.index("@media (prefers-reduced-motion: reduce)"):]
     assert ".tabbar, .tab, .tabbar__dot, .sheet__panel" in rm and "transition: none !important" in rm
 
@@ -56,11 +60,18 @@ def test_phone_layout_fills_the_screen_and_fits_2_3_posters():
     assert f"@media {PHONE} {{" in CSS
     assert ".hero, .hero[data-size] { height: 100vh; height: 100svh; min-height: 0; }" in CSS
     assert ".tile { width: clamp(132px, 42vw, 230px); }" in CSS
-    assert ".hero[data-size] .hero__title { font-size: clamp(30px, 9.6vw, 46px);" in CSS
+    assert ".hero[data-size] .hero__title { font-size: clamp(26px, 8.2vw, 38px);" in CSS
     assert ".nav__toggle, .nav__links, .nav .search { display: none !important; }" in CSS
     assert "let size = !phoneLayout && SIZES.includes(saved.size)" in HERO and PHONE in HERO
 
 
 def test_neighbour_trailers_wait_for_the_first_one_to_play():
     assert "const NEIGHBOUR_MS = 8000;" in HERO
-    assert "if (p && p.playing) warmNeighbours();" in HERO and "if (i === cur) warmNeighbours();" in HERO
+    assert "if (p && p.playing) warmNeighbours();" in HERO and "if (i === cur) { warmNeighbours(); startFirstTimer(); }" in HERO
+
+
+def test_first_slide_countdown_waits_for_its_trailer():
+    assert "const FIRST_WAIT_MS = 15000;" in HERO
+    assert "firstWait = setTimeout(startFirstTimer, FIRST_WAIT_MS);" in HERO
+    assert "if (i === cur) { warmNeighbours(); startFirstTimer(); }" in HERO
+    assert "if (!reduceMotion.matches && timerOn) raf = requestAnimationFrame(tick);" in HERO
