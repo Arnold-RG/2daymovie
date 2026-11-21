@@ -19,9 +19,9 @@ def test_no_click_to_load_gate_remains():
 
 def test_hero_starts_live_muted_trailers_on_load():
     build = HERO.split("function build() {", 1)[1].split("function paint()", 1)[0]
-    assert "if (reduceMotion.matches) return;" in build, "reduced motion keeps the static poster"
-    after_rm = build.split("if (reduceMotion.matches) return;", 1)[1]
-    assert re.search(r"loadYT\(\)\.then\(\(YT\) => \{ YTlib = YT; warm\(\); \}\)", after_rm), "player loads right away"
+    # Reduced motion (Windows "Animation effects" off) must not turn the trailers off.
+    assert "if (reduceMotion.matches) return;" not in build
+    assert re.search(r"loadYT\(\)\.then\(\(YT\) => \{ YTlib = YT; warm\(\); \}\)", build), "player loads right away"
     assert "autoplay: i === cur ? 1 : 0, mute: 1" in HERO and "playsinline: 1" in HERO  # iOS: muted inline autoplay; the poster hides YouTube's button
     assert "e.target.mute(); // start silent" in HERO and "e.target.playVideo()" in HERO
 
