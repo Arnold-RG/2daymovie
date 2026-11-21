@@ -82,8 +82,18 @@
 
   async function loadData() {
     const base = document.documentElement.dataset.base || "";
+    // The hero poster in the HTML is the largest thing on the first screen: let it have the bandwidth
+    // first, then fetch the 300 KB catalog (at most 1.5 s later). trailers.json is tiny and goes now.
+    const posterFirst = new Promise((resolve) => {
+      const img = document.querySelector(".hero__ssr-poster");
+      const done = () => requestAnimationFrame(() => setTimeout(resolve, 0)); // after the frame that paints it
+      if (!img || img.complete) { done(); return; }
+      img.addEventListener("load", done, { once: true });
+      img.addEventListener("error", done, { once: true });
+      setTimeout(resolve, 1500);
+    });
     const [c, t] = await Promise.all([
-      fetch(base + "data/catalog.json", { cache: "no-cache" }).then((r) => r.json()),
+      posterFirst.then(() => fetch(base + "data/catalog.json", { cache: "no-cache", priority: "low" })).then((r) => r.json()),
       fetch(base + "data/trailers.json", { cache: "no-cache" }).then((r) => r.json()),
     ]);
     const items = Array.isArray(c) ? c : c.items || [];

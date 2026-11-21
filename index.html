@@ -22,8 +22,8 @@
   <link rel="icon" href="static/img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://i.ytimg.com">
   
-  <link rel="preload" as="image" href="https://i.ytimg.com/vi/irVNGjRFZGk/maxresdefault.jpg" imagesrcset="https://i.ytimg.com/vi/irVNGjRFZGk/sddefault.jpg 640w, https://i.ytimg.com/vi/irVNGjRFZGk/maxresdefault.jpg 1280w" imagesizes="100vw" fetchpriority="high">
-  <link rel="stylesheet" href="static/css/app.css?v=afe4555ed9">
+  <link rel="preload" as="image" href="https://i.ytimg.com/vi/irVNGjRFZGk/maxresdefault.jpg" imagesrcset="https://i.ytimg.com/vi/irVNGjRFZGk/sddefault.jpg 640w, https://i.ytimg.com/vi/irVNGjRFZGk/maxresdefault.jpg 1280w" imagesizes="(max-width: 900px) 50vw, 100vw" fetchpriority="high">
+  <link rel="stylesheet" href="static/css/app.css?v=4d6d3636da">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -104,12 +104,15 @@
         <svg class="i-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/></svg>
       </button>
     </div>
-    <div class="hero__track" id="heroTrack"></div>
+    <div class="hero__track" id="heroTrack">
+      
+      <img class="slide__poster hero__ssr-poster" data-id="irVNGjRFZGk" alt="" width="1280" height="720" fetchpriority="high" src="https://i.ytimg.com/vi/irVNGjRFZGk/maxresdefault.jpg" srcset="https://i.ytimg.com/vi/irVNGjRFZGk/sddefault.jpg 640w, https://i.ytimg.com/vi/irVNGjRFZGk/maxresdefault.jpg 1280w" sizes="(max-width: 900px) 50vw, 100vw">
+    </div>
     <div class="hero__shade"></div>
     <div class="hero__content is-ssr" id="heroContent" aria-live="polite" data-ssr="irVNGjRFZGk">
       <span class="hero__tag">Upcoming trailer</span>
       <h1 class="hero__title hero__logo"><span class="hero__logo-main">Avengers</span><span class="sr">: </span><span class="hero__logo-sub">Doomsday</span></h1>
-      <p class="hero__date"><span class="hero__date-label">In cinemas</span><time class="hero__date-value" datetime="2026-12-18">18 Dec 2026</time></p>
+      <p class="hero__date"><span class="hero__date-label">In cinemas</span><time class="hero__date-value" datetime="2026-12-18">18 Dec 2026</time><span class="hero__date-count is-placeholder" aria-hidden="true">in 00 days</span></p>
       <div class="hero__actions"><button class="btn btn--play" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>Watch trailer</button><a class="btn btn--ghost" href="#trailers"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z"/></svg>All trailers</a></div>
     </div>
     <button class="hero__arrow hero__arrow--prev" id="heroPrev" aria-label="Previous trailer"><svg viewBox="0 0 24 24"><path d="M15.4 5.4 14 4l-8 8 8 8 1.4-1.4L8.8 12z"/></svg></button>
@@ -120,7 +123,17 @@
   </section>
 
   <main id="main">
-    <div id="browse"></div>
+    <div id="browse">
+      
+      <div class="skel" id="browseSkeleton" aria-hidden="true">
+        <div class="section"><div class="section__title">Upcoming Trailers</div>
+          <div class="row"><div class="row__head"><p class="row__title">Coming soon to cinemas</p></div>
+            <div class="row__scroller"><div class="tile tile--trailer"><div class="card card--trailer"><div class="card__thumb"></div><p class="card__title">&nbsp;</p><p class="card__meta">&nbsp;</p></div></div><div class="tile tile--trailer"><div class="card card--trailer"><div class="card__thumb"></div><p class="card__title">&nbsp;</p><p class="card__meta">&nbsp;</p></div></div><div class="tile tile--trailer"><div class="card card--trailer"><div class="card__thumb"></div><p class="card__title">&nbsp;</p><p class="card__meta">&nbsp;</p></div></div><div class="tile tile--trailer"><div class="card card--trailer"><div class="card__thumb"></div><p class="card__title">&nbsp;</p><p class="card__meta">&nbsp;</p></div></div></div></div></div>
+        <div class="section"><div class="section__title">Movies</div>
+          <div class="row"><div class="row__head"><p class="row__title">&nbsp;</p></div>
+            <div class="row__scroller"><div class="tile"><div class="card"><div class="card__thumb"></div><p class="card__title">&nbsp;</p><p class="card__meta">&nbsp;</p></div></div><div class="tile"><div class="card"><div class="card__thumb"></div><p class="card__title">&nbsp;</p><p class="card__meta">&nbsp;</p></div></div><div class="tile"><div class="card"><div class="card__thumb"></div><p class="card__title">&nbsp;</p><p class="card__meta">&nbsp;</p></div></div><div class="tile"><div class="card"><div class="card__thumb"></div><p class="card__title">&nbsp;</p><p class="card__meta">&nbsp;</p></div></div><div class="tile"><div class="card"><div class="card__thumb"></div><p class="card__title">&nbsp;</p><p class="card__meta">&nbsp;</p></div></div><div class="tile"><div class="card"><div class="card__thumb"></div><p class="card__title">&nbsp;</p><p class="card__meta">&nbsp;</p></div></div></div></div></div>
+      </div>
+    </div>
     <section class="results" id="results" hidden>
       <div class="results__head">
         <h2 id="resultsTitle">Results</h2>
@@ -251,9 +264,9 @@
   </div>
 
   <noscript><p class="loading">2DayMovie needs JavaScript to play videos.</p></noscript>
-  <script src="static/js/hero.js?v=afe4555ed9" defer></script>
-  <script src="static/js/search.js?v=afe4555ed9" defer></script>
-  <script src="static/js/app.js?v=afe4555ed9" defer></script>
-  <script src="static/js/mobile.js?v=afe4555ed9" defer></script>
+  <script src="static/js/hero.js?v=4d6d3636da" defer></script>
+  <script src="static/js/search.js?v=4d6d3636da" defer></script>
+  <script src="static/js/app.js?v=4d6d3636da" defer></script>
+  <script src="static/js/mobile.js?v=4d6d3636da" defer></script>
 </body>
 </html>

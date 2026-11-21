@@ -88,16 +88,24 @@
         s.setAttribute("aria-roledescription", "slide");
         s.setAttribute("aria-label", `${i + 1} of ${trailers.length}: ${t.film}`);
         s.setAttribute("aria-hidden", i === 0 ? "false" : "true");
-        const poster = el("img", "slide__poster");
-        poster.alt = "";
-        // 640px poster for phones, 1280px for larger screens; hqdefault if a size is missing.
-        // t.poster (from trailers.json) names a smaller still when YouTube has no maxresdefault.
+        // Slide 1 adopts the poster already in the HTML (painted with the page, the LCP element)
+        // instead of making a new one; the others get their own.
+        const ssr = i === 0 ? track.querySelector(`.hero__ssr-poster[data-id="${t.id}"]`) : null;
+        const poster = ssr || el("img", "slide__poster");
         const big = t.poster || "maxresdefault";
-        poster.width = 1280; poster.height = 720; // reserve the box before the image arrives
-        poster.srcset = big === "maxresdefault" ? `${thumb(t.id, "sddefault")} 640w, ${thumb(t.id, big)} 1280w` : `${thumb(t.id, big)} 640w`;
-        poster.sizes = "100vw";
-        poster.src = thumb(t.id, big);
         const fallback = () => { poster.srcset = ""; poster.src = thumb(t.id, "hqdefault"); };
+        if (ssr) {
+          ssr.classList.remove("hero__ssr-poster");
+          if (ssr.complete && ssr.naturalWidth <= 120) fallback(); // it already failed before this script ran
+        } else {
+          poster.alt = "";
+          // 640px poster for phones, 1280px for larger screens (same sizes as the preload); hqdefault if a size is missing.
+          // t.poster (from trailers.json) names a smaller still when YouTube has no maxresdefault.
+          poster.width = 1280; poster.height = 720; // reserve the box before the image arrives
+          poster.srcset = big === "maxresdefault" ? `${thumb(t.id, "sddefault")} 640w, ${thumb(t.id, big)} 1280w` : `${thumb(t.id, big)} 640w`;
+          poster.sizes = "(max-width: 900px) 50vw, 100vw"; // phones: the 640px still is plenty for the band (and much lighter)
+          poster.src = thumb(t.id, big);
+        }
         poster.addEventListener("error", fallback, { once: true });
         // i.ytimg.com answers a missing still with a 120px grey placeholder rather than an error
         poster.addEventListener("load", () => { if (poster.naturalWidth > 0 && poster.naturalWidth <= 120) fallback(); }, { once: true });
@@ -146,8 +154,13 @@
         const date = content.querySelector(".hero__date");
         if (ssr === t.id && play && date) {
           play.addEventListener("click", () => openPlayer(t.id));
+          // the HTML holds an invisible "in 00 days" chip so the line keeps its height; fill or drop it
           const days = daysUntil(t.release);
-          if (days > 0 && days <= 365) date.appendChild(el("span", "hero__date-count", days === 1 ? "Tomorrow" : `in ${days} days`));
+          const txt = days > 0 && days <= 365 ? (days === 1 ? "Tomorrow" : `in ${days} days`) : "";
+          const ph = date.querySelector(".hero__date-count.is-placeholder");
+          if (ph && txt) { ph.textContent = txt; ph.classList.remove("is-placeholder"); ph.removeAttribute("aria-hidden"); }
+          else if (ph) ph.remove();
+          else if (txt) date.appendChild(el("span", "hero__date-count", txt));
           paintDots();
           return;
         }
@@ -472,6 +485,7 @@
       const p = players.get(i);
       if (!p) return;
       p.wantPlay = false;
+      clearTimeout(p.reveal); // a pending fade-in must not outlive the pause
       if (p.ready) { applyMute(p, true); p.player.pauseVideo(); }
     }
 
@@ -518,7 +532,7 @@
       const from = slides[cur], to = slides[target];
       const prevIndex = cur;
       const prev = players.get(prevIndex);
-      if (prev) { prev.wantPlay = false; applyMute(prev); } // fade the outgoing clip's audio
+      if (prev) { prev.wantPlay = false; clearTimeout(prev.reveal); applyMute(prev); } // fade the outgoing clip's audio
       cur = target;
       if (!reduceMotion.matches) {
         ensurePlayer(target);
