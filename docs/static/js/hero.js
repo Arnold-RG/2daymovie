@@ -13,7 +13,7 @@
      #heroSizes          Compact / Standard / Full radiogroup
      #heroFullscreen     Fullscreen API on the hero          (F, Esc exits)
 
-   Sound, volume, brightness and size are remembered in localStorage.
+   Sound, volume, brightness and size (and a Pause made under reduced motion) are remembered in localStorage.
    YouTube's own chrome stays hidden: the iframes are sandboxed, unfocusable
    and pointer-events: none, and are driven only through the IFrame API.
 */
@@ -24,7 +24,8 @@
   const FIRST_WAIT_MS = 15000; // longest the first slide waits for its trailer before the countdown starts anyway
   const NEIGHBOUR_MS = 8000; // load the next/previous trailer after this even if the current one has not started
   const KICK_MS = 1200, KICK_TRIES = 10; // re-ask a stalled player to play for ~12 s, then wait for a gesture
-  const REVEAL_MS = 4300; // YouTube auto-hides its centre play/pause button about 4 s after playback starts
+  const SKIP_MS = 1500; // an unplayable trailer shows its poster this long, then the next slide plays
+  const REVEAL_POLL_MS = 250, REVEAL_ADVANCE_S = 0.5, REVEAL_TRIES = 48; // fade in once playback has really advanced (~12 s cap)
   const LEGACY_KEY = "tdm.hero.v1";
   const FADE_MS = 650;    // sound fade in / out
   const BRIGHT = { dim: 0.65, normal: 1, bright: 1.3 };
@@ -88,16 +89,24 @@
         s.setAttribute("aria-roledescription", "slide");
         s.setAttribute("aria-label", `${i + 1} of ${trailers.length}: ${t.film}`);
         s.setAttribute("aria-hidden", i === 0 ? "false" : "true");
-        const poster = el("img", "slide__poster");
-        poster.alt = "";
-        // 640px poster for phones, 1280px for larger screens; hqdefault if a size is missing.
-        // t.poster (from trailers.json) names a smaller still when YouTube has no maxresdefault.
+        // Slide 1 adopts the poster already in the HTML (painted with the page, the LCP element)
+        // instead of making a new one; the others get their own.
+        const ssr = i === 0 ? track.querySelector(`.hero__ssr-poster[data-id="${t.id}"]`) : null;
+        const poster = ssr || el("img", "slide__poster");
         const big = t.poster || "maxresdefault";
-        poster.width = 1280; poster.height = 720; // reserve the box before the image arrives
-        poster.srcset = big === "maxresdefault" ? `${thumb(t.id, "sddefault")} 640w, ${thumb(t.id, big)} 1280w` : `${thumb(t.id, big)} 640w`;
-        poster.sizes = "100vw";
-        poster.src = thumb(t.id, big);
         const fallback = () => { poster.srcset = ""; poster.src = thumb(t.id, "hqdefault"); };
+        if (ssr) {
+          ssr.classList.remove("hero__ssr-poster");
+          if (ssr.complete && ssr.naturalWidth <= 120) fallback(); // it already failed before this script ran
+        } else {
+          poster.alt = "";
+          // 640px poster for phones, 1280px for larger screens (same sizes as the preload); hqdefault if a size is missing.
+          // t.poster (from trailers.json) names a smaller still when YouTube has no maxresdefault.
+          poster.width = 1280; poster.height = 720; // reserve the box before the image arrives
+          poster.srcset = big === "maxresdefault" ? `${thumb(t.id, "sddefault")} 640w, ${thumb(t.id, big)} 1280w` : `${thumb(t.id, big)} 640w`;
+          poster.sizes = "(max-width: 900px) 50vw, 100vw"; // phones: the 640px still is plenty for the band (and much lighter)
+          poster.src = thumb(t.id, big);
+        }
         poster.addEventListener("error", fallback, { once: true });
         // i.ytimg.com answers a missing still with a 120px grey placeholder rather than an error
         poster.addEventListener("load", () => { if (poster.naturalWidth > 0 && poster.naturalWidth <= 120) fallback(); }, { once: true });
@@ -124,7 +133,10 @@
       paint();
       bind();
       buildTools();
-      if (reduceMotion.matches) return; // static thumbnails only: no autoplay, no auto-advance
+      // Reduced motion (on Windows this follows "Animation effects" off, often set without the user
+      // knowing) still plays the current muted trailer: no slide animation, no Ken Burns and no
+      // auto-advance, and the Pause button stays. A pause under reduced motion is remembered.
+      if (reduceMotion.matches && saved.still === true) pause("user");
       // The countdown to the next slide starts when the first trailer actually plays, so a slow
       // start never skips it; FIRST_WAIT_MS caps the wait when autoplay is blocked or slow.
       firstWait = setTimeout(startFirstTimer, FIRST_WAIT_MS);
@@ -146,8 +158,13 @@
         const date = content.querySelector(".hero__date");
         if (ssr === t.id && play && date) {
           play.addEventListener("click", () => openPlayer(t.id));
+          // the HTML holds an invisible "in 00 days" chip so the line keeps its height; fill or drop it
           const days = daysUntil(t.release);
-          if (days > 0 && days <= 365) date.appendChild(el("span", "hero__date-count", days === 1 ? "Tomorrow" : `in ${days} days`));
+          const txt = days > 0 && days <= 365 ? (days === 1 ? "Tomorrow" : `in ${days} days`) : "";
+          const ph = date.querySelector(".hero__date-count.is-placeholder");
+          if (ph && txt) { ph.textContent = txt; ph.classList.remove("is-placeholder"); ph.removeAttribute("aria-hidden"); }
+          else if (ph) ph.remove();
+          else if (txt) date.appendChild(el("span", "hero__date-count", txt));
           paintDots();
           return;
         }
@@ -259,6 +276,7 @@
     function syncSound() {
       ui.mute.setAttribute("aria-pressed", String(soundOn));
       ui.mute.setAttribute("aria-label", soundOn ? "Mute trailer" : "Unmute trailer");
+      if (ui.qMute) { ui.qMute.setAttribute("aria-pressed", String(soundOn)); ui.qMute.textContent = soundOn ? "Mute trailers" : "Unmute trailers"; }
       ui.mute.dataset.tip = soundOn ? "Mute (M)" : "Unmute (M)";
       ui.vol.value = String(volume);
       ui.vol.setAttribute("aria-valuetext", soundOn ? `${volume}%` : `${volume}%, muted`);
@@ -343,7 +361,7 @@
 
     /* ---------- players ---------- */
     function ensurePlayer(i) {
-      if (!YTlib || players.has(i) || reduceMotion.matches) return;
+      if (!YTlib || players.has(i)) return;
       const t = trailers[i];
       const box = slides[i].querySelector(".slide__video");
       const mount = box.firstElementChild;
@@ -381,29 +399,44 @@
               if (i === cur) { warmNeighbours(); startFirstTimer(); }
               if (!entry.wantPlay || holds.size) { e.target.mute(); e.target.pauseVideo(); return; } // parked
               applyMute(entry);
-              // YouTube draws its own centre play/pause button for ~4 s after every play, even with
-              // controls:0. Keep the poster up until it has auto-hidden, then fade the live video in.
-              box.classList.remove("is-playing");
+              veil(box);
+              // Fade the video in on the first real time advance (>= REVEAL_ADVANCE_S): a player can
+              // report PLAYING while its picture is frozen or black (blocked media, no decoder), so the
+              // poster stays until the clock moves. No fixed hold: YouTube's brief play bezel is gone by
+              // then and the .6 s opacity fade covers the rest. Already visible (re-PLAYING after a
+              // buffer or a loop): leave it up, no flash back to the poster.
               clearTimeout(entry.reveal);
-              // Fade the video in only when it is really moving: a player can report PLAYING while
-              // its picture is frozen or black (blocked media, no decoder). Otherwise the poster stays.
+              if (box.classList.contains("is-playing")) return;
               const t0 = (() => { try { return e.target.getCurrentTime() || 0; } catch (_) { return 0; } })();
               let checks = 0;
               const reveal = () => {
                 if (!players.has(i) || !entry.wantPlay) return;
                 let now = t0;
                 try { now = entry.player.getCurrentTime() || t0; } catch (_) { /* not ready */ }
-                if (now - t0 < 0.5) { if (++checks < 12) entry.reveal = setTimeout(reveal, 1000); return; }
+                if (now - t0 < REVEAL_ADVANCE_S) { if (++checks < REVEAL_TRIES) entry.reveal = setTimeout(reveal, REVEAL_POLL_MS); return; }
                 box.classList.add("is-playing");
                 slides[i].classList.add("has-video");
               };
-              entry.reveal = setTimeout(reveal, REVEAL_MS);
+              entry.reveal = setTimeout(reveal, REVEAL_POLL_MS);
             } else if (e.data === S.ENDED) {
               e.target.seekTo(start, true); // loop the clip from start to end
               if (entry.wantPlay) e.target.playVideo();
             }
           },
-          onError: () => { box.classList.remove("is-playing"); slides[i].classList.remove("has-video"); },
+          // 100/101/150 (removed, embedding off) or 2/5: keep the poster and move on to a trailer that plays.
+          onError: (e) => {
+            clearTimeout(entry.reveal);
+            clearTimeout(entry.retry);
+            deadIds.add(t.id); // kept outside the player, so evicting the player does not forget it
+            box.classList.remove("is-playing");
+            slides[i].classList.remove("has-video");
+            slides[i].dataset.ytError = String(e && e.data);
+            if (i === cur && !holds.size) {
+              clearTimeout(skipTimer);
+              skipFor = i;
+              skipTimer = setTimeout(() => { if (i === cur && !holds.size) skipDead(1); }, SKIP_MS);
+            }
+          },
         },
       });
       // The API may swap in its own element; keep the sandbox and focus rules on whatever iframe is live.
@@ -472,27 +505,43 @@
       const p = players.get(i);
       if (!p) return;
       p.wantPlay = false;
+      clearTimeout(p.reveal); // a pending fade-in must not outlive the pause
+      if (skipFor === i) clearTimeout(skipTimer); // a skip queued for this slide is moot once it is parked
       if (p.ready) { applyMute(p, true); p.player.pauseVideo(); }
     }
 
+    /* ---------- centre veil (optional; to drop it delete this block, its one veil() call and the
+       ".slide__video::after" CSS block) ----------
+       YouTube's 2026 player shows its own centre play/pause and a dim scrim for ~3-4 s after every
+       play, even with controls:0. A small blurred spot over the frame centre covers it. */
+    const VEIL_MS = 4000;
+    const veils = new WeakMap();
+    function veil(box) {
+      box.classList.add("is-veiled");
+      clearTimeout(veils.get(box));
+      veils.set(box, setTimeout(() => box.classList.remove("is-veiled"), VEIL_MS));
+    }
+    /* ---------- end centre veil ---------- */
+
+    function drop(i) {
+      const p = players.get(i);
+      if (!p) return;
+      cancelAnimationFrame(p.fade);
+      clearTimeout(p.reveal);
+      clearTimeout(p.retry);
+      try { p.player.destroy(); } catch (_) { /* already gone */ }
+      players.delete(i);
+      const box = slides[i].querySelector(".slide__video");
+      box.classList.remove("is-playing");
+      slides[i].classList.remove("has-video");
+      box.textContent = "";
+      box.appendChild(el("div"));
+    }
     // Keep the current slide and both neighbours loaded; drop the rest.
     function warm() {
-      if (!YTlib || reduceMotion.matches) return;
+      if (!YTlib) return;
       const keep = new Set([cur, mod(cur + 1), mod(cur - 1)]);
-      for (const [i, p] of players) {
-        if (!keep.has(i)) {
-          cancelAnimationFrame(p.fade);
-          clearTimeout(p.reveal);
-          clearTimeout(p.retry);
-          try { p.player.destroy(); } catch (_) { /* already gone */ }
-          players.delete(i);
-          const box = slides[i].querySelector(".slide__video");
-          box.classList.remove("is-playing");
-          slides[i].classList.remove("has-video");
-          box.textContent = "";
-          box.appendChild(el("div"));
-        }
-      }
+      for (const i of [...players.keys()]) if (!keep.has(i)) drop(i);
       ensurePlayer(cur);
       playAt(cur);
       // Neighbours load only once the current trailer plays (or after NEIGHBOUR_MS), so on a
@@ -506,7 +555,7 @@
     let neighbourTimer = 0;
     function warmNeighbours() {
       clearTimeout(neighbourTimer);
-      if (!YTlib || reduceMotion.matches) return;
+      if (!YTlib) return;
       ensurePlayer(mod(cur + 1));
       ensurePlayer(mod(cur - 1));
     }
@@ -518,12 +567,11 @@
       const from = slides[cur], to = slides[target];
       const prevIndex = cur;
       const prev = players.get(prevIndex);
-      if (prev) { prev.wantPlay = false; applyMute(prev); } // fade the outgoing clip's audio
+      if (prev) { prev.wantPlay = false; clearTimeout(prev.reveal); applyMute(prev); } // fade the outgoing clip's audio
+      clearTimeout(skipTimer);
       cur = target;
-      if (!reduceMotion.matches) {
-        ensurePlayer(target);
-        playAt(target);
-      }
+      ensurePlayer(target);
+      playAt(target);
       const fade = reduceMotion.matches;
       to.classList.remove("anim");
       to.classList.add("is-moving");
@@ -556,16 +604,38 @@
       if (manual) dots.children[cur].focus({ preventScroll: true });
     }
 
+    // Next slide whose trailer has not failed. Every trailer failed (one full cycle): stop on the
+    // posters and show Play, which clears the list and tries again.
+    function skipDead(dir) {
+      clearTimeout(skipTimer);
+      for (let k = 1; k < slides.length; k++) {
+        const j = mod(cur + dir * k);
+        if (!deadIds.has(trailers[j].id)) { go(j, dir, false); return; }
+      }
+      if (!deadIds.has(trailers[cur].id)) return; // the current one still plays
+      allDead = true;
+      heroEl.classList.add("is-unplayable");
+      pause("user");
+    }
+    function retryAll() {
+      allDead = false;
+      deadIds.clear();
+      heroEl.classList.remove("is-unplayable");
+      slides.forEach((s) => delete s.dataset.ytError);
+      [...players.keys()].forEach(drop);
+      warm();
+    }
     function tick() {
       const left = Math.max(0, remaining - (performance.now() - started));
       const frac = 1 - left / total;
       bar.style.width = `${frac * 100}%`;
       const d = dots.children[cur];
       if (d) d.style.setProperty("--p", frac.toFixed(4)); // slim per-slide progress in the active dot
-      if (left <= 0) { go(cur + 1, 1, false); return; }
+      if (left <= 0) { skipDead(1); return; }
       raf = requestAnimationFrame(tick);
     }
-    let firstWait = 0, timerOn = false;
+    let firstWait = 0, timerOn = false, skipTimer = 0, skipFor = -1, allDead = false;
+    const deadIds = new Set(); // trailer ids YouTube refused (100/101/150/2/5) this visit
     function startFirstTimer() {
       clearTimeout(firstWait);
       if (timerOn) return;
@@ -593,6 +663,8 @@
         const p = players.get(cur);
         if (p && p.ready) { applyMute(p, true); p.player.pauseVideo(); }
       }
+      clearTimeout(neighbourTimer); // parked: no neighbour players load in the background
+      clearTimeout(skipTimer);
       holds.add(reason);
       syncPause();
     }
@@ -604,6 +676,9 @@
       started = performance.now();
       if (!reduceMotion.matches && timerOn) raf = requestAnimationFrame(tick);
       const p = players.get(cur);
+      // re-arm what the park cancelled: the neighbour preload and a skip off a failed trailer
+      if (YTlib && !(p && p.playing)) { clearTimeout(neighbourTimer); neighbourTimer = setTimeout(warmNeighbours, NEIGHBOUR_MS); }
+      if (!allDead && trailers[cur] && deadIds.has(trailers[cur].id)) { clearTimeout(skipTimer); skipFor = cur; skipTimer = setTimeout(() => { if (!holds.size) skipDead(1); }, SKIP_MS); }
       if (p && p.ready && p.wantPlay) {
         p.kicks = 0;
         kick(p);
@@ -616,9 +691,13 @@
       ui.pause.setAttribute("aria-pressed", String(paused));
       ui.pause.setAttribute("aria-label", paused ? "Play trailers" : "Pause trailers");
       ui.pause.dataset.tip = paused ? "Play (Space / K)" : "Pause (Space / K)";
+      if (ui.qPause) { ui.qPause.setAttribute("aria-pressed", String(paused)); ui.qPause.textContent = paused ? "Play trailers" : "Pause trailers"; }
       heroEl.classList.toggle("is-paused", paused);
     }
-    const togglePause = () => (holds.has("user") ? resume("user") : pause("user"));
+    const togglePause = () => {
+      if (holds.has("user")) { resume("user"); if (allDead) retryAll(); } else pause("user");
+      if (reduceMotion.matches) prefs.save({ still: holds.has("user") }); // remember a reduced-motion pause
+    };
 
     /* ---------- control bar ---------- */
     function buildTools() {
@@ -635,15 +714,18 @@
       ui.sizeCycle = $("#heroSizeCycle");
       ui.sizeLabel = $("#heroSizeLabel");
       ui.fs = $("#heroFullscreen");
+      ui.qPause = $("#quickPause");
+      ui.qMute = $("#quickMute");
       if (!ui.barEl) return;
+      // Skip-link style twins of Pause and Mute: the first tab stops after "Skip to content".
+      if (ui.qPause && ui.qMute) {
+        ui.qPause.hidden = false;
+        ui.qMute.hidden = false;
+        ui.qPause.addEventListener("click", togglePause);
+        ui.qMute.addEventListener("click", () => setSound(!soundOn));
+      }
 
       track.classList.add("is-dimmable");
-      if (reduceMotion.matches) {
-        // Static posters only: no clip to pause or hear.
-        ui.pause.hidden = true;
-        ui.soundGroup.hidden = true;
-        ui.barEl.classList.add("is-static");
-      }
       if (!fsEnabled()) ui.fs.hidden = true;
 
       ui.pause.addEventListener("click", togglePause);
@@ -675,7 +757,7 @@
       });
 
       // A remembered "sound on" waits for the first gesture (browsers block unmuted autoplay).
-      if (soundWanted && !reduceMotion.matches) {
+      if (soundWanted) {
         ui.mute.classList.add("is-armed");
         const arm = (e) => {
           window.removeEventListener("pointerdown", arm, true);
@@ -706,10 +788,10 @@
       const r = heroEl.getBoundingClientRect();
       if (r.bottom < 80 || r.top > innerHeight - 80) return; // hero must be on screen
       const k = e.key.toLowerCase();
-      if (k === "m" && !reduceMotion.matches) setSound(!soundOn);
+      if (k === "m") setSound(!soundOn);
       else if (k === "b") cycleBrightness();
       else if (k === "f" && fsEnabled()) toggleFullscreen();
-      else if ((k === "k" || (k === " " && !(t && t.closest && t.closest("button, a, input")))) && !reduceMotion.matches) togglePause();
+      else if ((k === "k" || (k === " " && !(t && t.closest && t.closest("button, a, input")))) ) togglePause();
       else return;
       e.preventDefault();
     }

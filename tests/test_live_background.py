@@ -19,9 +19,9 @@ def test_no_click_to_load_gate_remains():
 
 def test_hero_starts_live_muted_trailers_on_load():
     build = HERO.split("function build() {", 1)[1].split("function paint()", 1)[0]
-    assert "if (reduceMotion.matches) return;" in build, "reduced motion keeps the static poster"
-    after_rm = build.split("if (reduceMotion.matches) return;", 1)[1]
-    assert re.search(r"loadYT\(\)\.then\(\(YT\) => \{ YTlib = YT; warm\(\); \}\)", after_rm), "player loads right away"
+    # Reduced motion (Windows "Animation effects" off) must not turn the trailers off.
+    assert "if (reduceMotion.matches) return;" not in build
+    assert re.search(r"loadYT\(\)\.then\(\(YT\) => \{ YTlib = YT; warm\(\); \}\)", build), "player loads right away"
     assert "autoplay: i === cur ? 1 : 0, mute: 1" in HERO and "playsinline: 1" in HERO  # iOS: muted inline autoplay; the poster hides YouTube's button
     assert "e.target.mute(); // start silent" in HERO and "e.target.playVideo()" in HERO
 
@@ -60,10 +60,14 @@ def test_screen_reader_text_in_cards_cannot_widen_the_page():
     assert re.search(r"^\.card \{ position: relative;", CSS, re.M)
 
 
-def test_video_revealed_only_after_youtube_overlay_autohides():
-    # YouTube shows its own centre play/pause button for ~4 s after each play, even with controls:0.
-    assert "const REVEAL_MS = 4300" in HERO
-    assert "entry.reveal = setTimeout(reveal, REVEAL_MS);" in HERO
+def test_video_revealed_on_first_real_time_advance():
+    # No fixed hold after PLAYING: fade in as soon as getCurrentTime() has moved >= 0.5 s.
+    assert "REVEAL_MS" not in HERO and "4300" not in HERO
+    assert "const REVEAL_POLL_MS = 250, REVEAL_ADVANCE_S = 0.5, REVEAL_TRIES = 48" in HERO
+    assert "entry.reveal = setTimeout(reveal, REVEAL_POLL_MS);" in HERO
+    assert "if (now - t0 < REVEAL_ADVANCE_S)" in HERO
+    assert 'if (box.classList.contains("is-playing")) return;' in HERO  # no flash back to the poster
+    assert ".slide__video { position: absolute; inset: 0; overflow: hidden; opacity: 0; transition: opacity .6s ease;" in CSS
     assert "clearTimeout(p.reveal)" in HERO and "clearTimeout(entry.reveal)" in HERO
 
 

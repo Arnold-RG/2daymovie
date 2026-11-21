@@ -52,7 +52,8 @@ than five seconds.
 
 - [ ] A Pause / Play control is present and keyboard-accessible
 - [ ] Pause stops auto-advance and pauses the current clip
-- [ ] `prefers-reduced-motion: reduce` is honoured (no large slide motion)
+- [ ] `prefers-reduced-motion: reduce` is honoured (no large slide motion, no Ken Burns, no auto-advance) while the current muted trailer still plays; Pause is shown and remembered
+- [ ] Desktop playback e2e: `E2E=1 pytest -q tests/e2e` (Chromium default autoplay policy, Edge UA, 1366x768 + 1920x1080, unplayable trailer skipped)
 - [ ] Autoplay is muted; unmuting is an explicit user action
 - [ ] Switching tabs (`visibilitychange`) pauses the clip
 - [ ] Opening search results or the player pauses the hero

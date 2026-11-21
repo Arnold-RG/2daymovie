@@ -26,6 +26,9 @@ svg { fill: currentColor; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .skip { position: absolute; left: -999px; top: 8px; z-index: 100; background: var(--accent); padding: 8px 12px; border-radius: 6px; }
 .skip:focus { left: 8px; }
+/* Pause / Unmute for the background trailers: the first tab stops after Skip (WCAG 2.2.2), shown on focus. */
+.skip--btn { border: 0; color: #fff; font: inherit; font-weight: 600; cursor: pointer; }
+.skip--btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 :focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 body.modal-open { overflow: hidden; }
 
@@ -92,6 +95,13 @@ body.modal-open { overflow: hidden; }
 @keyframes kenburns { from { transform: scale(1.02) translate3d(0,0,0); } to { transform: scale(1.14) translate3d(-1.5%,-1%,0); } }
 .slide__video { position: absolute; inset: 0; overflow: hidden; opacity: 0; transition: opacity .6s ease; pointer-events: none; }
 .slide__video.is-playing { opacity: 1; }
+/* ---- centre veil (optional; drop this block together with veil() in hero.js) ----
+   YouTube's own centre play/pause shows for ~3-4 s after each play: a soft blurred spot over the
+   frame centre hides it while the live video is already visible (removed after VEIL_MS). */
+.slide__video::after { content: ""; position: absolute; left: 50%; top: 50%; width: clamp(96px, calc(min(100cqw, 177.78cqh) * .13), 220px); aspect-ratio: 1; transform: translate(-50%,-50%); border-radius: 50%; backdrop-filter: blur(14px) brightness(.9); -webkit-backdrop-filter: blur(14px) brightness(.9); -webkit-mask: radial-gradient(closest-side, #000 55%, transparent); mask: radial-gradient(closest-side, #000 55%, transparent); opacity: 0; transition: opacity .5s ease; pointer-events: none; }
+.slide__video.is-veiled::after { opacity: 1; transition: none; }
+@media (prefers-reduced-motion: reduce) { .slide__video::after { transition: none; } }
+/* ---- end centre veil ---- */
 .slide__video.is-tappable { pointer-events: auto; } /* autoplay blocked: a tap on the background starts the trailer */
 .slide__video { container-type: size; }
 /* cover the hero at any size with no letterboxing: a 16:9 box at least as wide and as tall as the hero */
@@ -269,7 +279,18 @@ main { position: relative; z-index: 6; margin-top: 0; padding-bottom: 40px; }
 .grid .card { width: auto; }
 body.is-results .hero, body.is-results #browse { display: none; }
 body.is-results main { margin-top: 0; }
-.loading { text-align: center; color: var(--muted); padding: 40px; }
+.loading { text-align: center; color: var(--muted); padding: 40px; margin: 0; } /* no margin: it used to collapse through main and shift it */
+/* skeleton rows while the catalog loads (replaced by renderBrowse); tall enough that the footer starts below the first screen */
+.skel { min-height: 100vh; min-height: 100svh; pointer-events: none; }
+.skel .row__scroller { overflow: hidden; }
+.skel .card { display: inline-block; } /* same box as the real <button class="card">, incl. its baseline gap */
+.skel .card__thumb { background: linear-gradient(100deg, var(--card) 30%, #26262f 50%, var(--card) 70%) 0 0 / 300% 100%; animation: skel 1.4s ease-in-out infinite; }
+.skel .card__title, .skel .card__meta { width: 70%; border-radius: 4px; background: rgba(255,255,255,.06); }
+.skel .card__meta { width: 45%; }
+@keyframes skel { from { background-position: 100% 0; } to { background-position: 0 0; } }
+.hero__date-count.is-placeholder { visibility: hidden; }
+/* the server-rendered first poster starts at the Ken Burns start scale, so adopting it into the slide changes nothing visible */
+.hero__ssr-poster { transform: scale(1.02); transform-origin: 60% 40%; }
 
 /* ---------- modal player ---------- */
 .modal { position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; padding: 16px; }
@@ -338,13 +359,18 @@ body.is-results main { margin-top: 0; }
   .tabbar { display: block; position: fixed; z-index: 80; left: 0; right: 0; bottom: 0; pointer-events: none;
     padding: 0 max(var(--tab-side), env(safe-area-inset-right, 0px)) calc(var(--tab-gap) + env(safe-area-inset-bottom, 0px)) max(var(--tab-side), env(safe-area-inset-left, 0px));
     transition: transform .35s var(--ease), opacity .3s ease; }
+  /* a soft fade behind the floating bar, so content scrolling under it never shows as a cut-off sliver */
+  .tabbar::before { content: ""; position: absolute; z-index: -1; left: 0; right: 0; bottom: 0; height: calc(var(--tab-space) + 26px); pointer-events: none;
+    background: linear-gradient(180deg, rgba(11,11,15,0) 0%, rgba(11,11,15,.86) 38%, var(--bg) 62%); }
   .tabbar.is-hidden { transform: translateY(calc(100% + 12px)); opacity: 0; }
   .tabbar__inner { position: relative; max-width: 480px; margin: 0 auto; height: calc(var(--tab-h) + var(--tab-bump)); }
   /* the glass: a rounded pill; JS swaps in a clip-path with the centre bump once it knows the width */
-  .tabbar__glass { position: absolute; left: 0; right: 0; bottom: 0; height: var(--tab-h); border-radius: 24px;
+  /* the glass box always spans the bump area too (no layout change when mobile.js draws the bump);
+     until then an inset clip shows the plain pill */
+  .tabbar__glass { position: absolute; left: 0; right: 0; top: 0; bottom: 0; border-radius: 24px; clip-path: inset(var(--tab-bump) 0 0 0 round 24px);
     background: linear-gradient(180deg, rgba(38,38,46,.5), rgba(14,14,18,.58)); box-shadow: inset 0 0 0 1px rgba(255,255,255,.14), 0 14px 34px rgba(0,0,0,.4);
     backdrop-filter: blur(20px) saturate(170%); -webkit-backdrop-filter: blur(20px) saturate(170%); }
-  .tabbar__glass.has-bump { top: 0; height: auto; border-radius: 0; box-shadow: none; }
+  .tabbar__glass.has-bump { border-radius: 0; box-shadow: none; }
   .tabbar__glow { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
   .tabbar__glow path { fill: none; stroke-linecap: round; }
   .tabbar__glow .edge { stroke: rgba(255,255,255,.16); stroke-width: 1; }
@@ -522,6 +548,8 @@ body.is-results main { margin-top: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  .slide__video, .slide__video.is-playing { transition: none; }
+  .skel .card__thumb { animation: none; }
   .slide { transform: none !important; opacity: 0; }
   .slide.is-current { opacity: 1; }
   .hero__content > *, .hero__content > .hero__logo { animation: none; }

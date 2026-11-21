@@ -62,7 +62,7 @@ def test_band_always_has_a_backdrop_image_under_the_video():
 
 
 def test_video_fades_in_only_when_it_is_really_moving():
-    assert "if (now - t0 < 0.5) { if (++checks < 12) entry.reveal = setTimeout(reveal, 1000); return; }" in HERO
+    assert "if (now - t0 < REVEAL_ADVANCE_S) { if (++checks < REVEAL_TRIES) entry.reveal = setTimeout(reveal, REVEAL_POLL_MS); return; }" in HERO
     assert ".slide__video { position: absolute; inset: 0; overflow: hidden; opacity: 0;" in CSS
     assert ".slide__video.is-playing { opacity: 1; }" in CSS
 

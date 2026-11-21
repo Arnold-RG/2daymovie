@@ -22,13 +22,16 @@
   <link rel="icon" href="{{ base }}static/img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://i.ytimg.com">
   {% set hero = hero_first() %}
-  {% if hero and not page.anchor %}{% if hero.poster == "maxresdefault" %}<link rel="preload" as="image" href="https://i.ytimg.com/vi/{{ hero.id }}/maxresdefault.jpg" imagesrcset="https://i.ytimg.com/vi/{{ hero.id }}/sddefault.jpg 640w, https://i.ytimg.com/vi/{{ hero.id }}/maxresdefault.jpg 1280w" imagesizes="100vw" fetchpriority="high">{% else %}<link rel="preload" as="image" href="https://i.ytimg.com/vi/{{ hero.id }}/{{ hero.poster }}.jpg" fetchpriority="high">{% endif %}{% endif %}
+  {% if hero and not page.anchor %}{% if hero.poster == "maxresdefault" %}<link rel="preload" as="image" href="https://i.ytimg.com/vi/{{ hero.id }}/maxresdefault.jpg" imagesrcset="https://i.ytimg.com/vi/{{ hero.id }}/sddefault.jpg 640w, https://i.ytimg.com/vi/{{ hero.id }}/maxresdefault.jpg 1280w" imagesizes="(max-width: 900px) 50vw, 100vw" fetchpriority="high">{% else %}<link rel="preload" as="image" href="https://i.ytimg.com/vi/{{ hero.id }}/{{ hero.poster }}.jpg" fetchpriority="high">{% endif %}{% endif %}
   <link rel="stylesheet" href="{{ base }}static/css/app.css?v={{ asset_v }}">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
 
   <header class="nav" id="nav">
+    <!-- Keyboard Pause/Unmute for the background trailers: tab stops 2-3, shown on focus; inside the banner landmark. -->
+    <button class="skip skip--btn" id="quickPause" type="button" aria-pressed="false" aria-controls="heroTrack" hidden>Pause trailers</button>
+    <button class="skip skip--btn" id="quickMute" type="button" aria-pressed="false" aria-controls="heroTrack" hidden>Unmute trailers</button>
     <div class="nav__inner">
       <a class="brand" href="#top" aria-label="2DayMovie home"><span class="brand__mark">2</span>Day<span>Movie</span></a>
       <button class="nav__toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks" aria-label="Menu">
@@ -59,12 +62,12 @@
   <section class="hero" id="top" data-size="full" aria-roledescription="carousel" aria-label="Upcoming movie trailers">
     {# the control bar comes first in the DOM so Pause is the first stop inside the hero (WCAG 2.2.2) #}
     <div class="hero__bar hero__tools" id="heroBar" role="toolbar" aria-label="Trailer controls" aria-controls="heroTrack">
-      <button class="hbtn hero__playpause" id="heroPause" type="button" aria-pressed="false" aria-label="Pause trailers" aria-keyshortcuts="Space K" data-tip="Pause (Space / K)">
+      <button class="hbtn hero__playpause" id="heroPause" type="button" tabindex="-1" aria-pressed="false" aria-label="Pause trailers" aria-keyshortcuts="Space K" data-tip="Pause (Space / K)">
         <svg class="i-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
         <svg class="i-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
       </button>
       <div class="hero__group hero__soundgroup" id="heroSoundGroup">
-        <button class="hbtn hero__sound" id="heroMute" type="button" aria-pressed="false" aria-label="Unmute trailer" aria-keyshortcuts="M" data-tip="Unmute (M)">
+        <button class="hbtn hero__sound" id="heroMute" type="button" tabindex="-1" aria-pressed="false" aria-label="Unmute trailer" aria-keyshortcuts="M" data-tip="Unmute (M)">
           <svg class="i-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.8 8.8 0 0 0 21 12a9 9 0 0 0-7-8.77v2.06A7 7 0 0 1 19 12zM4.27 3 3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06a9 9 0 0 0 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4 9.91 6.09 12 8.18V4z"/></svg>
           <svg class="i-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05A4.47 4.47 0 0 0 16.5 12zM14 3.23v2.06a7 7 0 0 1 0 13.42v2.06A9 9 0 0 0 14 3.23z"/></svg>
         </button>
@@ -104,13 +107,18 @@
         <svg class="i-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/></svg>
       </button>
     </div>
-    <div class="hero__track" id="heroTrack"></div>
+    <div class="hero__track" id="heroTrack">
+      {%- if hero %}
+      {# the first poster is in the HTML so it paints with the page (LCP); hero.js moves it into the first slide #}
+      {% if hero.poster == "maxresdefault" %}<img class="slide__poster hero__ssr-poster" data-id="{{ hero.id }}" alt="" width="1280" height="720"{% if not page.anchor %} fetchpriority="high"{% endif %} src="https://i.ytimg.com/vi/{{ hero.id }}/maxresdefault.jpg" srcset="https://i.ytimg.com/vi/{{ hero.id }}/sddefault.jpg 640w, https://i.ytimg.com/vi/{{ hero.id }}/maxresdefault.jpg 1280w" sizes="(max-width: 900px) 50vw, 100vw">{% else %}<img class="slide__poster hero__ssr-poster" data-id="{{ hero.id }}" alt="" width="1280" height="720"{% if not page.anchor %} fetchpriority="high"{% endif %} src="https://i.ytimg.com/vi/{{ hero.id }}/{{ hero.poster }}.jpg">{% endif %}
+      {%- endif %}
+    </div>
     <div class="hero__shade"></div>
     <div class="hero__content{% if hero %} is-ssr{% endif %}" id="heroContent" aria-live="polite"{% if hero %} data-ssr="{{ hero.id }}"{% endif %}>
       {%- if hero %}
       <span class="hero__tag">Upcoming trailer</span>
       <h1 class="hero__title hero__logo">{% if hero.sub %}<span class="hero__logo-main">{{ hero.main }}</span><span class="sr">: </span><span class="hero__logo-sub">{{ hero.sub }}</span>{% else %}<span class="hero__logo-main">{{ hero.film }}</span>{% endif %}</h1>
-      <p class="hero__date"><span class="hero__date-label">In cinemas</span><time class="hero__date-value" datetime="{{ hero.release }}">{{ hero.release_fmt }}</time></p>
+      <p class="hero__date"><span class="hero__date-label">In cinemas</span><time class="hero__date-value" datetime="{{ hero.release }}">{{ hero.release_fmt }}</time><span class="hero__date-count is-placeholder" aria-hidden="true">in 00 days</span></p>
       <div class="hero__actions"><button class="btn btn--play" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>Watch trailer</button><a class="btn btn--ghost" href="#trailers"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z"/></svg>All trailers</a></div>
       {%- endif %}
     </div>
@@ -122,7 +130,18 @@
   </section>
 
   <main id="main">
-    <div id="browse"></div>
+    <div id="browse">
+      {# Placeholder rows with the real row metrics: they hold the space while the catalog loads, so nothing
+         below them moves into or out of the first screen (CLS). renderBrowse() replaces them. #}
+      <div class="skel" id="browseSkeleton" aria-hidden="true">
+        <div class="section"><div class="section__title">Upcoming Trailers</div>
+          <div class="row"><div class="row__head"><p class="row__title">Coming soon to cinemas</p></div>
+            <div class="row__scroller"><div class="tile tile--trailer"><div class="card card--trailer"><div class="card__thumb"></div><p class="card__title">&nbsp;</p><p class="card__meta">&nbsp;</p></div></div><div class="tile tile--trailer"><div class="card card--trailer"><div class="card__thumb"></div><p class="card__title">&nbsp;</p><p class="card__meta">&nbsp;</p></div></div><div class="tile tile--trailer"><div class="card card--trailer"><div class="card__thumb"></div><p class="card__title">&nbsp;</p><p class="card__meta">&nbsp;</p></div></div><div class="tile tile--trailer"><div class="card card--trailer"><div class="card__thumb"></div><p class="card__title">&nbsp;</p><p class="card__meta">&nbsp;</p></div></div></div></div></div>
+        <div class="section"><div class="section__title">Movies</div>
+          <div class="row"><div class="row__head"><p class="row__title">&nbsp;</p></div>
+            <div class="row__scroller"><div class="tile"><div class="card"><div class="card__thumb"></div><p class="card__title">&nbsp;</p><p class="card__meta">&nbsp;</p></div></div><div class="tile"><div class="card"><div class="card__thumb"></div><p class="card__title">&nbsp;</p><p class="card__meta">&nbsp;</p></div></div><div class="tile"><div class="card"><div class="card__thumb"></div><p class="card__title">&nbsp;</p><p class="card__meta">&nbsp;</p></div></div><div class="tile"><div class="card"><div class="card__thumb"></div><p class="card__title">&nbsp;</p><p class="card__meta">&nbsp;</p></div></div><div class="tile"><div class="card"><div class="card__thumb"></div><p class="card__title">&nbsp;</p><p class="card__meta">&nbsp;</p></div></div><div class="tile"><div class="card"><div class="card__thumb"></div><p class="card__title">&nbsp;</p><p class="card__meta">&nbsp;</p></div></div></div></div></div>
+      </div>
+    </div>
     <section class="results" id="results" hidden>
       <div class="results__head">
         <h2 id="resultsTitle">Results</h2>

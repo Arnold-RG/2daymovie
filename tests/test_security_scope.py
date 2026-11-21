@@ -63,7 +63,7 @@ def test_local_storage_holds_only_ui_preferences():
     assert "localStorage.setItem(LIST_KEY, JSON.stringify(ids))" in js and "byId.has(id)" in js and "LIST_MAX" in js
     assert "localStorage.removeItem(LEGACY_KEY)" in js, "old v1 preferences are dropped"
     saved = set(re.findall(r"prefs\.save\(\{\s*(\w+)", js))
-    assert saved <= {"sound", "volume", "brightness", "size"}, saved
+    assert saved <= {"sound", "volume", "brightness", "size", "still"}, saved  # still: a reduced-motion pause (boolean)
 
 
 def test_third_party_notices_cover_bundled_icons():
