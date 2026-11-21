@@ -21,6 +21,10 @@ def test_public_routes_return_200(client, app):
             continue  # private: token-gated, covered in tests/test_app.py
         resp = client.get(rule.rule)
         checked.append(rule.rule)
+        if rule.endpoint == "explore_index":  # /explore/ is a permanent redirect to the first explore page
+            if resp.status_code != 301 or not resp.headers["Location"].endswith("/explore/movies/"):
+                missing.append((rule.rule, resp.status_code))
+            continue
         if resp.status_code != 200:
             missing.append((rule.rule, resp.status_code))
     assert checked, "url_map produced no concrete GET routes to check"

@@ -14,6 +14,8 @@ import datetime as dt
 import json
 import subprocess
 import sys
+import urllib.error
+import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -60,6 +62,16 @@ def info(vid: str) -> dict | None:
         return None
 
 
+def has_maxres(vid: str) -> bool:
+    """True when i.ytimg.com has a 1280px maxresdefault still for this video."""
+    req = urllib.request.Request(f"https://i.ytimg.com/vi/{vid}/maxresdefault.jpg", method="HEAD")
+    try:
+        with urllib.request.urlopen(req, timeout=10) as r:
+            return r.status == 200
+    except (urllib.error.URLError, TimeoutError):
+        return False
+
+
 def main() -> int:
     today = dt.date.today().isoformat()
     out = []
@@ -78,7 +90,10 @@ def main() -> int:
         if not (20 <= end - start <= 45 and end < int(d["duration"])):
             print(f"skip {film}: bad clip {start}-{end}", file=sys.stderr)
             continue
-        out.append({"title": film, "release_date": release, "youtube_id": vid, "start": start, "end": end})
+        item = {"title": film, "release_date": release, "youtube_id": vid, "start": start, "end": end}
+        if not has_maxres(vid):  # optional "poster": the largest still YouTube has, so the hero never asks for a 404
+            item["poster"] = "sddefault"
+        out.append(item)
     out.sort(key=lambda t: (t["title"] != "Avengers: Doomsday", t["release_date"]))
     OUT.write_text(json.dumps({"generated": today, "items": out}, indent=1, ensure_ascii=False) + "\n")
     print(f"{len(out)} trailers", file=sys.stderr)

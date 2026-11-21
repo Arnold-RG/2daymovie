@@ -56,7 +56,7 @@ def test_phone_layout_fills_the_screen_and_fits_2_3_posters():
     assert f"@media {PHONE} {{" in CSS
     assert ".hero, .hero[data-size] { height: 100vh; height: 100svh; min-height: 0; }" in CSS
     assert ".tile { width: clamp(132px, 42vw, 230px); }" in CSS
-    assert ".hero[data-size] .hero__title { font-size: clamp(30px, 9.6vw, 46px);" in CSS
+    assert ".hero[data-size] .hero__title { font-size: clamp(26px, 8.2vw, 38px);" in CSS
     assert ".nav__toggle, .nav__links, .nav .search { display: none !important; }" in CSS
     assert "let size = !phoneLayout && SIZES.includes(saved.size)" in HERO and PHONE in HERO
 

@@ -21,8 +21,9 @@
   <meta name="twitter:description" content="Stream full movies, TV series, kids&#39; shows, cartoons and nature documentaries free through official YouTube embeds, plus trailers for the biggest upcoming films.">
   <link rel="icon" href="static/img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://i.ytimg.com">
+  
   <link rel="preload" as="image" href="https://i.ytimg.com/vi/irVNGjRFZGk/maxresdefault.jpg" imagesrcset="https://i.ytimg.com/vi/irVNGjRFZGk/sddefault.jpg 640w, https://i.ytimg.com/vi/irVNGjRFZGk/maxresdefault.jpg 1280w" imagesizes="100vw" fetchpriority="high">
-  <link rel="stylesheet" href="static/css/app.css?v=32a04475ec">
+  <link rel="stylesheet" href="static/css/app.css?v=064a102bb2">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -56,13 +57,7 @@
   </header>
 
   <section class="hero" id="top" data-size="full" aria-roledescription="carousel" aria-label="Upcoming movie trailers">
-    <div class="hero__track" id="heroTrack"></div>
-    <div class="hero__shade"></div>
-    <div class="hero__content" id="heroContent" aria-live="polite"></div>
-    <button class="hero__arrow hero__arrow--prev" id="heroPrev" aria-label="Previous trailer"><svg viewBox="0 0 24 24"><path d="M15.4 5.4 14 4l-8 8 8 8 1.4-1.4L8.8 12z"/></svg></button>
-    <button class="hero__arrow hero__arrow--next" id="heroNext" aria-label="Next trailer"><svg viewBox="0 0 24 24"><path d="M8.6 5.4 10 4l8 8-8 8-1.4-1.4 6.6-6.6z"/></svg></button>
-    <div class="hero__dots" id="heroDots" role="tablist" aria-label="Choose trailer"></div>
-    <div class="hero__progress"><span id="heroProgress"></span></div>
+    
     <div class="hero__bar hero__tools" id="heroBar" role="toolbar" aria-label="Trailer controls" aria-controls="heroTrack">
       <button class="hbtn hero__playpause" id="heroPause" type="button" aria-pressed="false" aria-label="Pause trailers" aria-keyshortcuts="Space K" data-tip="Pause (Space / K)">
         <svg class="i-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
@@ -109,6 +104,19 @@
         <svg class="i-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/></svg>
       </button>
     </div>
+    <div class="hero__track" id="heroTrack"></div>
+    <div class="hero__shade"></div>
+    <div class="hero__content is-ssr" id="heroContent" aria-live="polite" data-ssr="irVNGjRFZGk">
+      <span class="hero__tag">Upcoming trailer</span>
+      <h1 class="hero__title hero__logo"><span class="hero__logo-main">Avengers</span><span class="sr">: </span><span class="hero__logo-sub">Doomsday</span></h1>
+      <p class="hero__date"><span class="hero__date-label">In cinemas</span><time class="hero__date-value" datetime="2026-12-18">18 Dec 2026</time></p>
+      <div class="hero__actions"><button class="btn btn--play" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>Watch trailer</button><a class="btn btn--ghost" href="#trailers"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z"/></svg>All trailers</a></div>
+    </div>
+    <button class="hero__arrow hero__arrow--prev" id="heroPrev" aria-label="Previous trailer"><svg viewBox="0 0 24 24"><path d="M15.4 5.4 14 4l-8 8 8 8 1.4-1.4L8.8 12z"/></svg></button>
+    <button class="hero__arrow hero__arrow--next" id="heroNext" aria-label="Next trailer"><svg viewBox="0 0 24 24"><path d="M8.6 5.4 10 4l8 8-8 8-1.4-1.4 6.6-6.6z"/></svg></button>
+    <div class="hero__dots" id="heroDots" role="tablist" aria-label="Choose trailer"></div>
+    <div class="hero__progress"><span id="heroProgress"></span></div>
+    <a class="hero__cue" href="#trailers" id="heroCue"><span>More to watch</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.4 8.6 12 13.2l4.6-4.6L18 10l-6 6-6-6z"/></svg></a>
   </section>
 
   <main id="main">
@@ -242,9 +250,9 @@
   </div>
 
   <noscript><p class="loading">2DayMovie needs JavaScript to play videos.</p></noscript>
-  <script src="static/js/hero.js?v=32a04475ec" defer></script>
-  <script src="static/js/search.js?v=32a04475ec" defer></script>
-  <script src="static/js/app.js?v=32a04475ec" defer></script>
-  <script src="static/js/mobile.js?v=32a04475ec" defer></script>
+  <script src="static/js/hero.js?v=064a102bb2" defer></script>
+  <script src="static/js/search.js?v=064a102bb2" defer></script>
+  <script src="static/js/app.js?v=064a102bb2" defer></script>
+  <script src="static/js/mobile.js?v=064a102bb2" defer></script>
 </body>
 </html>

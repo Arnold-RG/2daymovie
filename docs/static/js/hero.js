@@ -91,11 +91,18 @@
         const poster = el("img", "slide__poster");
         poster.alt = "";
         // 640px poster for phones, 1280px for larger screens; hqdefault if a size is missing.
-        poster.srcset = `${thumb(t.id, "sddefault")} 640w, ${thumb(t.id, "maxresdefault")} 1280w`;
+        // t.poster (from trailers.json) names a smaller still when YouTube has no maxresdefault.
+        const big = t.poster || "maxresdefault";
+        poster.width = 1280; poster.height = 720; // reserve the box before the image arrives
+        poster.srcset = big === "maxresdefault" ? `${thumb(t.id, "sddefault")} 640w, ${thumb(t.id, big)} 1280w` : `${thumb(t.id, big)} 640w`;
         poster.sizes = "100vw";
-        poster.src = thumb(t.id, "maxresdefault");
-        poster.addEventListener("error", () => { poster.srcset = ""; poster.src = thumb(t.id, "hqdefault"); }, { once: true });
+        poster.src = thumb(t.id, big);
+        const fallback = () => { poster.srcset = ""; poster.src = thumb(t.id, "hqdefault"); };
+        poster.addEventListener("error", fallback, { once: true });
+        // i.ytimg.com answers a missing still with a 120px grey placeholder rather than an error
+        poster.addEventListener("load", () => { if (poster.naturalWidth > 0 && poster.naturalWidth <= 120) fallback(); }, { once: true });
         if (i === 0) poster.fetchPriority = "high";
+        else poster.fetchPriority = "low";
         if (i > 1) poster.loading = "lazy";
         const vid = el("div", "slide__video");
         vid.appendChild(el("div"));
@@ -119,11 +126,30 @@
       // start never skips it; FIRST_WAIT_MS caps the wait when autoplay is blocked or slow.
       firstWait = setTimeout(startFirstTimer, FIRST_WAIT_MS);
       // Live background: muted trailers start on load, no click needed.
-      loadYT().then((YT) => { YTlib = YT; warm(); }).catch(() => {}); // posters stay up if the API fails
+      // The YouTube player starts after the page has loaded (posters are the LCP), on the next idle moment.
+      const startVideo = () => loadYT().then((YT) => { YTlib = YT; warm(); }).catch(() => {}); // posters stay up if the API fails
+      const idle = () => (window.requestIdleCallback ? requestIdleCallback(startVideo, { timeout: 1200 }) : setTimeout(startVideo, 200));
+      if (document.readyState === "complete") idle();
+      else window.addEventListener("load", idle, { once: true });
     }
 
     function paint() {
       const t = trailers[cur];
+      // The first slide is already in the HTML (fast LCP): keep those nodes, just wire them up.
+      if (content.dataset.ssr) {
+        const ssr = content.dataset.ssr;
+        delete content.dataset.ssr;
+        const play = content.querySelector(".btn--play");
+        const date = content.querySelector(".hero__date");
+        if (ssr === t.id && play && date) {
+          play.addEventListener("click", () => openPlayer(t.id));
+          const days = daysUntil(t.release);
+          if (days > 0 && days <= 365) date.appendChild(el("span", "hero__date-count", days === 1 ? "Tomorrow" : `in ${days} days`));
+          paintDots();
+          return;
+        }
+      }
+      content.classList.remove("is-ssr"); // later slides animate in
       content.textContent = "";
       content.appendChild(el("span", "hero__tag", "Upcoming trailer"));
       // Logo-style title: "Avengers: Doomsday" -> big AVENGERS over a spaced DOOMSDAY.
@@ -154,6 +180,10 @@
       more.append(svg(ICON_INFO), document.createTextNode("All trailers"));
       actions.append(play, more);
       content.appendChild(actions);
+      paintDots();
+    }
+
+    function paintDots() {
       [...dots.children].forEach((d, i) => {
         d.setAttribute("aria-selected", String(i === cur));
         d.style.setProperty("--p", i === cur && reduceMotion.matches ? "1" : "0");
@@ -320,8 +350,10 @@
       players.set(i, entry);
       // Build the sandboxed nocookie iframe ourselves, then let the IFrame API attach to it.
       const frame = embedFrame(t.id, {
-        // no YouTube chrome in the header: our control bar is the only control surface
-        autoplay: 0, mute: 1, controls: 0, disablekb: 1, fs: 0, rel: 0, playsinline: 1,
+        // autoplay=1 + mute=1 + playsinline=1 on the current slide: the muted inline pattern iOS Safari
+        // honours on first load. Neighbours stay cued (autoplay=0) until their turn.
+        // No YouTube chrome in the header: our control bar is the only control surface.
+        autoplay: i === cur ? 1 : 0, mute: 1, controls: 0, disablekb: 1, fs: 0, rel: 0, playsinline: 1,
         modestbranding: 1, iv_load_policy: 3, cc_load_policy: 0, showinfo: 0, start, end,
       }, `${t.film} trailer clip`);
       frame.tabIndex = -1;

@@ -50,6 +50,9 @@ def write_pages(target: Path, error_base: str = "/") -> None:
                                canonical=seo.SITE_URL + rel, og_image=og,
                                lcp_id=first_trailer_id()), encoding="utf-8")
     (target / "404.html").write_text(render("404.html", base=error_base), encoding="utf-8")
+    (explore / "index.html").write_text(render("explore.html", base="../", csp_meta=CSP_META,
+                                               canonical=seo.SITE_URL + "explore/movies/",
+                                               pages=seo.explore_links(catalog)), encoding="utf-8")
     # sitemap and robots describe the host that serves this copy
     site = seo.PAGES_URL if error_base == PAGES_BASE else seo.SITE_URL
     (target / "sitemap.xml").write_text(seo.sitemap_xml(catalog, site), encoding="utf-8")

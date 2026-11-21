@@ -1,0 +1,26 @@
+<!doctype html>
+{# /explore/ has no section of its own: send visitors and crawlers to Movies, and list every landing page. #}
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {% if csp_meta %}<meta http-equiv="Content-Security-Policy" content="{{ csp_meta }}">{% endif %}
+  <meta http-equiv="refresh" content="0; url={{ base }}explore/movies/">
+  <meta name="robots" content="noindex, follow">
+  <link rel="canonical" href="{{ canonical }}">
+  <title>Explore · 2DayMovie</title>
+  <link rel="icon" href="{{ base }}static/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="{{ base }}static/css/404.css">
+</head>
+<body>
+  <main>
+    <h1>Explore 2DayMovie</h1>
+    <p>Taking you to <a href="{{ base }}explore/movies/">Movies</a>. Or pick a section:</p>
+    <ul>
+      {% for p in pages %}<li><a href="{{ base }}explore/{{ p.slug }}/">{{ p.label }}</a></li>
+      {% endfor %}
+    </ul>
+    <p><a href="{{ base }}">Back to 2DayMovie</a></p>
+  </main>
+</body>
+</html>

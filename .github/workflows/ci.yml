@@ -93,4 +93,8 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4
       - name: Validate compose file
+        # Placeholder so the required ${GRAFANA_ADMIN_PASSWORD:?} interpolation resolves.
+        # Not a secret: config -q only parses the file and starts nothing.
+        env:
+          GRAFANA_ADMIN_PASSWORD: ci-validation-only
         run: docker compose config -q
