@@ -49,7 +49,7 @@
     /* ---------- active indicator: a small dot that slides under the current tab ---------- */
     function moveDot() {
       const t = tabOf(active);
-      if (!t || active === "shuffle" || !inner.clientWidth) { dot.classList.remove("is-on"); return; }
+      if (!t || t.classList.contains("tab--center") || !inner.clientWidth) { dot.classList.remove("is-on"); return; }
       const a = inner.getBoundingClientRect(), r = t.getBoundingClientRect();
       dot.style.setProperty("--x", `${Math.round(r.left - a.left + r.width / 2)}px`);
       dot.classList.add("is-on");
@@ -81,8 +81,9 @@
     }
     function spy() {
       if (openSheet || document.body.classList.contains("is-results")) return;
-      const hero = $("#top");
-      setActive(hero && hero.getBoundingClientRect().bottom > window.innerHeight * 0.45 ? "home" : "");
+      const hero = $("#top"), kids = $("#kids"), mid = window.innerHeight * 0.45;
+      const inView = (n) => { if (!n) return false; const r = n.getBoundingClientRect(); return r.top < mid && r.bottom > 140; };
+      setActive(hero && hero.getBoundingClientRect().bottom > mid ? "home" : inView(kids) ? "kids" : "");
     }
     window.addEventListener("scroll", onScroll, { passive: true });
     if (window.ResizeObserver) new ResizeObserver(shape).observe(inner);
@@ -240,21 +241,34 @@
       if (name === "home") {
         if (longFired) { longFired = false; return; } // the long press already went to Upcoming Trailers
         close(false); setActive("home"); jump("top");
-      } else if (name === "search") { if (openSheet && openSheet.id === "sheetSearch") close(); else open("sheetSearch", "search"); }
-      else if (name === "genres") { if (openSheet && openSheet.id === "sheetGenres") close(); else open("sheetGenres", "genres"); }
+      } else if (name === "trailers") { close(false); setActive("trailers"); jump("trailers"); }
+      else if (name === "kids") { close(false); setActive("kids"); jump($("#kids") ? "kids" : "movies"); }
+      else if (name === "search") { if (openSheet && openSheet.id === "sheetSearch") close(); else open("sheetSearch", "search"); }
+      else if (name === "browse") { if (openSheet && openSheet.id === "sheetGenres") close(); else open("sheetGenres", "browse"); }
       else if (name === "mylist") {
         if (openSheet && openSheet.id === "sheetList") close();
         else { renderList(); open("sheetList", "mylist"); }
-      } else if (name === "shuffle") {
-        const list = TDM.trailers;
-        if (!list.length) return;
-        t.classList.remove("is-spin"); void t.offsetWidth; t.classList.add("is-spin");
-        const cur = TDM.hero && TDM.hero.state ? TDM.hero.state().index : -1;
-        let i = Math.floor(Math.random() * list.length);
-        if (list.length > 1 && i === cur) i = (i + 1) % list.length; // never the one already playing behind
-        TDM.openPlayer(list[i].id);
       }
     });
+
+    /* ---------- Shuffle (in the Browse sheet): a random trailer, never the one playing behind ---------- */
+    function shuffle(btn) {
+      const list = TDM.trailers;
+      if (!list.length) return;
+      if (btn && !reduce.matches) { btn.classList.remove("is-spin"); void btn.offsetWidth; btn.classList.add("is-spin"); }
+      const cur = TDM.hero && TDM.hero.state ? TDM.hero.state().index : -1;
+      let i = Math.floor(Math.random() * list.length);
+      if (list.length > 1 && i === cur) i = (i + 1) % list.length;
+      close(false);
+      TDM.openPlayer(list[i].id);
+    }
+    document.addEventListener("click", (e) => { const b = e.target.closest("[data-shuffle]"); if (b) shuffle(b); });
+    // No Kids section in this catalog: the slot becomes Upcoming Trailers instead.
+    if (!$("#kids") && tabOf("kids")) {
+      const k = tabOf("kids");
+      k.dataset.tab = "trailers";
+      k.querySelector(".tab__label").textContent = "Trailers";
+    }
 
     phone.addEventListener("change", () => { if (!phone.matches) close(false); shape(); });
     spy();

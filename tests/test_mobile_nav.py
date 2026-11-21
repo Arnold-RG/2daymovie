@@ -11,12 +11,15 @@ HERO = (ROOT / "static/js/hero.js").read_text(encoding="utf-8")
 PHONE = "(max-width: 900px), (max-width: 1000px) and (max-height: 500px)"
 
 
-def test_tab_bar_is_a_labelled_nav_with_five_slots_and_a_centre_shuffle():
+def test_tab_bar_is_a_labelled_nav_with_five_slots_and_a_centre_search():
     nav = HTML[HTML.index('<nav class="tabbar"'):HTML.index("</nav>", HTML.index('<nav class="tabbar"'))]
     assert 'aria-label="Quick navigation"' in nav
     tabs = re.findall(r'data-tab="(\w+)"', nav)
-    assert tabs == ["home", "search", "shuffle", "genres", "mylist"]
-    assert 'aria-label="Shuffle: play a random trailer"' in nav
+    assert tabs == ["home", "browse", "search", "kids", "mylist"]
+    assert 'class="tab tab--center" type="button" data-tab="search" aria-label="Search"' in nav
+    # Shuffle moved into the Browse sheet; Kids falls back to Upcoming Trailers if the section is missing
+    assert 'data-shuffle' in HTML and '[data-shuffle]' in MOB
+    assert 'k.dataset.tab = "trailers"' in MOB
     assert 'aria-current="page"' in nav and 'id="listBadge"' in nav
 
 
@@ -28,9 +31,10 @@ def test_tab_bar_floats_as_glass_with_a_red_glow_and_safe_areas():
     assert "function barShape(" in MOB and "glass.style.clipPath" in MOB
 
 
-def test_targets_are_at_least_44px_and_reduced_motion_is_respected():
-    assert re.search(r"\.tab \{[^}]*min-width: 44px; min-height: 44px;", CSS)
-    assert ".chip { display: inline-flex; align-items: center; gap: 8px; min-height: 44px;" in CSS
+def test_targets_are_at_least_48px_and_reduced_motion_is_respected():
+    assert re.search(r"\.tab \{[^}]*min-width: 48px; min-height: 48px;", CSS)
+    assert ".shuffle-btn {" in CSS and "min-height: 48px" in CSS
+    assert ".chip { display: inline-flex; align-items: center; gap: 8px; min-height: 48px;" in CSS
     rm = CSS[CSS.index("@media (prefers-reduced-motion: reduce)"):]
     assert ".tabbar, .tab, .tabbar__dot, .sheet__panel" in rm and "transition: none !important" in rm
 
