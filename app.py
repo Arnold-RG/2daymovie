@@ -120,6 +120,7 @@ def asset_version() -> str:
 
 def create_app() -> Flask:
     app = Flask(__name__, static_folder="static", template_folder="templates")
+    app.jinja_env.keep_trailing_newline = True  # rendered/exported pages end with a newline, like the templates
     app.jinja_env.globals["asset_v"] = asset_version()
     app.jinja_env.globals["hero_first"] = hero_first
 

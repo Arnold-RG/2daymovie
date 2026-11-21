@@ -25,7 +25,8 @@
   const NEIGHBOUR_MS = 8000; // load the next/previous trailer after this even if the current one has not started
   const KICK_MS = 1200, KICK_TRIES = 10; // re-ask a stalled player to play for ~12 s, then wait for a gesture
   const SKIP_MS = 1500; // an unplayable trailer shows its poster this long, then the next slide plays
-  const REVEAL_MS = 4300; // YouTube auto-hides its centre play/pause button about 4 s after playback starts
+  const VEIL_MS = 4000; // YouTube's 2026 player shows its centre play/pause (and a dim scrim) ~3-4 s after each play
+  const REVEAL_POLL_MS = 250, REVEAL_ADVANCE_S = 0.5, REVEAL_TRIES = 48; // fade in once playback has really advanced (~12 s cap)
   const LEGACY_KEY = "tdm.hero.v1";
   const FADE_MS = 650;    // sound fade in / out
   const BRIGHT = { dim: 0.65, normal: 1, bright: 1.3 };
@@ -276,6 +277,7 @@
     function syncSound() {
       ui.mute.setAttribute("aria-pressed", String(soundOn));
       ui.mute.setAttribute("aria-label", soundOn ? "Mute trailer" : "Unmute trailer");
+      if (ui.qMute) { ui.qMute.setAttribute("aria-pressed", String(soundOn)); ui.qMute.textContent = soundOn ? "Mute trailers" : "Unmute trailers"; }
       ui.mute.dataset.tip = soundOn ? "Mute (M)" : "Unmute (M)";
       ui.vol.value = String(volume);
       ui.vol.setAttribute("aria-valuetext", soundOn ? `${volume}%` : `${volume}%, muted`);
@@ -398,23 +400,29 @@
               if (i === cur) { warmNeighbours(); startFirstTimer(); }
               if (!entry.wantPlay || holds.size) { e.target.mute(); e.target.pauseVideo(); return; } // parked
               applyMute(entry);
-              // YouTube draws its own centre play/pause button for ~4 s after every play, even with
-              // controls:0. Keep the poster up until it has auto-hidden, then fade the live video in.
-              box.classList.remove("is-playing");
+              // YouTube's own centre play/pause shows for a few seconds after every play, even with
+              // controls:0. A small blurred veil over the frame centre hides it; no wait for the video.
+              box.classList.add("is-veiled");
+              clearTimeout(entry.veil);
+              entry.veil = setTimeout(() => box.classList.remove("is-veiled"), VEIL_MS);
+              // Fade the video in on the first real time advance (>= REVEAL_ADVANCE_S): a player can
+              // report PLAYING while its picture is frozen or black (blocked media, no decoder), so the
+              // poster stays until the clock moves. No fixed hold: YouTube's brief play bezel is gone by
+              // then and the .6 s opacity fade covers the rest. Already visible (re-PLAYING after a
+              // buffer or a loop): leave it up, no flash back to the poster.
               clearTimeout(entry.reveal);
-              // Fade the video in only when it is really moving: a player can report PLAYING while
-              // its picture is frozen or black (blocked media, no decoder). Otherwise the poster stays.
+              if (box.classList.contains("is-playing")) return;
               const t0 = (() => { try { return e.target.getCurrentTime() || 0; } catch (_) { return 0; } })();
               let checks = 0;
               const reveal = () => {
                 if (!players.has(i) || !entry.wantPlay) return;
                 let now = t0;
                 try { now = entry.player.getCurrentTime() || t0; } catch (_) { /* not ready */ }
-                if (now - t0 < 0.5) { if (++checks < 12) entry.reveal = setTimeout(reveal, 1000); return; }
+                if (now - t0 < REVEAL_ADVANCE_S) { if (++checks < REVEAL_TRIES) entry.reveal = setTimeout(reveal, REVEAL_POLL_MS); return; }
                 box.classList.add("is-playing");
                 slides[i].classList.add("has-video");
               };
-              entry.reveal = setTimeout(reveal, REVEAL_MS);
+              entry.reveal = setTimeout(reveal, REVEAL_POLL_MS);
             } else if (e.data === S.ENDED) {
               e.target.seekTo(start, true); // loop the clip from start to end
               if (entry.wantPlay) e.target.playVideo();
@@ -424,11 +432,15 @@
           onError: (e) => {
             clearTimeout(entry.reveal);
             clearTimeout(entry.retry);
-            entry.dead = true;
+            deadIds.add(t.id); // kept outside the player, so evicting the player does not forget it
             box.classList.remove("is-playing");
             slides[i].classList.remove("has-video");
             slides[i].dataset.ytError = String(e && e.data);
-            if (i === cur && !holds.size) setTimeout(() => { if (i === cur && !holds.size) skipDead(1); }, SKIP_MS);
+            if (i === cur && !holds.size) {
+              clearTimeout(skipTimer);
+              skipFor = i;
+              skipTimer = setTimeout(() => { if (i === cur && !holds.size) skipDead(1); }, SKIP_MS);
+            }
           },
         },
       });
@@ -499,27 +511,30 @@
       if (!p) return;
       p.wantPlay = false;
       clearTimeout(p.reveal); // a pending fade-in must not outlive the pause
+      if (skipFor === i) clearTimeout(skipTimer); // a skip queued for this slide is moot once it is parked
       if (p.ready) { applyMute(p, true); p.player.pauseVideo(); }
     }
 
+    function drop(i) {
+      const p = players.get(i);
+      if (!p) return;
+      cancelAnimationFrame(p.fade);
+      clearTimeout(p.reveal);
+      clearTimeout(p.retry);
+      clearTimeout(p.veil);
+      try { p.player.destroy(); } catch (_) { /* already gone */ }
+      players.delete(i);
+      const box = slides[i].querySelector(".slide__video");
+      box.classList.remove("is-playing", "is-veiled");
+      slides[i].classList.remove("has-video");
+      box.textContent = "";
+      box.appendChild(el("div"));
+    }
     // Keep the current slide and both neighbours loaded; drop the rest.
     function warm() {
       if (!YTlib) return;
       const keep = new Set([cur, mod(cur + 1), mod(cur - 1)]);
-      for (const [i, p] of players) {
-        if (!keep.has(i)) {
-          cancelAnimationFrame(p.fade);
-          clearTimeout(p.reveal);
-          clearTimeout(p.retry);
-          try { p.player.destroy(); } catch (_) { /* already gone */ }
-          players.delete(i);
-          const box = slides[i].querySelector(".slide__video");
-          box.classList.remove("is-playing");
-          slides[i].classList.remove("has-video");
-          box.textContent = "";
-          box.appendChild(el("div"));
-        }
-      }
+      for (const i of [...players.keys()]) if (!keep.has(i)) drop(i);
       ensurePlayer(cur);
       playAt(cur);
       // Neighbours load only once the current trailer plays (or after NEIGHBOUR_MS), so on a
@@ -546,6 +561,7 @@
       const prevIndex = cur;
       const prev = players.get(prevIndex);
       if (prev) { prev.wantPlay = false; clearTimeout(prev.reveal); applyMute(prev); } // fade the outgoing clip's audio
+      clearTimeout(skipTimer);
       cur = target;
       ensurePlayer(target);
       playAt(target);
@@ -581,12 +597,26 @@
       if (manual) dots.children[cur].focus({ preventScroll: true });
     }
 
-    // Next slide whose trailer has not failed (all failed: plain next, posters only).
+    // Next slide whose trailer has not failed. Every trailer failed (one full cycle): stop on the
+    // posters and show Play, which clears the list and tries again.
     function skipDead(dir) {
+      clearTimeout(skipTimer);
       for (let k = 1; k < slides.length; k++) {
-        const j = mod(cur + dir * k), p = players.get(j);
-        if (!p || !p.dead) { go(j, dir, false); return; }
+        const j = mod(cur + dir * k);
+        if (!deadIds.has(trailers[j].id)) { go(j, dir, false); return; }
       }
+      if (!deadIds.has(trailers[cur].id)) return; // the current one still plays
+      allDead = true;
+      heroEl.classList.add("is-unplayable");
+      pause("user");
+    }
+    function retryAll() {
+      allDead = false;
+      deadIds.clear();
+      heroEl.classList.remove("is-unplayable");
+      slides.forEach((s) => delete s.dataset.ytError);
+      [...players.keys()].forEach(drop);
+      warm();
     }
     function tick() {
       const left = Math.max(0, remaining - (performance.now() - started));
@@ -597,7 +627,8 @@
       if (left <= 0) { skipDead(1); return; }
       raf = requestAnimationFrame(tick);
     }
-    let firstWait = 0, timerOn = false;
+    let firstWait = 0, timerOn = false, skipTimer = 0, skipFor = -1, allDead = false;
+    const deadIds = new Set(); // trailer ids YouTube refused (100/101/150/2/5) this visit
     function startFirstTimer() {
       clearTimeout(firstWait);
       if (timerOn) return;
@@ -648,10 +679,11 @@
       ui.pause.setAttribute("aria-pressed", String(paused));
       ui.pause.setAttribute("aria-label", paused ? "Play trailers" : "Pause trailers");
       ui.pause.dataset.tip = paused ? "Play (Space / K)" : "Pause (Space / K)";
+      if (ui.qPause) { ui.qPause.setAttribute("aria-pressed", String(paused)); ui.qPause.textContent = paused ? "Play trailers" : "Pause trailers"; }
       heroEl.classList.toggle("is-paused", paused);
     }
     const togglePause = () => {
-      if (holds.has("user")) resume("user"); else pause("user");
+      if (holds.has("user")) { resume("user"); if (allDead) retryAll(); } else pause("user");
       if (reduceMotion.matches) prefs.save({ still: holds.has("user") }); // remember a reduced-motion pause
     };
 
@@ -670,7 +702,16 @@
       ui.sizeCycle = $("#heroSizeCycle");
       ui.sizeLabel = $("#heroSizeLabel");
       ui.fs = $("#heroFullscreen");
+      ui.qPause = $("#quickPause");
+      ui.qMute = $("#quickMute");
       if (!ui.barEl) return;
+      // Skip-link style twins of Pause and Mute: the first tab stops after "Skip to content".
+      if (ui.qPause && ui.qMute) {
+        ui.qPause.hidden = false;
+        ui.qMute.hidden = false;
+        ui.qPause.addEventListener("click", togglePause);
+        ui.qMute.addEventListener("click", () => setSound(!soundOn));
+      }
 
       track.classList.add("is-dimmable");
       if (!fsEnabled()) ui.fs.hidden = true;

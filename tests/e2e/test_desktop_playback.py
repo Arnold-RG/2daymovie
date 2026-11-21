@@ -71,7 +71,7 @@ def test_desktop_trailer_plays_and_poster_fades(site, browser, motion, size):
     errors = []
     page.on("pageerror", lambda e: errors.append(str(e)))
     page.goto(site, wait_until="load")
-    seen = wait_playing(page, 10_000)
+    seen = wait_playing(page, 6_000)  # poster faded to live video within ~6 s of load
     ctx.close()
     assert not errors, errors
     last = seen[-1]
@@ -99,3 +99,53 @@ def test_unplayable_trailer_is_skipped(site, browser):
     seen = wait_playing(page, 10_000)
     ctx.close()
     assert seen[-1]["st"] == 1 and seen[-1]["shown"], seen[-4:]
+
+
+def test_all_trailers_broken_stops_after_one_cycle(site, browser):
+    """Every embed fails: the hero tries each trailer at most once, then stops on the posters with Play."""
+    ctx = browser.new_context(viewport={"width": 1366, "height": 768}, user_agent=EDGE)
+    ctx.route(re.compile(r".*/embed/[\w-]{11}\?.*"),
+              lambda r: r.continue_(url=re.sub(r"/embed/[\w-]{11}", "/embed/AAAAAAAAAAA", r.request.url)))
+    page = ctx.new_page()
+    page.goto(site, wait_until="load")
+    page.wait_for_function("() => window.TDM && TDM.hero && document.querySelector('.slide')")
+    n = page.evaluate("() => document.querySelectorAll('.slide').length")
+    moves, last, stopped = 0, 0, None
+    for _ in range(480):  # up to 120 s
+        s = page.evaluate("""() => ({ idx: TDM.hero.state().index, paused: TDM.hero.state().paused,
+            stop: document.querySelector('.hero').classList.contains('is-unplayable'),
+            label: document.querySelector('#heroPause').getAttribute('aria-label') })""")
+        if s["idx"] != last:
+            moves += 1
+            last = s["idx"]
+        if s["stop"]:
+            stopped = s
+            break
+        page.wait_for_timeout(250)
+    assert stopped, f"never stopped after {moves} moves"
+    assert moves <= n, f"cycled {moves} times over {n} trailers"
+    assert stopped["paused"] and stopped["label"] == "Play trailers"
+    idx = stopped["idx"]
+    page.wait_for_timeout(4000)  # and it stays put
+    assert page.evaluate("() => TDM.hero.state().index") == idx
+    assert page.evaluate("() => document.querySelectorAll('.slide__video.is-playing').length") == 0
+    ctx.close()
+
+
+def test_pause_and_mute_are_the_first_tab_stops(site, browser):
+    ctx = browser.new_context(viewport={"width": 1366, "height": 768}, user_agent=EDGE)
+    page = ctx.new_page()
+    page.goto(site, wait_until="load")
+    page.wait_for_function("() => window.TDM && TDM.hero && !document.querySelector('#quickPause').hidden")
+    order = []
+    for _ in range(3):
+        page.keyboard.press("Tab")
+        order.append(page.evaluate("() => document.activeElement.id || document.activeElement.textContent.trim()"))
+    assert order == ["Skip to content", "quickPause", "quickMute"], order
+    assert page.evaluate("() => document.activeElement.getBoundingClientRect().left") >= 0  # visible on focus
+    page.keyboard.press("Shift+Tab")
+    page.keyboard.press("Enter")
+    assert page.evaluate("() => TDM.hero.state().paused") is True
+    assert page.evaluate("() => document.querySelector('#heroPause').getAttribute('aria-pressed')") == "true"
+    assert page.evaluate("() => document.querySelector('#quickPause').textContent") == "Play trailers"
+    ctx.close()

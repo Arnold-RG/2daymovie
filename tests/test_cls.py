@@ -57,4 +57,14 @@ def test_reveal_timers_are_cleared_when_a_slide_is_left_or_paused():
 
 def test_reduced_motion_drops_the_video_fade():
     rm = CSS[CSS.index("@media (prefers-reduced-motion: reduce) {"):]
-    assert ".slide__video, .slide__video.is-playing { transition: none; }" in rm
+    assert ".slide__video, .slide__video.is-playing, .slide__video::after { transition: none; }" in rm
+
+
+def test_skeleton_card_has_the_real_card_box():
+    # real cards are inline-block <button>s; a block <div> skeleton came out 0.6px short per row
+    assert ".skel .card { display: inline-block; }" in CSS
+
+
+def test_pages_end_with_a_newline(client):
+    assert client.get("/").get_data(as_text=True).endswith("</html>\n")
+    assert (ROOT / "index.html").read_text(encoding="utf-8").endswith("</html>\n")
