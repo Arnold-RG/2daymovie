@@ -126,8 +126,10 @@ def test_all_trailers_broken_stops_after_one_cycle(site, browser):
     assert moves <= n, f"cycled {moves} times over {n} trailers"
     assert stopped["paused"] and stopped["label"] == "Play trailers"
     idx = stopped["idx"]
-    page.wait_for_timeout(4000)  # and it stays put
+    frames = page.evaluate("() => document.querySelectorAll('.slide__video iframe').length")
+    page.wait_for_timeout(9000)  # stays put, and the 8 s neighbour preload was cancelled with the park
     assert page.evaluate("() => TDM.hero.state().index") == idx
+    assert page.evaluate("() => document.querySelectorAll('.slide__video iframe').length") == frames
     assert page.evaluate("() => document.querySelectorAll('.slide__video.is-playing').length") == 0
     ctx.close()
 
@@ -142,6 +144,17 @@ def test_pause_and_mute_are_the_first_tab_stops(site, browser):
         page.keyboard.press("Tab")
         order.append(page.evaluate("() => document.activeElement.id || document.activeElement.textContent.trim()"))
     assert order == ["Skip to content", "quickPause", "quickMute"], order
+    # the in-hero twins stay clickable but are not tab stops; labels and aria-pressed stay in sync
+    for _ in range(40):
+        page.keyboard.press("Tab")
+        assert page.evaluate("() => document.activeElement.id") not in ("heroPause", "heroMute")
+    assert page.evaluate("() => [heroPause.tabIndex, heroMute.tabIndex]") == [-1, -1]
+    page.focus("#quickMute")
+    page.keyboard.press("Enter")
+    assert page.evaluate("() => [heroMute.getAttribute('aria-pressed'), quickMute.getAttribute('aria-pressed'), quickMute.textContent]") == ["true", "true", "Mute trailers"]
+    page.click("#heroMute")
+    assert page.evaluate("() => [quickMute.getAttribute('aria-pressed'), quickMute.textContent]") == ["false", "Unmute trailers"]
+    page.focus("#quickMute")
     assert page.evaluate("() => document.activeElement.getBoundingClientRect().left") >= 0  # visible on focus
     page.keyboard.press("Shift+Tab")
     page.keyboard.press("Enter")

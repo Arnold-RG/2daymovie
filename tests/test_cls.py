@@ -57,7 +57,7 @@ def test_reveal_timers_are_cleared_when_a_slide_is_left_or_paused():
 
 def test_reduced_motion_drops_the_video_fade():
     rm = CSS[CSS.index("@media (prefers-reduced-motion: reduce) {"):]
-    assert ".slide__video, .slide__video.is-playing, .slide__video::after { transition: none; }" in rm
+    assert ".slide__video, .slide__video.is-playing { transition: none; }" in rm
 
 
 def test_skeleton_card_has_the_real_card_box():

@@ -25,7 +25,6 @@
   const NEIGHBOUR_MS = 8000; // load the next/previous trailer after this even if the current one has not started
   const KICK_MS = 1200, KICK_TRIES = 10; // re-ask a stalled player to play for ~12 s, then wait for a gesture
   const SKIP_MS = 1500; // an unplayable trailer shows its poster this long, then the next slide plays
-  const VEIL_MS = 4000; // YouTube's 2026 player shows its centre play/pause (and a dim scrim) ~3-4 s after each play
   const REVEAL_POLL_MS = 250, REVEAL_ADVANCE_S = 0.5, REVEAL_TRIES = 48; // fade in once playback has really advanced (~12 s cap)
   const LEGACY_KEY = "tdm.hero.v1";
   const FADE_MS = 650;    // sound fade in / out
@@ -400,11 +399,7 @@
               if (i === cur) { warmNeighbours(); startFirstTimer(); }
               if (!entry.wantPlay || holds.size) { e.target.mute(); e.target.pauseVideo(); return; } // parked
               applyMute(entry);
-              // YouTube's own centre play/pause shows for a few seconds after every play, even with
-              // controls:0. A small blurred veil over the frame centre hides it; no wait for the video.
-              box.classList.add("is-veiled");
-              clearTimeout(entry.veil);
-              entry.veil = setTimeout(() => box.classList.remove("is-veiled"), VEIL_MS);
+              veil(box);
               // Fade the video in on the first real time advance (>= REVEAL_ADVANCE_S): a player can
               // report PLAYING while its picture is frozen or black (blocked media, no decoder), so the
               // poster stays until the clock moves. No fixed hold: YouTube's brief play bezel is gone by
@@ -515,17 +510,29 @@
       if (p.ready) { applyMute(p, true); p.player.pauseVideo(); }
     }
 
+    /* ---------- centre veil (optional; to drop it delete this block, its one veil() call and the
+       ".slide__video::after" CSS block) ----------
+       YouTube's 2026 player shows its own centre play/pause and a dim scrim for ~3-4 s after every
+       play, even with controls:0. A small blurred spot over the frame centre covers it. */
+    const VEIL_MS = 4000;
+    const veils = new WeakMap();
+    function veil(box) {
+      box.classList.add("is-veiled");
+      clearTimeout(veils.get(box));
+      veils.set(box, setTimeout(() => box.classList.remove("is-veiled"), VEIL_MS));
+    }
+    /* ---------- end centre veil ---------- */
+
     function drop(i) {
       const p = players.get(i);
       if (!p) return;
       cancelAnimationFrame(p.fade);
       clearTimeout(p.reveal);
       clearTimeout(p.retry);
-      clearTimeout(p.veil);
       try { p.player.destroy(); } catch (_) { /* already gone */ }
       players.delete(i);
       const box = slides[i].querySelector(".slide__video");
-      box.classList.remove("is-playing", "is-veiled");
+      box.classList.remove("is-playing");
       slides[i].classList.remove("has-video");
       box.textContent = "";
       box.appendChild(el("div"));
@@ -656,6 +663,8 @@
         const p = players.get(cur);
         if (p && p.ready) { applyMute(p, true); p.player.pauseVideo(); }
       }
+      clearTimeout(neighbourTimer); // parked: no neighbour players load in the background
+      clearTimeout(skipTimer);
       holds.add(reason);
       syncPause();
     }
@@ -667,6 +676,9 @@
       started = performance.now();
       if (!reduceMotion.matches && timerOn) raf = requestAnimationFrame(tick);
       const p = players.get(cur);
+      // re-arm what the park cancelled: the neighbour preload and a skip off a failed trailer
+      if (YTlib && !(p && p.playing)) { clearTimeout(neighbourTimer); neighbourTimer = setTimeout(warmNeighbours, NEIGHBOUR_MS); }
+      if (!allDead && trailers[cur] && deadIds.has(trailers[cur].id)) { clearTimeout(skipTimer); skipFor = cur; skipTimer = setTimeout(() => { if (!holds.size) skipDead(1); }, SKIP_MS); }
       if (p && p.ready && p.wantPlay) {
         p.kicks = 0;
         kick(p);

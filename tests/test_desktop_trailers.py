@@ -42,7 +42,7 @@ def test_dead_trailers_are_remembered_outside_the_players():
 
 def test_youtube_centre_button_is_veiled_not_waited_for():
     css = (ROOT / "static/css/app.css").read_text(encoding="utf-8")
-    assert "const VEIL_MS = 4000" in HERO and 'box.classList.add("is-veiled")' in HERO
+    assert "const VEIL_MS = 4000" in HERO and 'box.classList.add("is-veiled")' in HERO and "veil(box);" in HERO
     assert ".slide__video.is-veiled::after { opacity: 1;" in css and "backdrop-filter: blur(14px)" in css
 
 
@@ -50,4 +50,30 @@ def test_quick_pause_and_mute_follow_the_skip_link(client):
     html = client.get("/").get_data(as_text=True)
     body = html.split("<body>", 1)[1]
     skip = body.index('class="skip" href="#main"')
-    assert skip < body.index('id="quickPause"') < body.index('id="quickMute"') < body.index('<header class="nav"')
+    assert skip < body.index('<header class="nav"') < body.index('id="quickPause"') < body.index('id="quickMute"') < body.index('class="nav__inner"')
+
+
+def test_parking_cancels_background_timers():
+    pause = HERO.split("function pause(reason) {", 1)[1].split("\n    }\n", 1)[0]
+    assert "clearTimeout(neighbourTimer);" in pause and "clearTimeout(skipTimer);" in pause
+    resume = HERO.split("function resume(reason) {", 1)[1].split("\n    }\n", 1)[0]
+    assert "neighbourTimer = setTimeout(warmNeighbours, NEIGHBOUR_MS)" in resume
+
+
+def test_veil_is_one_removable_block():
+    css = (ROOT / "static/css/app.css").read_text(encoding="utf-8")
+    js = HERO.split("/* ---------- centre veil", 1)[1].split("/* ---------- end centre veil ---------- */", 1)[0]
+    assert "const VEIL_MS = 4000" in js and "function veil(box)" in js
+    assert HERO.count("veil(box)") == 2  # the definition and its single call
+    assert HERO.count("is-veiled") == 2 and "VEIL_MS" not in HERO.replace(js, "")
+    block = css.split("/* ---- centre veil", 1)[1].split("/* ---- end centre veil ---- */", 1)[0]
+    assert "slide__video::after" not in css.replace(block, "")
+
+
+def test_in_hero_pause_and_mute_are_not_tab_stops(client):
+    html = client.get("/").get_data(as_text=True)
+    assert 'id="heroPause" type="button" tabindex="-1"' in html
+    assert 'id="heroMute" type="button" tabindex="-1"' in html
+    assert "skip-media" not in html and 'role="group" aria-label="Background trailers"' not in html
+    header = html.split('<header class="nav" id="nav">', 1)[1].split("</header>", 1)[0]
+    assert 'id="quickPause"' in header and 'id="quickMute"' in header
