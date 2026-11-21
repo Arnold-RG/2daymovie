@@ -63,7 +63,7 @@ def test_screen_reader_text_in_cards_cannot_widen_the_page():
 def test_video_revealed_only_after_youtube_overlay_autohides():
     # YouTube shows its own centre play/pause button for ~4 s after each play, even with controls:0.
     assert "const REVEAL_MS = 4300" in HERO
-    assert "setTimeout(() => {" in HERO and "}, REVEAL_MS);" in HERO
+    assert "entry.reveal = setTimeout(reveal, REVEAL_MS);" in HERO
     assert "clearTimeout(p.reveal)" in HERO and "clearTimeout(entry.reveal)" in HERO
 
 

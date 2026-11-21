@@ -83,6 +83,8 @@ body.modal-open { overflow: hidden; }
 .slide.is-current, .slide.is-moving { visibility: visible; }
 .slide.is-current { transform: translate3d(0,0,0); z-index: 2; }
 .slide.anim { transition: transform var(--slide-ms) var(--ease), opacity var(--slide-ms) ease; }
+/* backdrop still (set per slide in hero.js) under the poster and the video */
+.slide { background-color: #000; background-position: center; background-size: cover; background-repeat: no-repeat; }
 .slide__poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform-origin: 60% 40%; }
 /* subtle Ken Burns while the trailer loads; the clip fades in over it */
 .slide.is-current .slide__poster, .slide.is-moving .slide__poster { animation: kenburns 24s ease-out both; }
@@ -553,6 +555,8 @@ body.is-results main { margin-top: 0; }
   .hero__track, .hero__shade { inset: auto; top: var(--nav-h); left: 0; right: 0; height: var(--band-h); }
   .hero__track { overflow: hidden; } /* the Ken Burns zoom must not spill above or below the band */
   .slide__poster { object-position: 50% 42%; }
+  /* bigger cover zoom in the band: 16:9 fills it, and scope (2.39:1) trailers lose almost all of their baked-in bars */
+  .slide__video iframe { transform: translate(-50%,-50%) scale(1.3); }
   /* scrim: a light top fade under the header and a bottom fade into the text area */
   .hero__shade { background: linear-gradient(180deg, rgba(0,0,0,.42) 0%, rgba(0,0,0,0) 26%, rgba(0,0,0,0) 62%, rgba(11,11,15,.7) 88%, var(--bg) 100%); }
   .hero__shade::after { display: none; }

@@ -49,3 +49,24 @@ def test_landscape_shows_the_scroll_cue():
 def test_iframe_sandbox_has_only_valid_tokens():
     assert 'const SANDBOX = "allow-scripts allow-same-origin";' in APP
     assert "allow-presentation" not in APP
+
+
+HERO = (ROOT / "static/js/hero.js").read_text(encoding="utf-8")
+
+
+def test_band_always_has_a_backdrop_image_under_the_video():
+    # every slide carries a 16:9 YouTube still as its CSS background, under the poster <img> and the iframe
+    assert 's.style.backgroundImage = `url("${thumb(t.id, "mqdefault")}")`;' in HERO
+    assert ".slide { background-color: #000; background-position: center; background-size: cover;" in CSS
+    assert "https://i.ytimg.com" in (ROOT / "app.py").read_text(encoding="utf-8")  # img-src allows the still
+
+
+def test_video_fades_in_only_when_it_is_really_moving():
+    assert "if (now - t0 < 0.5) { if (++checks < 12) entry.reveal = setTimeout(reveal, 1000); return; }" in HERO
+    assert ".slide__video { position: absolute; inset: 0; overflow: hidden; opacity: 0;" in CSS
+    assert ".slide__video.is-playing { opacity: 1; }" in CSS
+
+
+def test_band_iframe_is_scaled_to_cover():
+    b = block(BAND)
+    assert ".slide__video iframe { transform: translate(-50%,-50%) scale(1.3); }" in b

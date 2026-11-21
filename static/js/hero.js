@@ -104,6 +104,9 @@
         if (i === 0) poster.fetchPriority = "high";
         else poster.fetchPriority = "low";
         if (i > 1) poster.loading = "lazy";
+        // Always-on backdrop under the poster and the video: mqdefault is a true 16:9 still (no bars)
+        // that YouTube serves for every video, so the band is never an empty black box.
+        s.style.backgroundImage = `url("${thumb(t.id, "mqdefault")}")`;
         const vid = el("div", "slide__video");
         vid.appendChild(el("div"));
         s.append(poster, vid);
@@ -382,11 +385,19 @@
               // controls:0. Keep the poster up until it has auto-hidden, then fade the live video in.
               box.classList.remove("is-playing");
               clearTimeout(entry.reveal);
-              entry.reveal = setTimeout(() => {
+              // Fade the video in only when it is really moving: a player can report PLAYING while
+              // its picture is frozen or black (blocked media, no decoder). Otherwise the poster stays.
+              const t0 = (() => { try { return e.target.getCurrentTime() || 0; } catch (_) { return 0; } })();
+              let checks = 0;
+              const reveal = () => {
                 if (!players.has(i) || !entry.wantPlay) return;
+                let now = t0;
+                try { now = entry.player.getCurrentTime() || t0; } catch (_) { /* not ready */ }
+                if (now - t0 < 0.5) { if (++checks < 12) entry.reveal = setTimeout(reveal, 1000); return; }
                 box.classList.add("is-playing");
                 slides[i].classList.add("has-video");
-              }, REVEAL_MS);
+              };
+              entry.reveal = setTimeout(reveal, REVEAL_MS);
             } else if (e.data === S.ENDED) {
               e.target.seekTo(start, true); // loop the clip from start to end
               if (entry.wantPlay) e.target.playVideo();
