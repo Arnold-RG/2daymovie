@@ -61,7 +61,7 @@ than five seconds.
 
 - [ ] Open from a catalog card, a “See all” result, and “Watch trailer”
 - [ ] Embed URL is `https://www.youtube-nocookie.com/embed/...` (DevTools)
-- [ ] Iframe has `sandbox="allow-scripts allow-same-origin allow-presentation"`
+- [ ] Iframe has `sandbox="allow-scripts allow-same-origin"`
 - [ ] No download / “save video” / rehosted `mp4` or proxy
 - [ ] Error state appears if the video cannot play
 - [ ] Close via button, backdrop, and Esc; body scroll is restored

@@ -55,7 +55,7 @@
 
   /* Every player iframe on the site is built here: youtube-nocookie.com only,
      sandboxed before its src is set, with the IFrame API enabled. */
-  const SANDBOX = "allow-scripts allow-same-origin allow-presentation";
+  const SANDBOX = "allow-scripts allow-same-origin";
   function embedFrame(id, params = {}, title = "YouTube video player") {
     const f = document.createElement("iframe");
     f.setAttribute("sandbox", SANDBOX);
