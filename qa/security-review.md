@@ -123,7 +123,7 @@ before the iframe exists.
 Required attribute (keeps the official player working):
 
 ```
-sandbox="allow-scripts allow-same-origin allow-presentation"
+sandbox="allow-scripts allow-same-origin"
 ```
 
 `allow-scripts` plus `allow-same-origin` lets a framed page remove its own
